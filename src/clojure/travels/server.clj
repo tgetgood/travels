@@ -1,5 +1,7 @@
 (ns travels.server
   (:require [ring.middleware.json :refer [wrap-json-response wrap-json-body]]
+            [ring.middleware.reload :as reload]
+            [ring.util.response :as response]
             [org.httpkit.server :refer [run-server]]
             [compojure.core :refer :all]
             [compojure.route :as route]
@@ -14,7 +16,8 @@
   (route/resources ""))
 
 (defn -main
+  [& args]
   (let [opts {:port 8000}]
-    (run-server site-routes opt)
+    (run-server site-routes opts)
     (println (str "Server is running on port: " (:port opts)))))
            
