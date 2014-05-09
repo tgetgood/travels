@@ -1,0 +1,16 @@
+
+.intro {
+    margin: auto;
+}
+
+.main-search {
+    margin: auto;
+}
+
+
+#floater{float:left; height:50%; margin-bottom:-120px;}
+#content{clear:both; height:240px; position:relative;}
+
+#content {
+    text-align: center;
+}
