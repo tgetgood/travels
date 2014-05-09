@@ -6,7 +6,7 @@
 
   :min-lein-version "2.0.0"
 
-  :source-path "src/clojure"
+  :source-paths ["src/clojure"]
 
   :dependencies [[org.clojure/clojure "1.5.1"]
                  [com.cemerick/friend "0.2.0"]
@@ -15,6 +15,6 @@
                  [http-kit "2.1.18"]
                  [ring/ring-json "0.3.1"]]
 
-  :main clojure.travels.server
+  :main travels.server
 )
                  

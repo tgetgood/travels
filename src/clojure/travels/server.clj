@@ -1,4 +1,4 @@
-(ns clojure.travels.server
+(ns travels.server
   (:require [ring.middleware.json :refer [wrap-json-response wrap-json-body]]
             [ring.middleware.reload :as reload]
             [ring.util.response :as response]
