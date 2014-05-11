@@ -14,7 +14,7 @@
 
 (defroutes dev-router
   (GET "/" [] (slurp "src/html/index-dev.html"))
-  (GET "/templates.js" [] (slurp "resources/public/templates.js"))
+  (GET "/templates.js" [] (slurp "resources/templates.js"))
   (route/files "" {:root "src"} ))
 
 (defroutes prod-router

@@ -14,9 +14,36 @@ Ember.ArrayProxy.prototype.flatten = Array.prototype.flatten = function() {
 // App
 //=================================
 
-App = Ember.Application.create();
+var App = Ember.Application.create();
 
+App.Location = DS.Model.extend({
+	name:    DS.attr("string"),
+	address: DS.attr("string")
+});
 
 App.Router.map(function () {
-	this.resource('newlocation', { path: 'location/new' });
+	this.resource('locations', function () {
+		this.resource('location', { path: "/:location_id" });
+		this.resource('edit');
+	});
+	this.resource("newlocation", { path: "locations/new" });
+});
+
+
+App.NewlocationRoute = Ember.Route.extend({
+	actions: {
+		save: function () {
+			this.get('store').
+				createRecord('location', this.controller.location).
+				save();
+			
+		}
+	}
+});
+
+App.NewlocationController = Ember.ObjectController.extend({
+	location: {
+		name: "",
+		address: ""
+	}
 });

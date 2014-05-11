@@ -8,7 +8,7 @@ module.exports = function(grunt) {
 					templateBasePath: /src\/html\/templates/
 				},
 				files: {
-					'resources/public/templates.js': 'src/html/templates/**/*.hbs'
+					'resources/templates.js': 'src/html/templates/**/*.hbs'
 				}
 			}
 		},
@@ -29,7 +29,8 @@ module.exports = function(grunt) {
 			},
 			dist: {
 				files: {
-					'resources/public/app.min.js': ['resources/app.js']
+					'resources/public/app.min.js': ['resources/app.js'],
+					'resources/public/templates.min.js': ['resources/templates.js']
 				}
 			}
 		},
