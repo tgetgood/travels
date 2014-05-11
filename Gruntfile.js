@@ -61,5 +61,6 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-concat');
 	grunt.loadNpmTasks('grunt-css');
  
-  grunt.registerTask('default', ['emberTemplates', 'concat', 'uglify', 'cssmin']);  
+  grunt.registerTask('heroku', ['emberTemplates', 'concat', 'uglify', 'cssmin']);  
+	grunt.registerTask('default', ['heroku']);
 };
