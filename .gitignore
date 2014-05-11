@@ -10,3 +10,4 @@ pom.xml.asc
 /models
 /generated
 /cache
+/node_modules
