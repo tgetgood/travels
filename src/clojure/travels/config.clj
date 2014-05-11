@@ -1,6 +1,6 @@
 (ns travels.config
   (:require [environ.core :refer [env]]
-            [clojure.edn :refer [read-string]]))
+            [clojure.edn :as edn]))
 
 (defn getenv
   "Takes an environ formatted var keyword and grabs the value.
@@ -13,4 +13,4 @@
 
 (def dev-server? (= (getenv :dev-mode "") "TRUE"))
 
-(def port (read-string (getenv :port "8000")))
+(def port (edn/read-string (getenv :port "8000")))
