@@ -5,28 +5,27 @@ module.exports = function(grunt) {
 		emberTemplates: {
 			compile: {
 				options: {
-					templateBasePath: /resources\/public\/templates\//
+					templateBasePath: /src\/html\/templates/
 				},
 				files: {
-					'resources/public/prod/templates.js': 'resources/public/templates/**/*.hbs'
+					'resources/public/templates.js': 'src/html/templates/**/*.hbs'
 				}
 			}
 		},
 
     watch :{
 			emberTemplates: {
-				files: 'resources/public/templates/**/*.hbs',
+				files: 'src/html/templates/**/*.hbs',
 				tasks: ['emberTemplates']
 			},
       scripts :{
-        files : ['resources/public/**/*'],
+        files : ['src/**/*'], // Efficiency be damned in dev mode, right?
         options : {
           livereload : 9090,
         }
       }
     }
- 
-  });
+   });
  
   grunt.loadNpmTasks('grunt-contrib-watch');
 	grunt.loadNpmTasks('grunt-ember-templates');

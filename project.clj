@@ -6,9 +6,15 @@
 
   :min-lein-version "2.0.0"
 
-  :source-paths ["src"]
+  :plugins [[lein-environ "0.4.0"]]
+
+  :source-paths ["src/clojure"]
+
+  :profiles {:dev {:env {:dev-mode "TRUE"}}}
 
   :dependencies [[org.clojure/clojure "1.5.1"]
+                 [environ "0.4.0"]
+
                  [com.cemerick/friend "0.2.0"]
                  [ring "1.2.2"]
                  [compojure "1.1.6"]
