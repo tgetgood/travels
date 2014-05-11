@@ -11,3 +11,4 @@ pom.xml.asc
 /generated
 /cache
 /node_modules
+/resources/public/prod

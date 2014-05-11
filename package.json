@@ -4,6 +4,7 @@
   "description": "Undiscovered Travel App",
   "devDependencies": {
     "grunt": "^0.4.4",
-    "grunt-contrib-watch": "^0.6.1"
+    "grunt-contrib-watch": "^0.6.1",
+		"grunt-ember-templates": "*"
   }
 }

@@ -11,10 +11,12 @@ Ember.ArrayProxy.prototype.flatten = Array.prototype.flatten = function() {
     return r;
 };
 
-
 // App
 //=================================
 
 App = Ember.Application.create();
 
-App.IndexRoute = Ember.Route.extend({});
+
+App.Router.map(function () {
+	this.resource('newlocation', { path: 'location/new' });
+});
