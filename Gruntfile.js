@@ -15,11 +15,11 @@ module.exports = function(grunt) {
 
 		concat: {
 			js: {
-				src: 'src/js/*.js',
+				src: 'src/js/**/*.js',
 				dest: 'resources/app.js'
 			},
 			css: {
-				src: 'src/css/*.css',
+				src: 'src/css/**/*.css',
 				dest: 'resources/all.css'
 			}
 		},
@@ -38,6 +38,15 @@ module.exports = function(grunt) {
 			css:{
 				src: 'resources/all.css',
 				dest: 'resources/public/all.min.css'
+			}
+		},
+
+		shell: {
+			rmtmp: {
+				command: "rm -rf resources"
+			},
+			mkresources: {
+				command: "mkdir -p resources/public"
 			}
 		},
 
@@ -60,7 +69,9 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-concat');
 	grunt.loadNpmTasks('grunt-css');
+	grunt.loadNpmTasks('grunt-shell');
  
-  grunt.registerTask('heroku', ['emberTemplates', 'concat', 'uglify', 'cssmin']);  
+	grunt.registerTask('clean', ['shell:rmtmp', 'shell:mkresources']);
+  grunt.registerTask('heroku', ['clean', 'emberTemplates', 'concat', 'uglify', 'cssmin']);  
 	grunt.registerTask('default', ['heroku']);
 };
