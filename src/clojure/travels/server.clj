@@ -12,6 +12,11 @@
             [cemerick.friend [workflows :as workflows]
                              [credentials :as creds]]))
 
+
+(defroutes api-router
+  (POST "/api/locations" {body :body} (api/create-location body))
+  (GET "/api/locations/:id" [id]      (api/get-location id)))
+
 (defroutes dev-router
   (GET "/" [] (slurp "src/html/index-dev.html"))
   (GET "/templates.js" [] (slurp "resources/templates.js"))

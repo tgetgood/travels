@@ -36,7 +36,10 @@ App.NewlocationRoute = Ember.Route.extend({
 			this.get('store').
 				createRecord('location', this.controller.location).
 				save();
-			
+		},
+		clickMe: function() {
+			var data = this.get('store').find('location', 1);
+			console.log(data.name);
 		}
 	}
 });
