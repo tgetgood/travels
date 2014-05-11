@@ -18,7 +18,7 @@
   (route/files "" {:root "src"} ))
 
 (defroutes prod-router
-  (GET "/" [] (slurp ""))
+  (GET "/" [] (slurp "src/html/index.html"))
   (route/resources ""))
 
 (defn -main
