@@ -15,8 +15,9 @@
 
 
 (defroutes api-router
-  (POST "/api/sights" {body :body} (api/create-sight body))
-  (GET "/api/sights/:id" [id]      (api/get-sight id)))
+  (POST "/api/sights"    {body :body} (api/create-sight body))
+  (GET "/api/sights/:id" [id]         (api/get-sight id))
+  (GET "/api/sights"     []           (api/get-sights)))
 
 (defroutes dev-router
   (GET "/" [] (slurp "src/html/index-dev.html"))
@@ -29,7 +30,7 @@
 
 (defroutes main-router
   (->
-   api
+   api-router
    ch/api
    wrap-json-body
    wrap-json-response)

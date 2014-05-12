@@ -1,5 +1,6 @@
 (ns travels.api
-  (:require [korma.core :as k :refer :all]))
+  (:require [travels.util :refer [ember-response]]
+            [korma.core :as k :refer :all]))
 
 (defentity sights
   (pk :id)
@@ -8,6 +9,17 @@
 (defn create-sight
   [data]
   ;; Validate!!!!!
-  (insert sights
-    (values data)))
+  (ember-response :id
+   (insert sights
+     (values data))))
 
+(defn get-sights
+  []
+  (ember-response :sights
+    (select sights)))
+
+(defn get-sight
+  [id]
+  (ember-response :sight
+  (select sights
+    (where (:id id)))))
