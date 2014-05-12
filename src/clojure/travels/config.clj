@@ -11,6 +11,13 @@
        val
        default)))
 
-(def dev-server? (= (getenv :dev-mode "") "TRUE"))
 
 (def port (edn/read-string (getenv :port "8000")))
+
+(def dev-server? (= (getenv :dev-mode "") "TRUE"))
+
+(def devdb? (= (getenv :dev-mode "") "TRUE"))
+
+(def proddb? (= (getenv :prod-mode "") "TRUE"))
+
+(def db-uri (getenv :heroku-postgresql-maroon-url "postgres://thomas:@localhost:5432/traveldb"))

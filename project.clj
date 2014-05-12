@@ -17,6 +17,7 @@
 
                  [org.clojure/java.jdbc "0.3.3"]
                  [postgresql "9.3-1101.jdbc4"]
+                 [korma "0.3.1"]
 
                  [com.cemerick/friend "0.2.0"]
                  [ring "1.2.2"]
