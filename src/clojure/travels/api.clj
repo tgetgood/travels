@@ -1,9 +1,12 @@
 (ns travels.api
   (:require [travels.util :refer [ember-response]]
+            [travels.database :refer [db]]
+            [clojure.edn :as edn]
             [korma.core :as k :refer :all]))
 
 (defentity sights
   (pk :id)
+  (database db)
   (entity-fields :name :description :flagship_photo :additional_photos))
 
 (defn create-sight
@@ -11,7 +14,7 @@
   ;; Validate!!!!!
   (ember-response :id
    (insert sights
-     (values data))))
+     (values (get data "sight")))))
 
 (defn get-sights
   []
@@ -22,4 +25,4 @@
   [id]
   (ember-response :sight
   (select sights
-    (where (:id id)))))
+    (where {:id (edn/read-string id)}))))

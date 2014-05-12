@@ -31,9 +31,9 @@
 (defroutes main-router
   (->
    api-router
-   ch/api
+   wrap-json-response
    wrap-json-body
-   wrap-json-response)
+   ch/api)
   (if config/dev-server?
     dev-router
     prod-router))

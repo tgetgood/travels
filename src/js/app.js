@@ -16,36 +16,43 @@ Ember.ArrayProxy.prototype.flatten = Array.prototype.flatten = function() {
 
 var App = Ember.Application.create();
 
-App.Location = DS.Model.extend({
-	name:    DS.attr("string"),
-	address: DS.attr("string")
+DS.RESTAdapter.reopen({
+  namespace: 'api'
+});
+
+App.Sight = DS.Model.extend({
+	name:            DS.attr("string"),
+	address:         DS.attr("string") //,
+//	description:     DS.attr("string"),
+//	location:        DS.attr("string"),
+//	flagship_photo:  DS.attr("string")
 });
 
 App.Router.map(function () {
-	this.resource('locations', function () {
-		this.resource('location', { path: "/:location_id" });
+	this.resource('sights', function () {
+		this.resource('sight', { path: "/:sight_id" });
 		this.resource('edit');
 	});
-	this.resource("newlocation", { path: "locations/new" });
+	this.resource("newsight", { path: "sights/new" });
 });
 
 
-App.NewlocationRoute = Ember.Route.extend({
+App.NewsightRoute = Ember.Route.extend({
 	actions: {
 		save: function () {
 			this.get('store').
-				createRecord('location', this.controller.location).
+				createRecord('sight', this.controller.sight).
 				save();
 		},
 		clickMe: function() {
-			var data = this.get('store').find('location', 1);
+			var data = this.get('store').find('sight', 0);
 			console.log(data.name);
 		}
 	}
 });
 
-App.NewlocationController = Ember.ObjectController.extend({
-	location: {
+App.NewsightController = Ember.ObjectController.extend({
+	sight: {
 		name: "",
 		address: ""
 	}
