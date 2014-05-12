@@ -44,3 +44,4 @@
    db
    (apply (partial sql/create-table-ddl :sights) sight-schema))) 
 
+(sql/db-do-commands db (sql/drop-table-ddl :sights))

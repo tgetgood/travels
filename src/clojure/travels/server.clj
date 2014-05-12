@@ -1,5 +1,6 @@
 (ns travels.server
   (:require [travels.config :as config]
+            [travels.api :as api]
 
             [org.httpkit.server :refer [run-server]]
             [ring.middleware.json :refer [wrap-json-response wrap-json-body]]
@@ -14,8 +15,8 @@
 
 
 (defroutes api-router
-  (POST "/api/locations" {body :body} (api/create-location body))
-  (GET "/api/locations/:id" [id]      (api/get-location id)))
+  (POST "/api/sights" {body :body} (api/create-sight body))
+  (GET "/api/sights/:id" [id]      (api/get-sight id)))
 
 (defroutes dev-router
   (GET "/" [] (slurp "src/html/index-dev.html"))
@@ -26,12 +27,22 @@
   (GET "/" [] (slurp "src/html/index.html"))
   (route/resources ""))
 
+(defroutes main-router
+  (->
+   api
+   ch/api
+   wrap-json-body
+   wrap-json-response)
+  (if config/dev-server?
+    dev-router
+    prod-router))
+
 (defn -main
   [& args]
   (let [opts {:port config/port}
         handler (if config/dev-server?
-                  (reload/wrap-reload #'dev-router)
-                  prod-router)]
+                  (reload/wrap-reload #'main-router)
+                  main-router)]
     (run-server handler opts)
     (println (str "Server running on port " config/port))))
            
