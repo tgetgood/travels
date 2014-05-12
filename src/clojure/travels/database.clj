@@ -4,6 +4,19 @@
             [korma.db :refer [defdb postgres]]
             [travels.config :as config]))
 
+(def sight-schema
+  {:name              :text
+   :id                :bigserial
+   :description       :text
+   :address           :text
+   :geocoordinates   :point
+   :location          :text
+   :flagship_photo    :text
+   :additional_photos "text[]"
+   :created           :timestamptz
+   :last_modified     :timestamptz})
+   
+
 (def db
   (postgres
    (cond config/devdb?
@@ -26,8 +39,8 @@
            (throw (Exception. "Don't know which database to connect to.")))))
 
 (defn -create-tables!
-  [db]
+  []
   (sql/db-do-commands
    db
-   (sql/create-table-ddl :locations [:name :text])))
+   (apply (partial sql/create-table-ddl :sights) sight-schema))) 
 
