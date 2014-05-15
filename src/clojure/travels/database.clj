@@ -7,9 +7,7 @@
 
 ;;;;; DB init.
 
-(def db-name "travelsdb")
-
-(defn init!
+(defn- init
   []
   (cond config/devdb?
           (mg/connect)
@@ -17,4 +15,6 @@
           (mg/connect-via-uri config/db-uri)
         :else
           (throw (Exception. "Don't know how to connect to database."))))
+
+(def db (mg/get-db (init) "travelsdb"))
             
