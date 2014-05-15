@@ -1,6 +1,7 @@
 (ns travels.server
   (:require [travels.config :as config]
             [travels.api :as api]
+            [travels.database :as db]
 
             [org.httpkit.server :refer [run-server]]
             [ring.middleware.json :refer [wrap-json-response wrap-json-body]]
@@ -40,6 +41,9 @@
 
 (defn -main
   [& args]
+
+  (db/init!)
+
   (let [opts {:port config/port}
         handler (if config/dev-server?
                   (reload/wrap-reload #'main-router)

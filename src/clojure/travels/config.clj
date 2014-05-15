@@ -20,4 +20,4 @@
 
 (def proddb? (= (getenv :prod-mode "") "TRUE"))
 
-(def db-uri (getenv :heroku-postgresql-maroon-url "postgres://thomas:@localhost:5432/traveldb"))
+(def db-uri (getenv :mongohq-url "postgres://thomas:@localhost:5432/traveldb"))
