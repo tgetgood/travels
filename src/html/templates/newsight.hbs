@@ -9,7 +9,7 @@
       Geo-Coordinates {{input type="text" value=sight.geocoordinates}}
       Address     {{textarea value=sight.address}}
       More Photos
-      {{input type="file" value=current_image}}
+      {{input type="file" value=current_image multi="multi"}}
       <button class="pure-button img-submit" {{action 'addImage' current_image}}>Add Image</button>
       <ul class="image-list">
         {{#each sight.additional_photos}}

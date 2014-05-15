@@ -3,16 +3,19 @@
             [travels.database :refer [db]]
             [monger.collection :as mc]
             [monger.query :as q]
+            [monger.joda-time]
             [clojure.edn :as edn]
             [clj-time.core :as t]))
 
 (def sights-coll "sights")
 
 (defn create-sight
-  [data]
-  ;; Validate!!!!!
+  [body]
+  ; Validate!!!!!
+  (println body)
   (ember-response :id
-   (let [body (assoc data :created (t/now))]
+   (let [data (assoc (get body "sight") :created (t/now))]
+     (println data)
      (mc/ensure-index db sights-coll (array-map :id 1) {:unique true})
      (mc/ensure-index db sights-coll (array-map :location 1) {})
      (let [res (mc/insert-and-return db sights-coll data)
@@ -25,7 +28,7 @@
   []
   (ember-response :sights
     (q/with-collection db sights-coll
-      (q/find)
+      (q/find {})
       (q/fields {:_id 0}))))
 
 (defn get-sight

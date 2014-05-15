@@ -11,6 +11,10 @@ Ember.ArrayProxy.prototype.flatten = Array.prototype.flatten = function() {
     return r;
 };
 
+Ember.TextSupport.reopen({
+    attributeBindings: ['multi']
+});
+
 // App
 //=================================
 
@@ -20,11 +24,20 @@ DS.RESTAdapter.reopen({
   namespace: 'api'
 });
 
+App.Photo = DS.Model.extend({
+	link: DS.attr("string"),
+	created: DS.attr("date"),
+	primary: DS.attr("boolean")
+});
+	
+
 App.Sight = DS.Model.extend({
 	name:            DS.attr("string"),
-	address:         DS.attr("string") //,
-//	description:     DS.attr("string"),
-//	location:        DS.attr("string"),
+	address:         DS.attr("string"),
+	description:     DS.attr("string"),
+	location:        DS.attr("string"),
+	geocoordinates:  DS.attr("string"),
+	photos:          DS.hasMany('photo')
 //	flagship_photo:  DS.attr("string")
 });
 
