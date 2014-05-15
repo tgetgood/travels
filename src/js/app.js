@@ -44,16 +44,24 @@ App.NewsightRoute = Ember.Route.extend({
 				createRecord('sight', this.controller.sight).
 				save();
 		},
-		clickMe: function() {
-			var data = this.get('store').find('sight', 0);
-			console.log(data.name);
+		addImage: function (path) {
+			this.controller.addPhoto(path);
+			this.controller.resetCurrentImage();
 		}
 	}
 });
 
 App.NewsightController = Ember.ObjectController.extend({
 	sight: {
-		name: "",
-		address: ""
+		additional_photos: [{path:"testy"}]
+	},
+	current_image: "",
+	resetCurrentImage: function () {
+		this.set("current_image", "");
+	},
+	addPhoto: function (path) {
+		this.sight.additional_photos.push({path:path});
+		this.set('sight', this.sight);
+		console.log(this.sight);
 	}
 });

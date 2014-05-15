@@ -1,11 +1,23 @@
 <div id="creation-from" class="pure-gr">
   <form class="pure-form pure-form-stacked">
     <fieldset>
-      Name    {{input type="text" value=sight.name}}
-      Address {{input type="text" value=sight.address}}
+      Name        {{input type="text"  value=sight.name}}
+      Best Photo  {{input type="file" value=sight.flagship_photo}}
+      <br>
+      Description {{textarea value=sight.description}}
+      Location    {{input type="text" value=sight.location}}
+      Geo-Coordinates {{input type="text" value=sight.geocoordinates}}
+      Address     {{textarea value=sight.address}}
+      More Photos
+      {{input type="file" value=current_image}}
+      <button class="pure-button img-submit" {{action 'addImage' current_image}}>Add Image</button>
+      <ul class="image-list">
+        {{#each sight.additional_photos}}
+          <li>{{path}}</li>
+        {{/each}}
+      </ul>
+      <br>
       <button class="pure-button pure-button-primary" {{action 'save'}}>Save</button>
     </fieldset>
-
-    <button {{action 'clickMe'}}>Click Me</button>
   </form>
 </div>
