@@ -25,9 +25,10 @@ DS.RESTAdapter.reopen({
 });
 
 App.Photo = DS.Model.extend({
-	link: DS.attr("string"),
+	link:    DS.attr("string"),
 	created: DS.attr("date"),
-	primary: DS.attr("boolean")
+	primary: DS.attr("boolean"),
+	sight:   DS.belongsTo("sight")
 });
 	
 
@@ -38,43 +39,46 @@ App.Sight = DS.Model.extend({
 	location:        DS.attr("string"),
 	geocoordinates:  DS.attr("string"),
 	photos:          DS.hasMany('photo')
-//	flagship_photo:  DS.attr("string")
 });
 
 App.Router.map(function () {
 	this.resource('sights', function () {
 		this.resource('sight', { path: "/:sight_id" });
-		this.resource('edit');
+		this.route('edit');
 	});
-	this.resource("newsight", { path: "sights/new" });
+	this.route("newsight", { path: "sights/new" });
 });
 
 
 App.NewsightRoute = Ember.Route.extend({
 	actions: {
 		save: function () {
-			this.get('store').
-				createRecord('sight', this.controller.sight).
-				save();
-		},
-		addImage: function (path) {
-			this.controller.addPhoto(path);
-			this.controller.resetCurrentImage();
+			var that = this;
+			var sight = this.get('store').
+				createRecord('sight', this.controller.sight);
+			sight.save().then(function (sight) {
+
+				var p = that.get('store').createRecord('photo', {
+					primary: true, link:"first", sight:sight});
+				 
+				p.save().then(function (p) {
+					console.log(sight)
+					sight.get("photos").createRecord('photo', p);
+					sight.save();
+				});
+				// var p2 = that.get('store').createRecord('photo', {
+				// 	primary:false, link:"second", sight:sight});
+				
+				// p2.save();
+				// sight.get("photos").addObject(p2);
+				
+
+				
+			});
 		}
 	}
 });
 
 App.NewsightController = Ember.ObjectController.extend({
-	sight: {
-		additional_photos: [{path:"testy"}]
-	},
-	current_image: "",
-	resetCurrentImage: function () {
-		this.set("current_image", "");
-	},
-	addPhoto: function (path) {
-		this.sight.additional_photos.push({path:path});
-		this.set('sight', this.sight);
-		console.log(this.sight);
-	}
+	sight: {}
 });

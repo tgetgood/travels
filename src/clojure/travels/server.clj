@@ -16,7 +16,11 @@
 (defroutes api-router
   (POST "/api/sights"    {body :body} (api/create-sight body))
   (GET "/api/sights/:id" [id]         (api/get-sight id))
-  (GET "/api/sights"     []           (api/get-sights)))
+  (GET "/api/sights"     []           (api/get-sights))
+
+  (POST "/api/photos"    {body :body} {:status 200 :body {:photo (assoc (get body "photo") :id 12)}})
+  (GET "/api/photos/:id" [id]         {:status 200 :body {}}))
+  
 
 (defroutes dev-router
   (GET "/" [] (slurp "src/html/index-dev.html"))

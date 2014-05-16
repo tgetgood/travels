@@ -8,7 +8,7 @@
   [prop call]
   `(try
     (if-let [v# ~call]
-      {:body {~prop v#}}
+      {:status 200 :body {~prop v#}}
       {:status 404})
     (catch Exception e#
       {:status 503 :body (.toString e#)})))

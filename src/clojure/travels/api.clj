@@ -13,15 +13,14 @@
   [body]
   ; Validate!!!!!
   (println body)
-  (ember-response :id
+  (ember-response :sight
    (let [data (assoc (get body "sight") :created (t/now))]
-     (println data)
      (mc/ensure-index db sights-coll (array-map :id 1) {:unique true})
      (mc/ensure-index db sights-coll (array-map :location 1) {})
      (let [res (mc/insert-and-return db sights-coll data)
            id  (.toString (:_id res))]
        (mc/update db sights-coll data (assoc data :id id))
-       {:status 200 :body {:id id}}))))
+       (assoc data :id id)))))
                       
 
 (defn get-sights
