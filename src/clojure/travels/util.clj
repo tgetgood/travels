@@ -13,3 +13,15 @@
     (catch Exception e#
       (println (.printStackTrace e#))
       {:status 503 :body (.toString e#)})))
+
+
+(def irregular-plurals
+  {:person :people})
+
+(defn plural
+  "Returns the plural of the given keyword. Please make sure the arg
+  is a keyword."
+  [sing]
+  (if (contains? irregular-plurals sing)
+    (get irregular-plurals sing)
+    (keyword (str (name sing) "s"))))

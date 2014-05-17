@@ -27,7 +27,7 @@ DS.RESTAdapter.reopen({
 App.Photo = DS.Model.extend({
 	link:    DS.attr("string"),
 	created: DS.attr("date"),
-	primary: DS.attr("boolean"),
+	flagship: DS.attr("boolean"),
 	sight:   DS.belongsTo("sight")
 });
 	

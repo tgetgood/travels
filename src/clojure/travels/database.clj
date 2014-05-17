@@ -20,9 +20,9 @@
 
 (def photo-schema
   {:id            :bigserial
-   :sight_id      :bigint
+   :sight         :bigint
    :link          :text
-   :primary_photo :bool
+   :flagship      :bool
    :created       :timestamptz})
 
 

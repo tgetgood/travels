@@ -1,6 +1,7 @@
 (ns travels.server
   (:require [travels.config :as config]
             [travels.api :as api]
+            [travels.util :refer [plural]]
             [org.httpkit.server :refer [run-server]]
             [ring.middleware.json :refer [wrap-json-response wrap-json-body]]
             [ring.middleware.reload :as reload]
@@ -13,13 +14,25 @@
                              [credentials :as creds]]))
 
 
-(defroutes api-router
-  (POST "/api/sights"    {body :body} (api/create-sight body))
-  (GET "/api/sights/:id" [id]         (api/get-sight id))
-  (GET "/api/sights"     []           (api/get-sights))
+(defmacro generate-ember-routes
+  [ent]
+  `(defroutes ~(symbol (str (name ent) "-routes"))
+     (POST ~(str "/api/" (name (plural ent)))
+           {body# :body}
+           (~(symbol "api" (str "create-" (name ent))) body#))
+     (GET  ~(str "/api/" (name (plural ent)) "/:id")
+           [id#]
+           (~(symbol "api" (str "get-" (name ent))) id#))
+     (GET  ~(str "/api/" (name (plural ent)))
+           []
+           (~(symbol "api" (str "get-" (name (plural ent))))))))
+  
+(generate-ember-routes :sight)
+(generate-ember-routes :photo)
 
-  (POST "/api/photos"    {body :body} (api/create-photo body))
-  (GET "/api/photos/:id" [id]         {:status 200 :body {}}))
+(defroutes api-router
+  sight-routes
+  photo-routes)
   
 
 (defroutes dev-router
