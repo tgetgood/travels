@@ -1,49 +1,64 @@
 (ns travels.api
   (:require [travels.util :refer [ember-response]]
-            [travels.database :refer [db]]
-            [monger.collection :as mc]
-            [monger.query :as q]
-            [monger.joda-time]
-            [clojure.edn :as edn]
-            [clj-time.core :as t]))
+            [travels.database :as db]
+            [korma.core :refer :all]
+            [clj-time.core :as t]
+            [clj-time.coerce :as tc]
+            [clojure.edn :as edn]))
 
-(def sights-coll "sights")
-(def photos-coll "photos")
+(def irregular-plurals
+  {:person :people})
 
-(defn create-sight
-  [body]
-  ; Validate!!!!!
-  (ember-response :sight
-   (let [data (assoc (get body "sight") :created (t/now))]
-     (mc/ensure-index db sights-coll (array-map :id 1) {:unique true})
-     (mc/ensure-index db sights-coll (array-map :location 1) {})
-     (let [res (mc/insert-and-return db sights-coll data)
-           id  (.toString (:_id res))]
-       (mc/update db sights-coll data (assoc data :id id))
-       (assoc data :id id)))))
-                      
+(defn plural
+  "Returns the plural of the given keyword. Please make sure the arg
+  is a keyword."
+  [sing]
+  (if (contains? irregular-plurals sing)
+    (get irregular-plurals sing)
+    (keyword (str (name sing) "s"))))
 
-(defn get-sights
-  []
-  (ember-response :sights
-    (q/with-collection db sights-coll
-      (q/find {})
-      (q/fields {:_id 0}))))
 
-(defn get-sight
-  [id]
-  (ember-response :sight
-    (q/with-collection db sights-coll
-      (q/find {:id (edn/read-string id)})
-      (q/fields {:_id 0}))))
+(defmacro generate-api
+  "Takes a keyword corresponding to a korma entity and defines the
+  relevant CRUD endpoints. Functions currently are (for entity :user)
 
-(defn create-photo
-  [body]
-  (ember-response :photo
-    (let [data (assoc (get body "photo") :created (t/now))]
-      (mc/ensure-index db photos-coll (array-map :id 1) {:unique true})
-      (mc/ensure-index db photos-coll (array-map :sight 1))
-      (let [res (mc/insert-and-return db photos-coll data)
-            id (.toString (:_id res))]
-        (mc/update db photos-coll data (assoc data :id id))
-        (assoc data :id id)))))
+  create-user [data]
+  get-user [id]
+  get-users []
+
+  TODO: I don't like the magic strings for namespacing (str
+  \"db/\" (name entity)). There's got to be a better way..."
+  [entity]
+  ;; create
+  `(defn ~(symbol (str "create-" (name entity)))
+     [body#]
+     (ember-response ~entity
+       (let [data# (assoc (get body# ~(str entity)) :created (tc/to-timestamp (t/now)))]
+         (insert ~(symbol (str "db/" (name entity))) 
+           (values data#)))))
+  ;; read
+  `(defn ~(symbol (str "get-" (name entity)))
+    [id#]
+    (ember-response ~entity
+      (select ~(symbol (str "db/" (name entity)))
+        (where {:id (edn/read-string id#)}))))
+  `(defn ~(symbol (str "get-" (name (plural entity))))
+    []
+    (ember-response ~(plural entity)
+      (select ~(symbol (str "db/" (name entity))))))
+  ;; update
+
+  ;; delete
+  
+)
+
+
+
+(generate-api :sight)
+
+
+ 
+
+
+            
+

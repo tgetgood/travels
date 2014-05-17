@@ -11,4 +11,5 @@
       {:status 200 :body {~prop v#}}
       {:status 404})
     (catch Exception e#
+      (println (.printStackTrace e#))
       {:status 503 :body (.toString e#)})))
