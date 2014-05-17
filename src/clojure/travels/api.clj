@@ -6,6 +6,13 @@
             [clj-time.coerce :as tc]
             [clojure.edn :as edn]))
 
+(defn maybe-convert
+  "This is a hack to typecast string ids from ember into bigint ids
+  for postgres. There's got to be a cleaner way..."
+  [m]
+  (if-let [num (get m "sight")]
+    (assoc m "sight" (Integer. num))
+    m))
 
 
 (defmacro generate-api
@@ -15,6 +22,8 @@
   create-user [data]
   get-user [id]
   get-users []
+  update-user [request]
+  delete-user [id]
 
   TODO: I don't like the magic strings for namespacing (str
   \"db/\" (name entity)). There's got to be a better way..."
@@ -23,28 +32,37 @@
      ;; create
      (defn ~(symbol (str "create-" (name entity)))
        [body#]
-       (println body#)
        (ember-response ~entity
-         (let [data# (assoc (get body# ~(str (name entity))) "created" (tc/to-timestamp (t/now)))]
-           (insert ~(symbol (str "db/" (name entity))) 
+         (let [inner# (maybe-convert (get  body# ~(str (name entity))))
+               data# (assoc inner# "created" (tc/to-timestamp (t/now)))]
+           (insert ~(symbol "db" (str (name entity))) 
              (values data#)))))
      ;; read
      (defn ~(symbol (str "get-" (name entity)))
        [id#]
        (ember-response ~entity
-         (select ~(symbol (str "db/" (name entity)))
+         (select ~(symbol "db" (str (name entity)))
            (where {:id (edn/read-string id#)}))))
      
      (defn ~(symbol (str "get-" (name (plural entity))))
        []
        (ember-response ~(plural entity)
-         (select ~(symbol (str "db/" (name entity))))))
+         (select ~(symbol "db" (str (name entity))))))
      ;; update
-     
+     (defn ~(symbol (str "update-" (name entity)))
+       [req#]
+       (let [{:keys [id#]} (:route-params req#)
+             body#         (maybe-convert (get (:body req#) ~(str (name entity))))
+             data#         (assoc body# "last_modified" (tc/to-timestamp (t/now)))]
+         (ember-response ~entity
+                         ()))) ;; do update
      ;; delete
+     (defn ~(symbol (str "delete-" (name entity)))
+       [id#]
+       (ember-response ~entity
+                       ())) ;; do something
 ))
 
 (generate-api :sight)
 (generate-api :photo)
 
-(create-sight {"sight" {"name" "afdf"}})

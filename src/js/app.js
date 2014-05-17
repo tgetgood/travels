@@ -38,7 +38,7 @@ App.Sight = DS.Model.extend({
 	description:     DS.attr("string"),
 	location:        DS.attr("string"),
 	geocoordinates:  DS.attr("string"),
-	photos:          DS.hasMany('photo', {inverse: 'sight', nonNull: true})
+	photos:          DS.hasMany('photo', {inverse: 'sight', type: 'number'})
 });
 
 App.Router.map(function () {
@@ -64,11 +64,9 @@ App.NewsightRoute = Ember.Route.extend({
 					sight.get("photos").addObject(p);
 
 					p.save().then(function (p) {
-						console.log(sight.get('photos'));
-//						sight.photos.push(p);
-	//					sight.get("photos").addObject(p);
+						//						sight.photos.push(p);
+						//					sight.get("photos").addObject(p);
 				
-						console.log(sight.photos);
 						sight.save();
 					});
 				// var p2 = that.get('store').createRecord('photo', {

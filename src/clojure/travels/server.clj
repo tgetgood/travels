@@ -15,25 +15,36 @@
 
 
 (defmacro generate-ember-routes
+  "Routing magic."
   [ent]
-  `(defroutes ~(symbol (str (name ent) "-routes"))
-     (POST ~(str "/api/" (name (plural ent)))
-           {body# :body}
-           (~(symbol "api" (str "create-" (name ent))) body#))
-     (GET  ~(str "/api/" (name (plural ent)) "/:id")
-           [id#]
-           (~(symbol "api" (str "get-" (name ent))) id#))
-     (GET  ~(str "/api/" (name (plural ent)))
-           []
-           (~(symbol "api" (str "get-" (name (plural ent))))))))
+  `(do
+     (defroutes route# 
+       (POST    ~(str "/api/" (name (plural ent)))
+                {body# :body}
+                (~(symbol "api" (str "create-" (name ent))) body#))
+       
+       (GET     ~(str "/api/" (name (plural ent)) "/:id")
+                [id#]
+                (~(symbol "api" (str "get-" (name ent))) id#))
+
+       (GET     ~(str "/api/" (name (plural ent)))
+                []
+                (~(symbol "api" (str "get-" (name (plural ent))))))
+
+       (PUT     ~(str "/api/" (name (plural ent)) "/:id")
+                [req#]
+                (~(symbol "api" (str "update-" (name ent))) req#))
+
+       (DELETE  ~(str "/api/" (name (plural ent)) "/:id")
+                [id#]
+                (~(symbol "api" (str "delete-" (name ent))) id#)))
+     route#))
   
-(generate-ember-routes :sight)
-(generate-ember-routes :photo)
 
 (defroutes api-router
-  sight-routes
-  photo-routes)
-  
+  (generate-ember-routes :sight)
+  (generate-ember-routes :photo)
+ ) 
 
 (defroutes dev-router
   (GET "/" [] (slurp "src/html/index-dev.html"))
@@ -49,6 +60,7 @@
    api-router
    wrap-json-response
    wrap-json-body
+   api/json-type-convert-handler
    ch/api)
   (if config/dev-server?
     dev-router

@@ -65,12 +65,12 @@
   (pk :id)
   (database db)
   (table :sights)
-  (entity-fields :name :description :photos)
-  (has-many photo {:fk :sight_id}))
+;  (entity-fields :name :description :photos)
+  (has-many photo {:fk :sight}))
 
 (defentity photo
   (pk :id)
   (database db)
   (table :photos)
   (belongs-to sight))
- 
+
