@@ -60,7 +60,6 @@
    api-router
    wrap-json-response
    wrap-json-body
-   api/json-type-convert-handler
    ch/api)
   (if config/dev-server?
     dev-router

@@ -55,12 +55,22 @@
              body#         (maybe-convert (get (:body req#) ~(str (name entity))))
              data#         (assoc body# "last_modified" (tc/to-timestamp (t/now)))]
          (ember-response ~entity
-                         ()))) ;; do update
+           (do
+             (update ~(symbol "db" (str (name entity)))
+                     (set-fields data#)
+                     (where {:id id#}))
+             data#))))
+                         
      ;; delete
      (defn ~(symbol (str "delete-" (name entity)))
        [id#]
        (ember-response ~entity
-                       ())) ;; do something
+         (let [old# (select ~(symbol "db" (str (name entity)))
+                            (where {:id id#}))]
+           (delete ~(symbol "db" (str (name entity)))
+                   (where {:id id#}))
+           old#)))
+           
 ))
 
 (generate-api :sight)
