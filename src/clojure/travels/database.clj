@@ -72,5 +72,9 @@
   (pk :id)
   (database db)
   (table :photos)
+  (prepare (fn [p]
+             (if-let [num (get p "sight")]
+               (assoc p "sight" (Integer. num))
+               p)))
   (belongs-to sight))
 

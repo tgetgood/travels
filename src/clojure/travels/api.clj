@@ -6,15 +6,6 @@
             [clj-time.coerce :as tc]
             [clojure.edn :as edn]))
 
-(defn maybe-convert
-  "This is a hack to typecast string ids from ember into bigint ids
-  for postgres. There's got to be a cleaner way..."
-  [m]
-  (if-let [num (get m "sight")]
-    (assoc m "sight" (Integer. num))
-    m))
-
-
 (defmacro generate-api
   "Takes a keyword corresponding to a korma entity and defines the
   relevant CRUD endpoints. Functions currently are (for entity :user)
@@ -33,7 +24,7 @@
      (defn ~(symbol (str "create-" (name entity)))
        [body#]
        (ember-response ~entity
-         (let [inner# (maybe-convert (get  body# ~(str (name entity))))
+         (let [inner# (get  body# ~(str (name entity)))
                data# (assoc inner# "created" (tc/to-timestamp (t/now)))]
            (insert ~(symbol "db" (str (name entity))) 
              (values data#)))))
@@ -52,7 +43,7 @@
      (defn ~(symbol (str "update-" (name entity)))
        [req#]
        (let [{:keys [id#]} (:route-params req#)
-             body#         (maybe-convert (get (:body req#) ~(str (name entity))))
+             body#         (get (:body req#) ~(str (name entity)))
              data#         (assoc body# "last_modified" (tc/to-timestamp (t/now)))]
          (ember-response ~entity
            (do
