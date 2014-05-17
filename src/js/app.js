@@ -38,7 +38,7 @@ App.Sight = DS.Model.extend({
 	description:     DS.attr("string"),
 	location:        DS.attr("string"),
 	geocoordinates:  DS.attr("string"),
-	photos:          DS.hasMany('photo')
+	photos:          DS.hasMany('photo', {inverse: 'sight', nonNull: true})
 });
 
 App.Router.map(function () {
@@ -55,17 +55,22 @@ App.NewsightRoute = Ember.Route.extend({
 		save: function () {
 			var that = this;
 			var sight = this.get('store').
-				createRecord('sight', this.controller.sight);
-			sight.save().then(function (sight) {
+				createRecord('sight', this.controller.sight).
+				save().then(function (sight) {
+					sight.photos = [];
+					var p = that.get('store').createRecord('photo', {
+						primary: true, link:"first", sight:sight});
 
-				var p = that.get('store').createRecord('photo', {
-					primary: true, link:"first", sight:sight});
-				 
-				p.save().then(function (p) {
-					console.log(sight)
-					sight.get("photos").createRecord('photo', p);
-					sight.save();
-				});
+					sight.get("photos").addObject(p);
+
+					p.save().then(function (p) {
+						console.log(sight.get('photos'));
+//						sight.photos.push(p);
+	//					sight.get("photos").addObject(p);
+				
+						console.log(sight.photos);
+						sight.save();
+					});
 				// var p2 = that.get('store').createRecord('photo', {
 				// 	primary:false, link:"second", sight:sight});
 				
@@ -74,11 +79,13 @@ App.NewsightRoute = Ember.Route.extend({
 				
 
 				
-			});
+				});
 		}
 	}
 });
 
 App.NewsightController = Ember.ObjectController.extend({
-	sight: {}
+	sight: {
+	 // photos: []
+	}
 });

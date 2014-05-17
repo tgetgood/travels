@@ -18,7 +18,7 @@
   (GET "/api/sights/:id" [id]         (api/get-sight id))
   (GET "/api/sights"     []           (api/get-sights))
 
-  (POST "/api/photos"    {body :body} {:status 200 :body {:photo (assoc (get body "photo") :id 12)}})
+  (POST "/api/photos"    {body :body} (api/create-photo body))
   (GET "/api/photos/:id" [id]         {:status 200 :body {}}))
   
 
