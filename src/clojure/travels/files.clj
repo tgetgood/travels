@@ -11,5 +11,5 @@
           filename (str image-dir "/" (digest/md5 data))]
       (with-open [w (clojure.java.io/output-stream filename)]
         (.write w (.bytes (:body req)))
-        {:filename filename}))))
+        {:url filename}))))
 

@@ -53,21 +53,35 @@ App.Router.map(function () {
 App.NewsightRoute = Ember.Route.extend({
 	actions: {
 		save: function () {
-			var that = this;
+			var unfinished = this.controller.get("photo_uploads").
+				filter(function (item, i, elem) {
+					return !item.get("done");
+			});
+			
+			console.log(unfinished);
+			if (unfinished.length > 0) {
+				alert("Please wait for image uploads.");
+				return;
+			}
+			
+			var app = this;
+			
 			var sight = this.get('store').
 				createRecord('sight', this.controller.sight).
 				save().
 				then(function (sight) {
-					sight.photos = [];
-					var p = that.get('store').createRecord('photo', {
-						primary: true, link:"first", sight:sight});
-					
-					sight.get("photos").addObject(p);
-					
-					p.save().then(function (p) {
-						//						sight.photos.push(p);
-						//					sight.get("photos").addObject(p);
-						
+					var photosToStore = app.controller.get("photo_uploads").
+						filter(function (item, i, elem) {
+							return (item.send && item.link !== "");
+						}).map(function (item, i, elem) {
+							return app.get('store').
+								createRecord('photo', elem).
+								save().then(function (photo) {
+									sight.get("photos").addObject(photo);
+								});
+						});
+
+					Promise.all(photosToStore).then(function (res) {
 						sight.save();
 					});
 				});
@@ -128,7 +142,6 @@ App.NewsightView = Ember.View.extend({
 				done: false,
 			});
 
-			var index = app.controller.get("photo_uploads").length || -1;
 			// Using set forces the UI to update.
 			app.controller.set('photo_uploads', app.controller.get('photo_uploads').concat(image));
 			
@@ -144,21 +157,22 @@ App.NewsightView = Ember.View.extend({
 							if (isNaN(feedback) || Ember.typeOf(feedback) !== "number") {
 								return;
 							}
-	
+							// Ghetto progress bar
 							image.set("pip", Array(Math.max(0, feedback)));
 							image.set("togo",  Array(Math.max(0, 10 - feedback)));
-						}, false); // progressbar
+						}, false); 
           }
           return myXhr;
         },
         //Ajax events
         success: completeHandler = function(data) {
-					var link = data.file.link;
+					console.log(data)
+					var link = data.file.url;
 					image.set("link", link);
 					image.set("done", true);
         },
         error: errorHandler = function() {
-//					image.set("show", false);
+					image.set("show", false);
 					image.set("send", false);
 					image.set("done", true);
         },

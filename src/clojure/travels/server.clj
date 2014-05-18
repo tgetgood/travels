@@ -69,7 +69,9 @@
    wrap-json-body
    ch/api)
   (if config/dev-server?
-    dev-router
+    (->
+     dev-router
+     wrap-json-response)
     prod-router))
 
 (defn -main
