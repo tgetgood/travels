@@ -2,9 +2,11 @@
   (:require [travels.config :as config]
             [travels.api :as api]
             [travels.util :refer [plural]]
+            [travels.files :as files]
             [org.httpkit.server :refer [run-server]]
             [ring.middleware.json :refer [wrap-json-response wrap-json-body]]
             [ring.middleware.reload :as reload]
+            [ring.middleware.multipart-params :as mp]
             [ring.util.response :as response]
             [compojure [core :refer :all]
                        [route :as route]
@@ -32,7 +34,7 @@
                 (~(symbol "api" (str "get-" (name (plural ent))))))
 
        (PUT     ~(str "/api/" (name (plural ent)) "/:id")
-                [req#]
+                req#
                 (~(symbol "api" (str "update-" (name ent))) req#))
 
        (DELETE  ~(str "/api/" (name (plural ent)) "/:id")
@@ -47,9 +49,14 @@
  ) 
 
 (defroutes dev-router
-  (GET "/" [] (slurp "src/html/index-dev.html"))
-  (GET "/templates.js" [] (slurp "resources/templates.js"))
-  (route/files "" {:root "src"} ))
+  (GET  "/" [] (slurp "src/html/index-dev.html"))
+  (GET  "/templates.js" [] (slurp "resources/templates.js"))
+  (POST "/fileupload" req (files/upload req))
+  (GET  "/images/:name" [name] (when
+                                   (not (or (.startsWith name ".")
+                                            (.startsWith name "/")))
+                                 (slurp (str files/image-dir "/" name))))
+  (route/files "" {:root "src"}))
 
 (defroutes prod-router
   (GET "/" [] (slurp "src/html/index.html"))

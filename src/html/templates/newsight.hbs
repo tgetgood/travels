@@ -13,15 +13,17 @@
       {{input type="file" id="more-images"}}
       <br>
       {{#each photo_uploads}}
-        <div>
-          {{input type="checkbox" checked=send}}
-          <img src="#" class="thumbnail"></img>
-          <span class="progress">{{#each pip}}={{/each}}{{#each togo}}&nbsp;{{/each}}|
-          </span>
-          {{#if done}}
-            <span> done! </span>
-          {{/if}}
-        </div>
+        {{#if show}}
+          <div>
+            {{input type="checkbox" checked=send}}
+            <img src="#" class="thumbnail"></img>
+            <span class="progress">{{#each pip}}={{/each}}{{#each togo}}&nbsp;{{/each}}|
+            </span>
+            {{#if done}}
+              <span> done! </span>
+            {{/if}}
+          </div>
+        {{/if}}
       {{/each}}
       <br>
       <button class="pure-button pure-button-primary" {{action 'save'}}>Save</button>

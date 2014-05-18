@@ -117,27 +117,36 @@ App.NewsightView = Ember.View.extend({
 */
 			// Add photo descriptor to view
 			
-			var image = {
+			var image = Ember.Object.create({
 				pip: Array(0),
 				togo: Array(10),
 				flagship: false,
 				send: true,
-				name: name
-			};
+				name: name,
+				show: true,
+				link: "",
+				done: false,
+			});
 
+			var index = app.controller.get("photo_uploads").length || -1;
 			// Using set forces the UI to update.
 			app.controller.set('photo_uploads', app.controller.get('photo_uploads').concat(image));
 			
-      var formData = new FormData($('#more-images')[0]);
-
 			$.ajax({
-        url: 'script',  //server script to process data
+        url: '/fileupload',  //server script to process data
         type: 'POST',
         xhr: function() {  // custom xhr
           myXhr = $.ajaxSettings.xhr();
           if(myXhr.upload){ // if upload property exists
             myXhr.upload.addEventListener('progress', function(pro) {
-							console.log(pro);
+							var feedback = Math.floor(pro.position / pro.totalSize) * 10;
+
+							if (isNaN(feedback) || Ember.typeOf(feedback) !== "number") {
+								return;
+							}
+	
+							image.set("pip", Array(Math.max(0, feedback)));
+							image.set("togo",  Array(Math.max(0, 10 - feedback)));
 						}, false); // progressbar
           }
           return myXhr;
@@ -145,14 +154,15 @@ App.NewsightView = Ember.View.extend({
         //Ajax events
         success: completeHandler = function(data) {
 					var link = data.file.link;
-					image.link = link;
-					image.done = true;
+					image.set("link", link);
+					image.set("done", true);
         },
         error: errorHandler = function() {
-          alert("Computer says no.");
+//					image.set("show", false);
+					image.set("send", false);
+					image.set("done", true);
         },
-        // Form data
-        data: formData,
+        data: file,
         //Options to tell JQuery not to process data or worry about content-type
         cache: false,
         contentType: false,
