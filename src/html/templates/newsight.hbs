@@ -10,14 +10,19 @@
       Address     {{textarea id="address" value=sight.address}}
       More Photos
       <br>
-      {{input type="file" id="more-images" value=sight.more_photos}}
+      {{input type="file" id="more-images"}}
       <br>
-      <button class="pure-button img-submit" {{action 'addImage' current_image}}>Add Image</button>
-      <ul class="image-list">
-        {{#each sight.additional_photos}}
-          <li>{{path}}</li>
-        {{/each}}
-      </ul>
+      {{#each photo_uploads}}
+        <div>
+          {{input type="checkbox" checked=send}}
+          <img src="#" class="thumbnail"></img>
+          <span class="progress">{{#each pip}}={{/each}}{{#each togo}}&nbsp;{{/each}}|
+          </span>
+          {{#if done}}
+            <span> done! </span>
+          {{/if}}
+        </div>
+      {{/each}}
       <br>
       <button class="pure-button pure-button-primary" {{action 'save'}}>Save</button>
     </fieldset>

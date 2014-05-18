@@ -28,6 +28,7 @@
                data# (assoc inner# "created" (tc/to-timestamp (t/now)))]
            (insert ~(symbol "db" (str (name entity))) 
              (values data#)))))
+
      ;; read
      (defn ~(symbol (str "get-" (name entity)))
        [id#]
@@ -39,6 +40,7 @@
        []
        (ember-response ~(plural entity)
          (select ~(symbol "db" (str (name entity))))))
+
      ;; update
      (defn ~(symbol (str "update-" (name entity)))
        [req#]
@@ -61,7 +63,6 @@
            (delete ~(symbol "db" (str (name entity)))
                    (where {:id id#}))
            old#)))
-           
 ))
 
 (generate-api :sight)
