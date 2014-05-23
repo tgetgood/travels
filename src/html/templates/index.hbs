@@ -1,13 +1,17 @@
-<div id="floater">
-  <div id="content">
-    <h2 class="intro">Where do you want to go?</h2>
-    <form class="pure-form main-search">
-      <fieldset>
-        <input type="text">
-        <button type="submit" class="pure-button pure-button-primary">GO</button>
-      </fieldset>
-    </form>
+<div id="content">
+  <h2 class="intro">Where do you want to go?</h2>
+  <form class="pure-form pure-form-horizontal" id="main-search">
+    <fieldset>
+      <input type="text">
+      <button type="submit" class="pure-button pure-button-primary">GO</button>
+    </fieldset>
+  </form>
+
+  <div id="extras">
+    (Hint: type "India")
+    <br>
+    {{#link-to "newsight"}} Add a new location{{/link-to}}
   </div>
+
 </div>
 
-{{#link-to "newsight"}} a new location{{/link-to}}

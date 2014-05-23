@@ -1,0 +1,23 @@
+<h1>{{location}}</h1>
+
+<div id="home">
+  {{#link-to 'index'}}
+  home
+  {{/link-to}}
+</div>
+
+<div id="results-map">
+
+  results
+
+</div>
+
+<div id="rolodex">
+  {{#each image in activeImages}}
+    <div class="image-box">
+      <img src={{image.url}}></img>
+      image.name
+    </div>
+  {{/each}}
+</div>
+  

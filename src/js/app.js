@@ -1,3 +1,5 @@
+'use strict';
+
 ///// Extensions to Ember itself
 //=================================
  
@@ -11,18 +13,23 @@ Ember.ArrayProxy.prototype.flatten = Array.prototype.flatten = function() {
     return r;
 };
 
+// Global settings
+// ===============================
+
 Ember.TextSupport.reopen({
     attributeBindings: ['multi']
 });
 
-// App
-//=================================
-
-var App = Ember.Application.create();
-
 DS.RESTAdapter.reopen({
   namespace: 'api'
 });
+
+
+
+var App = Ember.Application.create();
+
+// Models
+//================================
 
 App.Photo = DS.Model.extend({
 	link:    DS.attr("string"),
@@ -41,7 +48,12 @@ App.Sight = DS.Model.extend({
 	photos:          DS.hasMany('photo', {inverse: 'sight', type: 'number'})
 });
 
+// App
+//=================================
+
 App.Router.map(function () {
+	this.route("navigate");
+	
 	this.resource('sights', function () {
 		this.resource('sight', { path: "/:sight_id" });
 		this.route('edit');
@@ -49,6 +61,21 @@ App.Router.map(function () {
 	this.route("newsight", { path: "sights/new" });
 });
 
+// Navigate
+//====================================================================
+
+App.NavigateController = Ember.ArrayController({
+	queryParams: ['location'],
+	location: null,
+	activeImages: []
+});
+
+
+
+
+
+// New Sight
+//====================================================================
 
 App.NewsightRoute = Ember.Route.extend({
 	actions: {
@@ -146,11 +173,11 @@ App.NewsightView = Ember.View.extend({
 			app.controller.set('photo_uploads', app.controller.get('photo_uploads').concat(image));
 			
 			$.ajax({
-        url: '/fileupload',  //server script to process data
+        url: '/fileupload',  
         type: 'POST',
-        xhr: function() {  // custom xhr
+        xhr: function() {  
           myXhr = $.ajaxSettings.xhr();
-          if(myXhr.upload){ // if upload property exists
+          if(myXhr.upload){ 
             myXhr.upload.addEventListener('progress', function(pro) {
 							var feedback = Math.floor(pro.position / pro.totalSize) * 10;
 
@@ -166,7 +193,6 @@ App.NewsightView = Ember.View.extend({
         },
         //Ajax events
         success: completeHandler = function(data) {
-					console.log(data)
 					var link = data.file.url;
 					image.set("link", link);
 					image.set("done", true);
