@@ -64,15 +64,18 @@ App.Router.map(function () {
 // Navigate
 //====================================================================
 
-App.NavigateController = Ember.ArrayController({
+App.NavigateController = Ember.ArrayController.extend({
 	queryParams: ['location'],
 	location: null,
 	activeImages: []
 });
 
+// Sight
+//====================================================================
 
-
-
+App.SightsSightController = Ember.ObjectController.extend({
+//	current_photo: this.get('model').photos[0]
+});
 
 // New Sight
 //====================================================================
@@ -135,6 +138,8 @@ App.NewsightView = Ember.View.extend({
 			var name = file.name;
 			var size = file.size;
 			var type = file.type;
+
+			// Sanitise
 /*
 			if(file.name.length < 1) {
 				alert("Empty filename.");

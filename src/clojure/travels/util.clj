@@ -9,7 +9,7 @@
   `(try
     (if-let [v# ~call]
       {:status 200 :body {~prop v#}}
-      {:status 404})
+      {:status 404 :body "Wha chu talkin bout?"})
     (catch Exception e#
       {:status 503 :body (.toString e#)})))
 

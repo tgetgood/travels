@@ -6,6 +6,8 @@
             [clj-time.coerce :as tc]
             [clojure.edn :as edn]))
 
+(ember-response :sight (select db/sight (where {:id 11})))
+
 (defmacro generate-api
   "Takes a keyword corresponding to a korma entity and defines the
   relevant CRUD endpoints. Functions currently are (for entity :user)
@@ -31,10 +33,11 @@
 
      ;; read
      (defn ~(symbol (str "get-" (name entity)))
-       [id#]
-       (ember-response ~entity
-         (select ~(symbol "db" (str (name entity)))
-           (where {:id (edn/read-string id#)}))))
+       [req#]
+       (let [id# (-> req# :route-params :id)]
+         (ember-response ~entity
+           (select ~(symbol "db" (str (name entity)))
+             (where {:id (edn/read-string id#)})))))
      
      (defn ~(symbol (str "get-" (name (plural entity))))
        []

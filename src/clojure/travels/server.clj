@@ -26,8 +26,8 @@
                 (~(symbol "api" (str "create-" (name ent))) body#))
        
        (GET     ~(str "/api/" (name (plural ent)) "/:id")
-                [id#]
-                (~(symbol "api" (str "get-" (name ent))) id#))
+                req#
+                (~(symbol "api" (str "get-" (name ent))) req#))
 
        (GET     ~(str "/api/" (name (plural ent)))
                 []
@@ -38,8 +38,8 @@
                 (~(symbol "api" (str "update-" (name ent))) req#))
 
        (DELETE  ~(str "/api/" (name (plural ent)) "/:id")
-                [id#]
-                (~(symbol "api" (str "delete-" (name ent))) id#)))
+                req#
+                (~(symbol "api" (str "delete-" (name ent))) req#)))
      route#))
   
 
