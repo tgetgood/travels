@@ -7,66 +7,20 @@
             [clojure.edn :as edn]))
 
 
-(defmacro generate-api
-  "Takes a keyword corresponding to a korma entity and defines the
-  relevant CRUD endpoints. Functions currently are (for entity :user)
+(defn create-sight
+  [body]
+  (let [sight (insert db/sight (assoc body "photos" []))
+        sid (:id sight)
+        photos (map #(assoc % :sight sid) (get body "photos"))
+        pid (insert db/photo (values photos))
+        pids (map inc (range (- pid (count photos)) pid))]
+    (update db/sight
+            (set-fields {:photos pids})
+            (where {:id sid}))))
 
-  create-user [data]
-  get-user [id]
-  get-users []
-  update-user [request]
-  delete-user [id]
-
-  TODO: I don't like the magic strings for namespacing (str
-  \"db/\" (name entity)). There's got to be a better way..."
-  [entity]
-  `(do
-     ;; create
-     (defn ~(symbol (str "create-" (name entity)))
-       [body#]
-       (ember-response ~entity
-                       (let [inner# (get  body# ~(str (name entity)))
-                             data# (assoc inner# "created" (tc/to-timestamp (t/now)))]
-                         (assoc (insert ~(symbol "db" (str (name entity))) 
-                                 (values data#)) "photos" []))))
-
-     ;; read
-     (defn ~(symbol (str "get-" (name entity)))
-       [req#]
-       (let [id# (-> req# :route-params :id)]
-         (ember-response ~entity
-                         (select ~(symbol "db" (str (name entity)))
-                                 (where {:id (edn/read-string id#)})))))
-     
-     (defn ~(symbol (str "get-" (name (plural entity))))
-       []
-       (ember-response ~(plural entity)
-                       (select ~(symbol "db" (str (name entity))))))
-
-     ;; update
-     (defn ~(symbol (str "update-" (name entity)))
-       [req#]
-       (let [id#           (-> req# :route-params :id edn/read-string)
-             body#         (get (:body req#) ~(str (name entity)))
-             data#         (assoc body# "last_modified" (tc/to-timestamp (t/now)))]
-         (ember-response ~entity
-                         (do
-                           (update ~(symbol "db" (str (name entity)))
-                                   (set-fields data#)
-                                   (where {:id id#}))
-                           (assoc data# :id id#)))))
-     
-     ;; delete
-     (defn ~(symbol (str "delete-" (name entity)))
-       [id#]
-       (ember-response ~entity
-                       (let [old# (select ~(symbol "db" (str (name entity)))
-                                          (where {:id id#}))]
-                         (delete ~(symbol "db" (str (name entity)))
-                                 (where {:id id#}))
-                         old#)))
-     ))
-
-(generate-api :sight)
-(generate-api :photo)
-
+(defn get-sight
+  [id]
+  (select db/sight
+          (where {:id id})))
+        
+    

@@ -3,6 +3,7 @@
             [travels.api :as api]
             [travels.util :refer [plural]]
             [travels.files :as files]
+            [clojure.edn :as edn]
             [org.httpkit.server :refer [run-server]]
             [ring.middleware.json :refer [wrap-json-response wrap-json-body]]
             [ring.middleware.reload :as reload]
@@ -16,37 +17,12 @@
                              [credentials :as creds]]))
 
 
-(defmacro generate-ember-routes
-  "Routing magic."
-  [ent]
-  `(do
-     (defroutes route# 
-       (POST    ~(str "/api/" (name (plural ent)))
-                {body# :body}
-                (~(symbol "api" (str "create-" (name ent))) body#))
-       
-       (GET     ~(str "/api/" (name (plural ent)) "/:id")
-                req#
-                (~(symbol "api" (str "get-" (name ent))) req#))
-
-       (GET     ~(str "/api/" (name (plural ent)))
-                []
-                (~(symbol "api" (str "get-" (name (plural ent))))))
-
-       (PUT     ~(str "/api/" (name (plural ent)) "/:id")
-                req#
-                (~(symbol "api" (str "update-" (name ent))) req#))
-
-       (DELETE  ~(str "/api/" (name (plural ent)) "/:id")
-                req#
-                (~(symbol "api" (str "delete-" (name ent))) req#)))
-     route#))
-  
-
 (defroutes api-router
-  (generate-ember-routes :sight)
-  (generate-ember-routes :photo)
-  ) 
+;  (generate-ember-routes :sight)
+;  (generate-ember-routes :photo)
+  (POST "/api/sights" {body :body} (api/create-sight body))
+  (GET "/api/sights/:id" req (api/get-sight (-> req :route-params :id edn/read-string)))
+ ) 
 
 (defroutes dev-router
   (GET  "/" [] (slurp "src/html/index-dev.html"))
