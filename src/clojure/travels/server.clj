@@ -9,8 +9,8 @@
             [ring.middleware.multipart-params :as mp]
             [ring.util.response :as response]
             [compojure [core :refer :all]
-                       [route :as route]
-                       [handler :as ch]]
+             [route :as route]
+             [handler :as ch]]
             [cemerick.friend :as friend]
             [cemerick.friend [workflows :as workflows]
                              [credentials :as creds]]))
@@ -46,7 +46,7 @@
 (defroutes api-router
   (generate-ember-routes :sight)
   (generate-ember-routes :photo)
- ) 
+  ) 
 
 (defroutes dev-router
   (GET  "/" [] (slurp "src/html/index-dev.html"))

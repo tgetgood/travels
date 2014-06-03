@@ -6,7 +6,6 @@
             [clj-time.coerce :as tc]
             [clojure.edn :as edn]))
 
-(ember-response :sight (select db/sight (where {:id 11})))
 
 (defmacro generate-api
   "Takes a keyword corresponding to a korma entity and defines the
@@ -26,23 +25,23 @@
      (defn ~(symbol (str "create-" (name entity)))
        [body#]
        (ember-response ~entity
-         (let [inner# (get  body# ~(str (name entity)))
-               data# (assoc inner# "created" (tc/to-timestamp (t/now)))]
-           (insert ~(symbol "db" (str (name entity))) 
-             (values data#)))))
+                       (let [inner# (get  body# ~(str (name entity)))
+                             data# (assoc inner# "created" (tc/to-timestamp (t/now)))]
+                         (insert ~(symbol "db" (str (name entity))) 
+                                 (values data#)))))
 
      ;; read
      (defn ~(symbol (str "get-" (name entity)))
        [req#]
        (let [id# (-> req# :route-params :id)]
          (ember-response ~entity
-           (select ~(symbol "db" (str (name entity)))
-             (where {:id (edn/read-string id#)})))))
+                         (select ~(symbol "db" (str (name entity)))
+                                 (where {:id (edn/read-string id#)})))))
      
      (defn ~(symbol (str "get-" (name (plural entity))))
        []
        (ember-response ~(plural entity)
-         (select ~(symbol "db" (str (name entity))))))
+                       (select ~(symbol "db" (str (name entity))))))
 
      ;; update
      (defn ~(symbol (str "update-" (name entity)))
@@ -51,22 +50,22 @@
              body#         (get (:body req#) ~(str (name entity)))
              data#         (assoc body# "last_modified" (tc/to-timestamp (t/now)))]
          (ember-response ~entity
-           (do
-             (update ~(symbol "db" (str (name entity)))
-                     (set-fields data#)
-                     (where {:id id#}))
-             data#))))
-                         
+                         (do
+                           (update ~(symbol "db" (str (name entity)))
+                                   (set-fields data#)
+                                   (where {:id id#}))
+                           data#))))
+     
      ;; delete
      (defn ~(symbol (str "delete-" (name entity)))
        [id#]
        (ember-response ~entity
-         (let [old# (select ~(symbol "db" (str (name entity)))
-                            (where {:id id#}))]
-           (delete ~(symbol "db" (str (name entity)))
-                   (where {:id id#}))
-           old#)))
-))
+                       (let [old# (select ~(symbol "db" (str (name entity)))
+                                          (where {:id id#}))]
+                         (delete ~(symbol "db" (str (name entity)))
+                                 (where {:id id#}))
+                         old#)))
+     ))
 
 (generate-api :sight)
 (generate-api :photo)

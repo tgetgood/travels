@@ -7,11 +7,11 @@
   this returns a 503."
   [prop call]
   `(try
-    (if-let [v# ~call]
-      {:status 200 :body {~prop v#}}
-      {:status 404 :body "Wha chu talkin bout?"})
-    (catch Exception e#
-      {:status 503 :body (.toString e#)})))
+     (if-let [v# ~call]
+       {:status 200 :body {~prop v#}}
+       {:status 404 :body "Wha chu talkin bout?"})
+     (catch Exception e#
+       {:status 503 :body (.toString e#)})))
 
 
 (def irregular-plurals

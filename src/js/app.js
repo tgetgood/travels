@@ -25,7 +25,6 @@ DS.RESTAdapter.reopen({
 });
 
 
-
 var App = Ember.Application.create();
 
 // Models
@@ -73,8 +72,23 @@ App.NavigateController = Ember.ArrayController.extend({
 // Sight
 //====================================================================
 
-App.SightsSightController = Ember.ObjectController.extend({
-//	current_photo: this.get('model').photos[0]
+App.SightRoute = Ember.Route.extend({
+	model: function (params) {
+		return this.store.find('sight', params.sight_id);
+	}
+});
+
+App.SightController = Ember.ObjectController.extend({
+	current_photo: "",
+	sight: function () {
+		return this.get("model");
+	}.property("model")
+});
+
+App.SightView = Ember.View.extend({
+	didInsertElement: function() {
+
+	}
 });
 
 // New Sight
@@ -118,7 +132,6 @@ App.NewsightRoute = Ember.Route.extend({
 		}
 	}
 });
-
 
 App.NewsightController = Ember.ObjectController.extend({
 	photo_uploads: [],
