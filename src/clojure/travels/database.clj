@@ -65,7 +65,7 @@
   (pk :id)
   (database db)
   (table :sights)
-;  (entity-fields :name :description :photos)
+  (entity-fields :id :name :description :photos :geocoordinates :address :location)
   (has-many photo {:fk :sight}))
 
 (defentity photo

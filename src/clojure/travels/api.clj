@@ -27,8 +27,8 @@
        (ember-response ~entity
                        (let [inner# (get  body# ~(str (name entity)))
                              data# (assoc inner# "created" (tc/to-timestamp (t/now)))]
-                         (insert ~(symbol "db" (str (name entity))) 
-                                 (values data#)))))
+                         (assoc (insert ~(symbol "db" (str (name entity))) 
+                                 (values data#)) "photos" []))))
 
      ;; read
      (defn ~(symbol (str "get-" (name entity)))
@@ -46,7 +46,7 @@
      ;; update
      (defn ~(symbol (str "update-" (name entity)))
        [req#]
-       (let [{:keys [id#]} (:route-params req#)
+       (let [id#           (-> req# :route-params :id edn/read-string)
              body#         (get (:body req#) ~(str (name entity)))
              data#         (assoc body# "last_modified" (tc/to-timestamp (t/now)))]
          (ember-response ~entity
@@ -54,7 +54,7 @@
                            (update ~(symbol "db" (str (name entity)))
                                    (set-fields data#)
                                    (where {:id id#}))
-                           data#))))
+                           (assoc data# :id id#)))))
      
      ;; delete
      (defn ~(symbol (str "delete-" (name entity)))

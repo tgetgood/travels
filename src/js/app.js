@@ -30,10 +30,11 @@ var App = Ember.Application.create();
 // Models
 //================================
 
+App.Store = DS.Store.extend();
+
 App.Photo = DS.Model.extend({
 	link:    DS.attr("string"),
 	created: DS.attr("date"),
-	flagship: DS.attr("boolean"),
 	sight:   DS.belongsTo("sight")
 });
 	
@@ -44,7 +45,7 @@ App.Sight = DS.Model.extend({
 	description:     DS.attr("string"),
 	location:        DS.attr("string"),
 	geocoordinates:  DS.attr("string"),
-	photos:          DS.hasMany('photo', {inverse: 'sight', type: 'number'})
+	photos:          DS.hasMany("photo")
 });
 
 // App
@@ -79,10 +80,12 @@ App.SightRoute = Ember.Route.extend({
 });
 
 App.SightController = Ember.ObjectController.extend({
-	current_photo: "",
 	sight: function () {
 		return this.get("model");
-	}.property("model")
+	}.property("model"),
+	current_image: function () {
+		return this.get("sight")//.photos[0];
+	}.property("sight")
 });
 
 App.SightView = Ember.View.extend({
@@ -109,35 +112,39 @@ App.NewsightRoute = Ember.Route.extend({
 			}
 			
 			var app = this;
+	
+			//this.controller.sight.set("photos", []);
 			
-			var sight = this.get('store').
-				createRecord('sight', this.controller.sight).
-				save().
+			
+			this.controller.get("sight").save().
 				then(function (sight) {
 					var photosToStore = app.controller.get("photo_uploads").
 						filter(function (item, i, elem) {
 							return (item.send && item.link !== "");
 						}).map(function (item, i, elem) {
-							return app.get('store').
-								createRecord('photo', elem).
-								save().then(function (photo) {
-									sight.get("photos").addObject(photo);
-								});
+							var p = app.get('store').createRecord('photo', elem);
+							sight.get("photos").addObject(p);
+							p.save().then(function (p) {
+								sight.get("photos").addObject(p);
+								sight.save();
+							});
 						});
-
-					Promise.all(photosToStore).then(function (res) {
-						sight.save();
-					});
 				});
+
+/*					Promise.all(photosToStore).then(function (res) {
+						console.log(sight);
+						sight.save();
+					}); */
+//				});
 		}
 	}
 });
 
 App.NewsightController = Ember.ObjectController.extend({
 	photo_uploads: [],
-	sight: {
-	 // photos: []
-	}
+	sight: function () {
+		return this.store.createRecord('sight', {})
+	}.property()
 });
 
 App.NewsightView = Ember.View.extend({
@@ -193,10 +200,11 @@ App.NewsightView = Ember.View.extend({
 			$.ajax({
         url: '/fileupload',  
         type: 'POST',
+				ContentType: "application/image",
         xhr: function() {  
-          myXhr = $.ajaxSettings.xhr();
-          if(myXhr.upload){ 
-            myXhr.upload.addEventListener('progress', function(pro) {
+          var myXhr = $.ajaxSettings.xhr();
+          if(myXhr.upload){
+					  myXhr.upload.addEventListener('progress', function(pro) {
 							var feedback = Math.floor(pro.position / pro.totalSize) * 10;
 
 							if (isNaN(feedback) || Ember.typeOf(feedback) !== "number") {
@@ -210,12 +218,14 @@ App.NewsightView = Ember.View.extend({
           return myXhr;
         },
         //Ajax events
-        success: completeHandler = function(data) {
+        success: function(data) {
+					console.log("success");
 					var link = data.file.url;
 					image.set("link", link);
 					image.set("done", true);
         },
-        error: errorHandler = function() {
+        error: function(err) {
+					console.log(err);
 					image.set("show", false);
 					image.set("send", false);
 					image.set("done", true);
@@ -226,9 +236,8 @@ App.NewsightView = Ember.View.extend({
         contentType: false,
         processData: false
       }, 'json');
-			
-			$(this).val('');
 		});
+		$(this).val('');
 	}
 });
 
