@@ -20,33 +20,11 @@ Ember.TextSupport.reopen({
     attributeBindings: ['multi']
 });
 
-DS.RESTAdapter.reopen({
-  namespace: 'api'
-});
-
-
 var App = Ember.Application.create();
 
 // Models
 //================================
 
-App.Store = DS.Store.extend();
-
-App.Photo = DS.Model.extend({
-	link:    DS.attr("string"),
-	created: DS.attr("date"),
-	sight:   DS.belongsTo("sight")
-});
-	
-
-App.Sight = DS.Model.extend({
-	name:            DS.attr("string"),
-	address:         DS.attr("string"),
-	description:     DS.attr("string"),
-	location:        DS.attr("string"),
-	geocoordinates:  DS.attr("string"),
-	photos:          DS.hasMany("photo")
-});
 
 // App
 //=================================
@@ -110,41 +88,33 @@ App.NewsightRoute = Ember.Route.extend({
 				alert("Please wait for image uploads.");
 				return;
 			}
-			
-			var app = this;
-	
-			//this.controller.sight.set("photos", []);
-			
-			
-			this.controller.get("sight").save().
-				then(function (sight) {
-					var photosToStore = app.controller.get("photo_uploads").
-						filter(function (item, i, elem) {
-							return (item.send && item.link !== "");
-						}).map(function (item, i, elem) {
-							var p = app.get('store').createRecord('photo', elem);
-							sight.get("photos").addObject(p);
-							p.save().then(function (p) {
-								sight.get("photos").addObject(p);
-								sight.save();
-							});
-						});
+			var photos = this.controller.get("photo_uploads").
+				filter(function (item, i, elem) {
+					return (item.send && item.link !== "");
+				}).map(function (item, i, elem) {
+					return {link: item.link};
 				});
+		
+			this.controller.sight.photos = photos;
 
-/*					Promise.all(photosToStore).then(function (res) {
-						console.log(sight);
-						sight.save();
-					}); */
-//				});
+			$.ajax({
+				url: '/api/sights',  
+        type: 'POST',
+				dataType: "json",
+				contentType: "application/json",
+				data: JSON.stringify(this.controller.sight)
+			});
+				
+       				
 		}
 	}
 });
 
 App.NewsightController = Ember.ObjectController.extend({
 	photo_uploads: [],
-	sight: function () {
-		return this.store.createRecord('sight', {})
-	}.property()
+	sight: {
+		photos: []
+	}
 });
 
 App.NewsightView = Ember.View.extend({
@@ -160,7 +130,7 @@ App.NewsightView = Ember.View.extend({
 			var type = file.type;
 
 			// Sanitise
-/*
+
 			if(file.name.length < 1) {
 				alert("Empty filename.");
 				$(this).val('');
@@ -180,13 +150,12 @@ App.NewsightView = Ember.View.extend({
 				$(this).val('');
 				return -1;
 			}
-*/
+
 			// Add photo descriptor to view
 			
 			var image = Ember.Object.create({
 				pip: Array(0),
 				togo: Array(10),
-				flagship: false,
 				send: true,
 				name: name,
 				show: true,
@@ -219,13 +188,11 @@ App.NewsightView = Ember.View.extend({
         },
         //Ajax events
         success: function(data) {
-					console.log("success");
 					var link = data.file.url;
 					image.set("link", link);
 					image.set("done", true);
         },
         error: function(err) {
-					console.log(err);
 					image.set("show", false);
 					image.set("send", false);
 					image.set("done", true);

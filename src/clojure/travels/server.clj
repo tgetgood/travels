@@ -18,8 +18,6 @@
 
 
 (defroutes api-router
-;  (generate-ember-routes :sight)
-;  (generate-ember-routes :photo)
   (POST "/api/sights" {body :body} (api/create-sight body))
   (GET "/api/sights/:id" req (api/get-sight (-> req :route-params :id edn/read-string)))
  ) 
