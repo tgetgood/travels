@@ -9,18 +9,17 @@
 
 (defn create-sight
   [body]
-  (println (sql-only (insert db/sight (values (assoc body "photos" nil)))))
-  (let [sight (insert db/sight (values (assoc body "photos" nil
-                                              "created" (tc/date-time (t/now)))))
+  (let [sight (insert db/sight (values (assoc body "photos" nil)))
+                                             ; "created" (tc/date-time (t/now)))))
         sid (:id sight)
-        photos (map #(assoc % "sight" sid "created" (tc/date-time (t/now)))
+        photos (map #(assoc % "sight" sid );"created" (tc/date-time (t/now)))
                     (get body "photos"))]
     (if (> (count photos) 0)
-      (let [pid (insert db/photo (values photos))
-            pids (map inc (range (- pid (count photos)) pid))]
-        (update db/sight
+      (let [pid (:id (insert db/photo (values photos)))
+            pids (mapv inc (range (- pid (count photos)) pid))]
+        (println (sql-only (update db/sight
                 (set-fields {"photos" pids})
-                (where {:id sid}))
+                (where {:id sid}))))
         (assoc body "photos" photos))
       body)))
 

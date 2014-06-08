@@ -12,7 +12,7 @@
    :id                :bigserial
    :description       :text
    :address           :text
-   :geocoordinates    :point
+   :geocoordinates    :text
    :location          :text
    :photos            "bigint[]"
    :created           :timestamptz
@@ -22,7 +22,6 @@
   {:id            :bigserial
    :sight         :bigint
    :link          :text
-   :flagship      :bool
    :created       :timestamptz})
 
 
@@ -55,7 +54,7 @@
   (sql/db-do-commands
    db
    (apply (partial sql/create-table-ddl :sights) sight-schema)
-   (apply (partial sql/create-table-ddl :photos) photo-schema))) 
+   (apply (partial sql/create-table-ddl :photos) photo-schema)))
 
 ;;;;; entities
 
