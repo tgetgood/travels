@@ -1,79 +1,20 @@
 (ns travels.database
-  (:require [clojure.java.jdbc :as sql]
+  (:require [monger.collection :as mc]
+            [monger.core :as mg]
+            [monger.db :as mdb]
             [clojure.string :as string]
-            [korma.db :refer [defdb postgres]]
-            [korma.core :as k :refer :all]
             [travels.config :as config]))
-
-;;;;; Schemata
-
-(def sight-schema
-  {:name              :text
-   :id                :bigserial
-   :description       :text
-   :address           :text
-   :geocoordinates    :text
-   :location          :text
-   :photos            "bigint[]"
-   :created           :timestamptz
-   :last_modified     :timestamptz})
-
-(def photo-schema
-  {:id            :bigserial
-   :sight         :bigint
-   :link          :text
-   :created       :timestamptz})
-
 
 ;;;;; DB init.
 
-(def db
-  (postgres
-   (cond config/devdb?
-         {:classname "org.postgresql.Driver"
-          :subprotocol "postgresql"
-          :subname "//localhost:5432/traveldb"}
-         config/proddb?
-         ;; ghetto ass URL parsing cause connection-uri doesn't work.
-         (let [re #"postgres://([^:\s]+):([^:@\s]*)@(.*)"
-               match (re-find re config/db-uri)]
-           {:classname   "org.postgresql.Driver"
-            :subprotocol "postgresql"
-            :subname     (str "//" (nth match 3))
-            :user        (nth match 1)
-            :password    (nth match 2)
-            ;; :ssl         true ; Eventually needed
-            :make-pool?  true})
-         :else
-         (throw (Exception. "Don't know which database to connect to.")))))
-
-;;;;; create tables. Where should this be?
-
-(defn -create-tables!
+(defn- init
   []
-  (sql/db-do-commands
-   db
-   (apply (partial sql/create-table-ddl :sights) sight-schema)
-   (apply (partial sql/create-table-ddl :photos) photo-schema)))
+  (cond config/devdb?
+          (mg/connect)
+        config/proddb?
+          (mg/connect-via-uri config/db-uri)
+        :else
+          (throw (Exception. "Don't know how to connect to database."))))
 
-;;;;; entities
-
-(declare sight photo)
-
-(defentity sight
-  (pk :id)
-  (database db)
-  (table :sights)
-  (entity-fields :id :name :description :photos :geocoordinates :address :location)
-  (has-many photo {:fk :sight}))
-
-(defentity photo
-  (pk :id)
-  (database db)
-  (table :photos)
-  (prepare (fn [p]
-             (if-let [num (get p "sight")]
-               (assoc p "sight" (Integer. num))
-               p)))
-  (belongs-to sight))
-
+(def db (mg/get-db (init) "travelsdb"))
+            

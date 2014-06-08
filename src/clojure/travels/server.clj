@@ -19,7 +19,7 @@
 
 (defroutes api-router
   (POST "/api/sights" {body :body} (api/create-sight body))
-  (GET "/api/sights/:id" req (api/get-sight (-> req :route-params :id edn/read-string)))
+  (GET "/api/sights/:id" req (api/get-sight (-> req :route-params :id)))
  ) 
 
 (defroutes dev-router
@@ -29,7 +29,8 @@
   (GET  "/images/:name" [name] (when
                                    (not (or (.startsWith name ".")
                                             (.startsWith name "/")))
-                                 (slurp (str files/image-dir "/" name))))
+                                 {:headers {"Content-Type" "application/image"}
+                                  :body (slurp (str files/image-dir "/" name))}))
   (route/files "" {:root "src"}))
 
 (defroutes prod-router

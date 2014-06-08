@@ -8,8 +8,9 @@
   [req]
   (ember-response :file
     (let [data (.bytes (:body req))
-          filename (str image-dir "/" (digest/md5 data))]
-      (with-open [w (clojure.java.io/output-stream filename)]
-        (.write w (.bytes (:body req)))
-        {:url filename}))))
+          hash (digest/md5 data)
+          filename (str image-dir "/" hash)
+          fileurl (str "images/" hash)]
+      (spit filename (:body req))
+      {:url fileurl})))
 

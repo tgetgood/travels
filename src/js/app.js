@@ -53,7 +53,9 @@ App.NavigateController = Ember.ArrayController.extend({
 
 App.SightRoute = Ember.Route.extend({
 	model: function (params) {
-		return this.store.find('sight', params.sight_id);
+		return $.get("/api/sights/" + params.sight_id).then(function (data) {
+			return data.sight;
+		});
 	}
 });
 
@@ -62,7 +64,7 @@ App.SightController = Ember.ObjectController.extend({
 		return this.get("model");
 	}.property("model"),
 	current_image: function () {
-		return this.get("sight")//.photos[0];
+		return this.get("sight").photos[0].link;
 	}.property("sight")
 });
 
@@ -83,7 +85,6 @@ App.NewsightRoute = Ember.Route.extend({
 					return !item.get("done");
 			});
 			
-			console.log(unfinished);
 			if (unfinished.length > 0) {
 				alert("Please wait for image uploads.");
 				return;
@@ -104,8 +105,6 @@ App.NewsightRoute = Ember.Route.extend({
 				contentType: "application/json",
 				data: JSON.stringify(this.controller.sight)
 			});
-				
-       				
 		}
 	}
 });

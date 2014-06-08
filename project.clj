@@ -16,11 +16,9 @@
                  [environ "0.4.0"]
                  [clj-time "0.7.0"]
                  [digest "1.4.4"]
-
-                 [org.clojure/java.jdbc "0.3.3"]
-                 [postgresql "9.3-1101.jdbc4"]
-                 [korma "0.3.1"]
-
+                 
+                 [com.novemberain/monger "2.0.0-rc1"]
+                 
                  [com.cemerick/friend "0.2.0"]
                  [ring "1.2.2"]
                  [compojure "1.1.6"]
