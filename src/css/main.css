@@ -22,3 +22,31 @@
 		height:20px;
 		width:38%;
 }
+
+#main-container {
+		width: 95%;
+}
+
+#image-container img {
+		width: 60%;
+		position: absolute;
+}
+
+.v-centre {
+		position: relative;
+		top: 50%;
+}
+
+#description {
+		text-align: center;
+		clear: both;
+		float: bottom;
+}
+
+#tags {
+		text-align: center;
+}
+
+#image-grid {
+		height: 50%;
+}

@@ -1,23 +1,26 @@
-<h1>{{location}}</h1>
-
-<div id="home">
-  {{#link-to 'index'}}
-  home
-  {{/link-to}}
-</div>
-
-<div id="results-map">
-
-  results
-
-</div>
-
-<div id="rolodex">
-  {{#each image in activeImages}}
-    <div class="image-box">
-      <img src={{image.url}}></img>
-      image.name
+<div id="main-container" draggable="true" {{action "drag" on="touchstart"}}>
+  <div id="image-grid" class="pure-g">
+    <div class="pure-u-1-6 v-centre">
+      <button id="negative" class="pure-button pure-button-primary" {{action "reject"}}>
+        no
+      </button>
     </div>
-  {{/each}}
+    <div id="image-container" class="pure-u-2-3">
+      {{#view App.MovableImage}}
+        <img {{bind-attr src=image}}></img>
+      {{/view}}
+    </div>
+    <div class="pure-u-1-6 v-centre">
+      <button class="pure-button pure-button-primary"  id="positive" {{action "accept"}}>
+        yes
+      </button>
+    </div>
+  </div>
+  <div id="description">{{description}}</div>
+  <br>
+  <div id="tags">
+    {{#each tag in tags}}
+      <span>#{{tag}}</span>
+    {{/each}}
+  </div>
 </div>
-  

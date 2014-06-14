@@ -30,7 +30,7 @@ var App = Ember.Application.create();
 //=================================
 
 App.Router.map(function () {
-	this.route("navigate");
+	this.route("navigate", { path: "/navigate/:location" });
 	
 	this.resource('sights', function () {
 		this.resource('sight', { path: "/:sight_id" });
@@ -42,19 +42,59 @@ App.Router.map(function () {
 // Navigate
 //====================================================================
 
+var getLocationTags = function (loc) {
+	return ["marinedrive", "gatewaytoindia"];
+}
+
 App.NavigateRoute = Ember.Route.extend({
 	model: function (params) {
-		console.log(params);
+		var tags = getLocationTags(params.location);
+		
+	},
+	actions: {
+		drag: function (event) {
+			this.controller.set("description", event);
+		}
 	}
 });
 
 App.NavigateController = Ember.ArrayController.extend({
 	queryParams: ['location'],
 	location: null,
-	activeImages: []
+	current: function () {
+		return {};
+	}.property("model"),
+	image: function () {
+		return "img.jpg"; //this.get("model").image.url
+	}.property("current"),
+	description: function () {
+		return "Dudes on a beach";
+	}.property("current"),
+	tags: function () {
+		return ["dudes", "beach", "sunglasses"];
+	}.property("current")
 });
-
-
+9
+App.MovableImage = Ember.View.extend({
+	touchStart: function (evt) {
+		this.controller.send("drag", evt);
+	},
+	touchMove: function (evt) {
+	},
+	dragStart: function (evt) {
+		console.log("START");
+		console.log(evt);
+		this.get("controller").send("drag", evt);
+	},
+	drag: function (evt) {
+		console.log("MOVE");
+		console.log(evt);
+	},
+	dragEnd: function (evt) {
+		console.log("END");
+		console.log(evt);
+	}
+});
 
 // Sight
 //====================================================================
