@@ -1,8 +1,8 @@
 (defproject travels "v0.0.1"
   
-  :description "Unknown"
+  :description "Intergalactic Travel Guide"
 
-  :url "N/A"
+  :url "wheredoyouwanttogo.herokuapp.com"
 
   :min-lein-version "2.0.0"
 
@@ -26,5 +26,5 @@
                  [ring/ring-json "0.3.1"]]
 
   :main travels.server
-)
+) 
                  

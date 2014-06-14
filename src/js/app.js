@@ -42,11 +42,19 @@ App.Router.map(function () {
 // Navigate
 //====================================================================
 
+App.NavigateRoute = Ember.Route.extend({
+	model: function (params) {
+		console.log(params);
+	}
+});
+
 App.NavigateController = Ember.ArrayController.extend({
 	queryParams: ['location'],
 	location: null,
 	activeImages: []
 });
+
+
 
 // Sight
 //====================================================================
