@@ -42,39 +42,125 @@ App.Router.map(function () {
 // Navigate
 //====================================================================
 
+var clientID = "4a6a3fb4b8464bfe9098d1e901d2aa6e"
+
 var getLocationTags = function (loc) {
 	return ["marinedrive", "gatewaytoindia"];
 }
 
+var appendAuth = function (url) {
+	var res = url;
+	if (url.indexOf("?") !== -1) {
+		res = res + "&";
+	}
+	else {
+		res = res + "?";
+	}
+		return res + "client_id=" + clientID;
+};
+
+var tagInfoURL = function (tag) {
+	var baseURL = "https://api.instagram.com/v1/tags/";
+	return appendAuth(baseURL + tag);
+};
+
+var getTagsURL = function (tag) {
+	var url = "https://api.instagram.com/v1/tags/" + tag + "/media/recent";
+	return appendAuth(url);
+};
+
+var getPostsForTag = function (tag) {
+	
+	return $.ajax(getTagsURL(tag), {
+		type: "GET",
+		"method": "GET",
+		dataType: "jsonp",
+		headers: {"Access-Control-Allow-Origin": "true"}
+	}).then(function (data) {
+		// Drop meta-data (will be used elsewhere...) and return only
+		// those posts which are images.
+		return data.data.filter(function(item) {
+			return item.type = "image";
+		});
+	});
+};				
+
 App.NavigateRoute = Ember.Route.extend({
 	model: function (params) {
+		var app = this;
 		var tags = getLocationTags(params.location);
 		
+		for (var i = 0; i < tags.length; i++) {
+			var p = getPostsForTag(tags[i]);
+			p.then(function (data) {
+				var im = app.controller.get("all");
+				app.controller.set("all", im.concat(data));
+			});
+		}
+		return {};
 	},
 	actions: {
 		drag: function (event) {
-			this.controller.set("description", event);
+//			this.controller.set("description", event);
+		},
+		accept: function (post) {
+			var a = this.controller.get("accepted");
+			this.controller.set("accepted", a.concat([post]));
+		},
+		reject: function (post) {
+			var r = this.controller.get("rejected");
+			this.controller.set("rejected", r.concat([post]));
 		}
 	}
 });
 
-App.NavigateController = Ember.ArrayController.extend({
-	queryParams: ['location'],
+App.NavigateController = Ember.ObjectController.extend({
 	location: null,
+	accepted: [],
+	acceptIDs: function () {
+		return this.get("accepted").map(function (item) { return item.id; });
+	}.property("accepted"),
+	rejected: [],
+	rejectIDs: function () {
+		return this.get("rejected").map(function (item) { return item.id; });
+	}.property("rejected"),
+	all: [],
 	current: function () {
-		return {};
-	}.property("model"),
+		var all = this.get("all");
+
+		if (all.length === 0) {
+			return {};
+		}
+		
+		var acids = this.get("acceptIDs");
+		var rejids = this.get("rejectIDs");
+
+		return all.filter(function (item) {
+			return !acids.contains(item.id) && !rejids.contains(item.id);
+		})[0] || {};
+
+	}.property("all", "acceptIDs", "rejectIDs"),
 	image: function () {
-		return "img.jpg"; //this.get("model").image.url
+		var im =  this.get("current").images;
+		if (im) {
+			return im["standard_resolution"].url;
+		}
 	}.property("current"),
 	description: function () {
-		return "Dudes on a beach";
+		if (this.get("current").caption) {
+			var t = this.get("current").caption.text;
+			if (t === undefined || t === "") {
+				return "- - -";
+			}
+			else {
+				return t;
+			}}
 	}.property("current"),
 	tags: function () {
-		return ["dudes", "beach", "sunglasses"];
+		return this.get("current").tags;
 	}.property("current")
 });
-9
+
 App.MovableImage = Ember.View.extend({
 	touchStart: function (evt) {
 		this.controller.send("drag", evt);
@@ -93,7 +179,9 @@ App.MovableImage = Ember.View.extend({
 	dragEnd: function (evt) {
 		console.log("END");
 		console.log(evt);
-	}
+	},
+	didInsertElement: function () {
+		}
 });
 
 // Sight

@@ -1,7 +1,7 @@
 <div id="main-container" draggable="true" {{action "drag" on="touchstart"}}>
   <div id="image-grid" class="pure-g">
-    <div class="pure-u-1-6 v-centre">
-      <button id="negative" class="pure-button pure-button-primary" {{action "reject"}}>
+    <div id="negative" class="pure-u-1-6 v-centre">
+      <button  class="pure-button pure-button-primary" {{action "reject" current}}>
         no
       </button>
     </div>
@@ -10,8 +10,8 @@
         <img {{bind-attr src=image}}></img>
       {{/view}}
     </div>
-    <div class="pure-u-1-6 v-centre">
-      <button class="pure-button pure-button-primary"  id="positive" {{action "accept"}}>
+    <div id="positive" class="pure-u-1-6 v-centre">
+      <button class="pure-button pure-button-primary" {{action "accept" current}}>
         yes
       </button>
     </div>
