@@ -22,10 +22,6 @@ Ember.TextSupport.reopen({
 
 var App = Ember.Application.create();
 
-// Models
-//================================
-
-
 // App
 //=================================
 
@@ -44,10 +40,6 @@ App.Router.map(function () {
 
 var clientID = "4a6a3fb4b8464bfe9098d1e901d2aa6e"
 
-var getLocationTags = function (loc) {
-	return ["marinedrive", "gatewaytoindia"];
-}
-
 var appendAuth = function (url) {
 	var res = url;
 	if (url.indexOf("?") !== -1) {
@@ -64,24 +56,19 @@ var tagInfoURL = function (tag) {
 	return appendAuth(baseURL + tag);
 };
 
+// Currently Set to get 100 results at a time, if IG respects that...
 var getTagsURL = function (tag) {
-	var url = "https://api.instagram.com/v1/tags/" + tag + "/media/recent";
+	var url = "https://api.instagram.com/v1/tags/" + tag + "/media/recent?count=100";
 	return appendAuth(url);
 };
 
-var getPostsForTag = function (tag) {
+var getIG = function (url) {
 	
-	return $.ajax(getTagsURL(tag), {
+	return $.ajax(url, {
 		type: "GET",
 		"method": "GET",
 		dataType: "jsonp",
 		headers: {"Access-Control-Allow-Origin": "true"}
-	}).then(function (data) {
-		// Drop meta-data (will be used elsewhere...) and return only
-		// those posts which are images.
-		return data.data.filter(function(item) {
-			return item.type = "image";
-		});
 	});
 };				
 
@@ -89,29 +76,60 @@ var filterCaption = function (text) {
 	return text.replace(/#[a-zA-Z-']+/g, "").trim();
 }
 
+var matchByID = function (id) {
+	return function (item) {
+		return item.id !== id;
+	};
+};
+
 App.NavigateRoute = Ember.Route.extend({
 	model: function (params) {
-		var app = this;
-		var tags = getLocationTags(params.location);
-		
-		for (var i = 0; i < tags.length; i++) {
-			var p = getPostsForTag(tags[i]);
-			p.then(function (data) {
-				var im = app.controller.get("all");
-				app.controller.set("all", im.concat(data));
-			});
-		}
-		return {};
+		this.set("nextURL", getTagsURL(params.location));
+		this.updateQueue();
+		return this;
 	},
+	
+	nextURL: "",
+
+  updateQueue: function () {
+		
+		var app = this;
+		return getIG(this.get("nextURL")).then(function (data) {
+
+			// I'm not excessively keen on this organisation pattern, of
+			// setting the next_url in the controller and having the queue
+			// know when it's low, but until I think of something else...
+			
+			app.set("nextURL", data.pagination["next_url"]);
+
+			var seenIDs = app.controller.get("seenIDs");
+
+			var viable = data.data.filter(function(item) {
+				return item.type = "image" && item.location !== null;
+			}).filter(function (item) {
+				return !seenIDs.contains(item.id);
+			});
+			
+			var im = app.controller.get("all");
+			app.controller.set("all", im.concat(viable));
+		});
+	},
+
 	actions: {
 		drag: function (event) {
 //			this.controller.set("description", event);
 		},
+		
 		accept: function (post) {
+			this.controller.set("all", this.controller.get("all").without(post));
+			
 			var a = this.controller.get("accepted");
 			this.controller.set("accepted", a.concat([post]));
 		},
+		
 		reject: function (post) {
+			this.controller.set("all", this.controller.get("all").filter(matchByID(post.id)));
+
 			var r = this.controller.get("rejected");
 			this.controller.set("rejected", r.concat([post]));
 		}
@@ -120,35 +138,35 @@ App.NavigateRoute = Ember.Route.extend({
 
 App.NavigateController = Ember.ObjectController.extend({
 	accepted: [],
-	acceptIDs: function () {
-		return this.get("accepted").map(function (item) { return item.id; });
-	}.property("accepted"),
 	rejected: [],
-	rejectIDs: function () {
-		return this.get("rejected").map(function (item) { return item.id; });
-	}.property("rejected"),
 	all: [],
-	current: function () {
+
+	seenIDs: function () {
+		return this.get("accepted").mapBy("id").
+			concat(this.get("rejected").mapBy("id"));
+	}.property("accepted", "rejected"),
+	
+	queue: function () {
 		var all = this.get("all");
-
-		if (all.length === 0) {
-			return {};
+		if (all.length < 10) {
+			this.get("model").updateQueue();
 		}
-		
-		var acids = this.get("acceptIDs");
-		var rejids = this.get("rejectIDs");
 
-		return all.filter(function (item) {
-			return !acids.contains(item.id) && !rejids.contains(item.id);
-		})[0] || {};
-
-	}.property("all", "acceptIDs", "rejectIDs"),
+		return all;
+	}.property("all"),
+	
+	current: function () {
+		console.log(this.get("queue")[0]);
+		return this.get("queue")[0] || {};
+	}.property("queue"),
+	
 	image: function () {
 		var im =  this.get("current").images;
 		if (im) {
 			return im["standard_resolution"].url;
 		}
 	}.property("current"),
+	
 	description: function () {
 		var cap = this.get("current").caption;
 		if (cap && cap.text) {
@@ -166,9 +184,11 @@ App.NavigateController = Ember.ObjectController.extend({
 			return "- - -";
 		}
 	}.property("current"),
+
 	tags: function () {
 		return this.get("current").tags;
 	}.property("current")
+
 });
 
 App.MovableImage = Ember.View.extend({
