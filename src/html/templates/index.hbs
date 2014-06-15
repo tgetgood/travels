@@ -2,8 +2,8 @@
   <h2 class="intro">Where do you want to go?</h2>
   <form class="pure-form pure-form-horizontal" id="main-search">
     <fieldset>
-      <input type="text">
-      <button type="submit" class="pure-button pure-button-primary">GO</button>
+      {{input type="text" value=location}}
+      <button class="pure-button pure-button-primary" {{action 'navigate' location}}>GO</button>
     </fieldset>
   </form>
 

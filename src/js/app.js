@@ -194,6 +194,17 @@ App.MovableImage = Ember.View.extend({
 		}
 });
 
+// Index
+//====================================================================
+
+App.IndexRoute = Ember.Route.extend({
+	actions: {
+		navigate: function (location) {
+			this.transitionTo("navigate", location);
+		}
+	}
+});
+
 // Sight
 //====================================================================
 
