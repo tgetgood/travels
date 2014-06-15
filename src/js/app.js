@@ -85,6 +85,10 @@ var getPostsForTag = function (tag) {
 	});
 };				
 
+var filterCaption = function (text) {
+	return text.replace(/#[a-zA-Z-']+/g, "").trim();
+}
+
 App.NavigateRoute = Ember.Route.extend({
 	model: function (params) {
 		var app = this;
@@ -115,7 +119,6 @@ App.NavigateRoute = Ember.Route.extend({
 });
 
 App.NavigateController = Ember.ObjectController.extend({
-	location: null,
 	accepted: [],
 	acceptIDs: function () {
 		return this.get("accepted").map(function (item) { return item.id; });
@@ -147,14 +150,21 @@ App.NavigateController = Ember.ObjectController.extend({
 		}
 	}.property("current"),
 	description: function () {
-		if (this.get("current").caption) {
-			var t = this.get("current").caption.text;
-			if (t === undefined || t === "") {
+		var cap = this.get("current").caption;
+		if (cap && cap.text) {
+			
+			var t = filterCaption(cap.text);
+
+			if (t === "") {
 				return "- - -";
 			}
 			else {
 				return t;
-			}}
+			}
+		}
+		else {
+			return "- - -";
+		}
 	}.property("current"),
 	tags: function () {
 		return this.get("current").tags;
