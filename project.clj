@@ -10,7 +10,8 @@
 
   :source-paths ["src/clojure"]
 
-  :profiles {:dev {:env {:dev-mode "TRUE"}}}
+  :profiles {:dev {:env {:dev-mode "TRUE"}}
+             :production {:env {:prod-mode "TRUE"}}}
 
   :dependencies [[org.clojure/clojure "1.5.1"]
                  [environ "0.4.0"]

@@ -16,5 +16,5 @@
         :else
           (throw (Exception. "Don't know how to connect to database."))))
 
-(def db (mg/get-db (init) "travelsdb"))
+(def db {}) ;(mg/get-db (init) "travelsdb"))
             

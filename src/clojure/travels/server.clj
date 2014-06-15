@@ -38,11 +38,11 @@
   (route/resources ""))
 
 (defroutes main-router
-  (->
-   api-router
-   wrap-json-response
-   wrap-json-body
-   ch/api)
+  ;; (->
+  ;;  api-router
+  ;;  wrap-json-response
+  ;;  wrap-json-body
+  ;;  ch/api)
   (if config/dev-server?
     (->
      dev-router
