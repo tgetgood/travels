@@ -87,10 +87,8 @@ var matchByID = function (id) {
 var findAFace = function(url) {
 	var image = new Image();
 	
-	console.log("called");
 	image.onload = function () {
-		console.log("loaded");
-		new HAAR.Detector(haarcascade_frontalface_alt, false).
+		new HAAR.Detector(haarcascade_frontalface_alt, Parallel).
 			image(image).
 			interval(40).
 			complete(function () {
@@ -101,23 +99,6 @@ var findAFace = function(url) {
 
 	image.src = url;
 };
-
-App.NavigateView = Ember.View.extend({
-	templateName: "navigate",
-	didInsertElement: function () {
-		$("haar-subject").bind('load', function () {
-			console.log("loaded");
-			new HAAR.Detector(haarcascade_frontalface_alt, Parallel).
-				image(image).
-				interval(40).
-				complete(function () {
-					console.log(this);
-				}).
-				detect(1, 1.25, 0.5, 1, true);
-		});
-	}
-});
-
 
 App.NavigateRoute = Ember.Route.extend({
 	model: function (params) {
@@ -209,7 +190,6 @@ App.NavigateController = Ember.ObjectController.extend({
 	image: function () {
 		var im =  this.get("current").images;
 		if (im) {
-			findAFace("/imageredirect?url=" + encodeURIComponent(im["standard_resolution"].url));
 			return im["standard_resolution"].url;
 		}
 	}.property("current"),
