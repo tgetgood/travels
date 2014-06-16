@@ -9,6 +9,7 @@
             [ring.middleware.reload :as reload]
             [ring.middleware.multipart-params :as mp]
             [ring.util.response :as response]
+            [ring.util.codec :as codec]
             [compojure [core :refer :all]
              [route :as route]
              [handler :as ch]]
@@ -33,6 +34,11 @@
                                   :body (slurp (str files/image-dir "/" name))}))
   (route/files "" {:root "src"}))
 
+(defroutes image-redirect
+  (GET "/imageredirect" req {:status 200
+                             :body (slurp (get (:query-params req) "url"))})
+)
+
 (defroutes prod-router
   (GET "/" [] (slurp "src/html/index.html"))
   (route/resources ""))
@@ -43,6 +49,9 @@
   ;;  wrap-json-response
   ;;  wrap-json-body
   ;;  ch/api)
+  
+  (ch/api image-redirect)
+
   (if config/dev-server?
     (->
      dev-router

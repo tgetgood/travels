@@ -87,8 +87,6 @@ var matchByID = function (id) {
 var findAFace = function(url) {
 	var image = new Image();
 	
-	image.crossOrigin = "Anonymous";
-
 	console.log("called");
 	image.onload = function () {
 		console.log("loaded");
@@ -211,7 +209,7 @@ App.NavigateController = Ember.ObjectController.extend({
 	image: function () {
 		var im =  this.get("current").images;
 		if (im) {
-			findAFace(im["standard_resolution"].url);
+			findAFace("/imageredirect?url=" + encodeURIComponent(im["standard_resolution"].url));
 			return im["standard_resolution"].url;
 		}
 	}.property("current"),
