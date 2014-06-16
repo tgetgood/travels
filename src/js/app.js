@@ -73,7 +73,7 @@ var getIG = function (url) {
 };				
 
 var filterCaption = function (text) {
-	return text.replace(/#[a-zA-Z-']+/g, "").trim();
+	return text.replace(/#[0-9a-zA-Z-']+/g, "").trim();
 }
 
 var matchByID = function (id) {
@@ -81,6 +81,45 @@ var matchByID = function (id) {
 		return item.id !== id;
 	};
 };
+
+
+// Look for faces in the given image.
+var findAFace = function(url) {
+	var image = new Image();
+	
+	image.crossOrigin = "Anonymous";
+
+	console.log("called");
+	image.onload = function () {
+		console.log("loaded");
+		new HAAR.Detector(haarcascade_frontalface_alt, false).
+			image(image).
+			interval(40).
+			complete(function () {
+				console.log(this);
+			}).
+			detect(1, 1.25, 0.5, 1, true); 
+	};
+
+	image.src = url;
+};
+
+App.NavigateView = Ember.View.extend({
+	templateName: "navigate",
+	didInsertElement: function () {
+		$("haar-subject").bind('load', function () {
+			console.log("loaded");
+			new HAAR.Detector(haarcascade_frontalface_alt, Parallel).
+				image(image).
+				interval(40).
+				complete(function () {
+					console.log(this);
+				}).
+				detect(1, 1.25, 0.5, 1, true);
+		});
+	}
+});
+
 
 App.NavigateRoute = Ember.Route.extend({
 	model: function (params) {
@@ -94,7 +133,14 @@ App.NavigateRoute = Ember.Route.extend({
   updateQueue: function () {
 		
 		var app = this;
-		return getIG(this.get("nextURL")).then(function (data) {
+		var next = this.get("nextURL");
+		if (next === "") {
+			return;
+		}
+
+		this.set("nextURL", "");
+
+		return getIG(next).then(function (data) {
 
 			// I'm not excessively keen on this organisation pattern, of
 			// setting the next_url in the controller and having the queue
@@ -151,18 +197,21 @@ App.NavigateController = Ember.ObjectController.extend({
 		if (all.length < 10) {
 			this.get("model").updateQueue();
 		}
+		
+		if (all[0] && all[0].images) 
+			$("haar-subject").src = all[0].images.thumbnail.url;
 
 		return all;
 	}.property("all"),
 	
 	current: function () {
-		console.log(this.get("queue")[0]);
 		return this.get("queue")[0] || {};
 	}.property("queue"),
 	
 	image: function () {
 		var im =  this.get("current").images;
 		if (im) {
+			findAFace(im["standard_resolution"].url);
 			return im["standard_resolution"].url;
 		}
 	}.property("current"),
@@ -211,8 +260,9 @@ App.MovableImage = Ember.View.extend({
 		console.log(evt);
 	},
 	didInsertElement: function () {
-		}
+	}
 });
+
 
 // Index
 //====================================================================
