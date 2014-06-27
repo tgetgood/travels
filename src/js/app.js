@@ -35,6 +35,39 @@ App.Router.map(function () {
 	this.route("newsight", { path: "sights/new" });
 });
 
+// Go (map)
+//====================================================================
+
+App.GoRoute = Ember.Route.extend({
+});
+
+App.GoController = Ember.Controller.extend({
+	location: function () {
+		var geocoder = new google.maps.Geocoder();
+		geocoder.geocode({address: "bombay"}, function (results, status) {
+			console.log(results);
+		});
+	}
+});
+
+App.GoView = Ember.View.extend({
+	didInsertElement: function() {
+		var geocoder = new google.maps.Geocoder();
+		geocoder.geocode({address: "bombay"}, function (results, status) {
+			var map;
+			var mapOptions = {
+				zoom: 8,
+				center: results[0].geometry.location
+			};
+			map = new google.maps.Map(document.getElementById('map-canvas'),
+																mapOptions);
+			
+			console.log(map);
+		});
+	}
+});
+
+
 // Navigate
 //====================================================================
 
@@ -63,7 +96,6 @@ var getTagsURL = function (tag) {
 };
 
 var getIG = function (url) {
-	
 	return $.ajax(url, {
 		type: "GET",
 		"method": "GET",
@@ -81,7 +113,6 @@ var matchByID = function (id) {
 		return item.id !== id;
 	};
 };
-
 
 // Look for faces in the given image.
 var findAFace = function(url) {
@@ -162,6 +193,17 @@ App.NavigateRoute = Ember.Route.extend({
 });
 
 App.NavigateController = Ember.ObjectController.extend({
+	viewState: "main",
+	hideMap: function () {
+		return !(this.get("viewState") === "map");
+	}.property("viewState"),
+	hideMain : function () {
+		return !(this.get("viewState") === "main");
+	}.property("viewState"),
+	hideThumbs: function() {
+		return !(this.get("viewState") === "thumbs");
+	}.property("viewState"),
+
 	accepted: [],
 	rejected: [],
 	all: [],

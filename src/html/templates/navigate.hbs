@@ -1,4 +1,5 @@
-<div id="main-container" draggable="true" {{action "drag" on="touchstart"}}>
+<div id="main-view" draggable="true" {{bind-attr hidden=hideMain}}
+  {{action "drag" on="touchstart"}}>
   <div id="image-grid" class="pure-g">
     <div id="negative" class="pure-u-1-6 v-centre">
       <button  class="pure-button pure-button-primary" {{action "reject" current}}>
@@ -16,6 +17,8 @@
       </button>
     </div>
   </div>
+  <br>
+  <div id="site-name">{{name}}</div>
   <div id="description">{{description}}</div>
   <br>
   <div id="tags">
@@ -24,3 +27,16 @@
     {{/each}}
   </div>
 </div>
+<div id="map-view">
+  <div id="map-canvas" {{bind-attr hidden=hideMap}}>
+    MAP
+  </div>
+</div>
+<div id="more-pictures" {{bind-attr hidden=hideThumbs}}>
+  {{#each thumb in thumbnails}}
+    <div class="pure-u-1-3 nav-thumb">
+      <img {{bind-attr src=thumb.url}}></img>
+    </div>
+  {{/each}}
+</div>
+    
