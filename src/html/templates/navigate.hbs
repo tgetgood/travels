@@ -8,7 +8,7 @@
     </div>
     <div id="image-container" class="pure-u-2-3">
       {{#view App.MovableImage}}
-        <img {{bind-attr src=image}}></img>
+        <img {{bind-attr src=image}} {{action 'seeThumbs'}}></img>
       {{/view}}
     </div>
     <div id="positive" class="pure-u-1-6 v-centre">
@@ -18,24 +18,17 @@
     </div>
   </div>
   <br>
-  <div id="site-name">{{name}}</div>
-  <div id="description">{{description}}</div>
-  <br>
-  <div id="tags">
-    {{#each tag in tags}}
-      <span>#{{tag}}</span>
-    {{/each}}
-  </div>
+  <div id="site-name">{{current.name}}</div>
+  <div id="description">{{current.description}}</div>
 </div>
-<div id="map-view">
-  <div id="map-canvas" {{bind-attr hidden=hideMap}}>
-    MAP
-  </div>
+
+<div id="map-canvas" class="pure-u-1-1" {{bind-attr hidden=hideMap}}>
 </div>
+
 <div id="more-pictures" {{bind-attr hidden=hideThumbs}}>
-  {{#each thumb in thumbnails}}
+  {{#each image in images}}
     <div class="pure-u-1-3 nav-thumb">
-      <img {{bind-attr src=thumb.url}}></img>
+      <img {{bind-attr src=image.thumbnail.url}} {{action 'setImage' image}}>
     </div>
   {{/each}}
 </div>

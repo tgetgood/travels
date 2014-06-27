@@ -108,12 +108,6 @@ var filterCaption = function (text) {
 	return text.replace(/#[0-9a-zA-Z-']+/g, "").trim();
 }
 
-var matchByID = function (id) {
-	return function (item) {
-		return item.id !== id;
-	};
-};
-
 // Look for faces in the given image.
 var findAFace = function(url) {
 	var image = new Image();
@@ -131,11 +125,24 @@ var findAFace = function(url) {
 	image.src = url;
 };
 
+var bombayFakes = [
+	{ "name": "Gateway to India",
+		"tag": "gatewaytoindia",
+		"description": "Big arch, not much to see.",
+		"location": {"lat": 17, "long": 77}
+	}];
+
+
+// Invoke IG
+// this.set("nextURL", getTagsURL(params.location));
+// this.updateQueue();
+
+
+
 App.NavigateRoute = Ember.Route.extend({
 	model: function (params) {
-		this.set("nextURL", getTagsURL(params.location));
-		this.updateQueue();
-		return this;
+		var location = params.location;
+		return bombayFakes;
 	},
 	
 	nextURL: "",
@@ -184,7 +191,7 @@ App.NavigateRoute = Ember.Route.extend({
 		},
 		
 		reject: function (post) {
-			this.controller.set("all", this.controller.get("all").filter(matchByID(post.id)));
+			this.controller.set("all", this.controller.get("all").without(post));
 
 			var r = this.controller.get("rejected");
 			this.controller.set("rejected", r.concat([post]));
@@ -206,7 +213,7 @@ App.NavigateController = Ember.ObjectController.extend({
 
 	accepted: [],
 	rejected: [],
-	all: [],
+	all: bombayFakes,
 
 	seenIDs: function () {
 		return this.get("accepted").mapBy("id").
@@ -215,12 +222,6 @@ App.NavigateController = Ember.ObjectController.extend({
 	
 	queue: function () {
 		var all = this.get("all");
-		if (all.length < 10) {
-			this.get("model").updateQueue();
-		}
-		
-		if (all[0] && all[0].images) 
-			$("haar-subject").src = all[0].images.thumbnail.url;
 
 		return all;
 	}.property("all"),
@@ -228,14 +229,28 @@ App.NavigateController = Ember.ObjectController.extend({
 	current: function () {
 		return this.get("queue")[0] || {};
 	}.property("queue"),
+
+	images: function () {
+		return getIG(getTagsURL(this.get("current").tag)).then(function (data) {
+			var seenIDs = app.controller.get("seenIDs");
+
+			return data.data.filter(function(item) {
+				return item.type = "image" && item.location !== null;
+			}).filter(function (item) {
+				return !seenIDs.contains(item.id);
+			});
+		});
+	}.property("current");
 	
-	image: function () {
-		var im =  this.get("current").images;
+	currentImage: function () {
+		var im =  this.get("images")[0];
 		if (im) {
 			return im["standard_resolution"].url;
 		}
-	}.property("current"),
+	}.property("images"),
 	
+
+
 	description: function () {
 		var cap = this.get("current").caption;
 		if (cap && cap.text) {
@@ -252,10 +267,6 @@ App.NavigateController = Ember.ObjectController.extend({
 		else {
 			return "- - -";
 		}
-	}.property("current"),
-
-	tags: function () {
-		return this.get("current").tags;
 	}.property("current")
 
 });
