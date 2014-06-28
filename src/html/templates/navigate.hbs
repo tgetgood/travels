@@ -1,5 +1,9 @@
 <div id="main-view" draggable="true" {{bind-attr hidden=hideMain}}
   {{action "drag" on="touchstart"}}>
+  <button id="previous" class="pure-button pure-button-primary centre"
+    {{action "previous"}}>
+    previous
+  </button>
   <div id="image-grid" class="pure-g">
     <div id="negative" class="pure-u-1-6 v-centre">
       <button  class="pure-button pure-button-primary" {{action "reject" current}}>
@@ -19,8 +23,13 @@
   </div>
   <br>
   <div id="site-name">{{current.name}}</div>
+  <br>
   <div id="description">{{current.description}}</div>
-</div>
+
+  <button id="next" class="pure-button pure-button-primary centre"
+    {{action "next"}}>
+    next
+  </button></div>
 
 <div id="map-canvas" class="pure-u-1-1" {{bind-attr hidden=hideMap}}>
 </div>

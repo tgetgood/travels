@@ -37,6 +37,12 @@
 		top: 50%;
 }
 
+#site-name {
+		text-align: center;
+		clear: both;
+		float: bottom;
+}
+
 #description {
 		text-align: center;
 		clear: both;

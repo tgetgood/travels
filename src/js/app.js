@@ -144,43 +144,29 @@ App.NavigateRoute = Ember.Route.extend({
 		var location = params.location;
 		return bombayFakes;
 	},
-	
-	nextURL: "",
-
-  updateQueue: function () {
-		
-		var app = this;
-		var next = this.get("nextURL");
-		if (next === "") {
-			return;
-		}
-
-		this.set("nextURL", "");
-
-		return getIG(next).then(function (data) {
-
-			// I'm not excessively keen on this organisation pattern, of
-			// setting the next_url in the controller and having the queue
-			// know when it's low, but until I think of something else...
-			
-			app.set("nextURL", data.pagination["next_url"]);
-
-			var seenIDs = app.controller.get("seenIDs");
-
-			var viable = data.data.filter(function(item) {
-				return item.type = "image" && item.location !== null;
-			}).filter(function (item) {
-				return !seenIDs.contains(item.id);
-			});
-			
-			var im = app.controller.get("all");
-			app.controller.set("all", im.concat(viable));
-		});
-	},
 
 	actions: {
 		drag: function (event) {
 //			this.controller.set("description", event);
+		},
+
+		next: function () {
+		},
+
+		previous: function () {
+		},
+
+		"view-map": function () {
+			this.controller.set("state", "map");
+		},
+
+		"view-thumbs": function () {
+			this.controller.set("state", "thumbs");
+		},
+		
+		"set-image": function (im) {
+			this.controller.set("current", im);
+			this.controller.set("state", "main");
 		},
 		
 		accept: function (post) {
@@ -229,46 +215,34 @@ App.NavigateController = Ember.ObjectController.extend({
 	current: function () {
 		return this.get("queue")[0] || {};
 	}.property("queue"),
-
-	images: function () {
+	
+	getImages: function () {
+		var app = this;
+		
 		return getIG(getTagsURL(this.get("current").tag)).then(function (data) {
 			var seenIDs = app.controller.get("seenIDs");
 
-			return data.data.filter(function(item) {
+			var viable = data.data.filter(function(item) {
 				return item.type = "image" && item.location !== null;
 			}).filter(function (item) {
 				return !seenIDs.contains(item.id);
 			});
+			
+			app.set("images", viable);
 		});
-	}.property("current");
+	},
+
+	images: function() {
+		this.getImages();
+		return [];
+	}.property("current"),
 	
 	currentImage: function () {
 		var im =  this.get("images")[0];
 		if (im) {
 			return im["standard_resolution"].url;
 		}
-	}.property("images"),
-	
-
-
-	description: function () {
-		var cap = this.get("current").caption;
-		if (cap && cap.text) {
-			
-			var t = filterCaption(cap.text);
-
-			if (t === "") {
-				return "- - -";
-			}
-			else {
-				return t;
-			}
-		}
-		else {
-			return "- - -";
-		}
-	}.property("current")
-
+	}.property("images")
 });
 
 App.MovableImage = Ember.View.extend({
