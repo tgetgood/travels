@@ -142,7 +142,7 @@ var bombayFakes = [
 App.NavigateRoute = Ember.Route.extend({
 	model: function (params) {
 		var location = params.location;
-		return bombayFakes;
+		return location;
 	},
 
 	actions: {
@@ -157,16 +157,16 @@ App.NavigateRoute = Ember.Route.extend({
 		},
 
 		"view-map": function () {
-			this.controller.set("state", "map");
+			this.controller.set("viewState", "map");
 		},
 
 		"view-thumbs": function () {
-			this.controller.set("state", "thumbs");
+			this.controller.set("viewState", "thumbs");
 		},
 		
 		"set-image": function (im) {
 			this.controller.set("current", im);
-			this.controller.set("state", "main");
+			this.controller.set("viewState", "main");
 		},
 		
 		accept: function (post) {
@@ -213,13 +213,28 @@ App.NavigateController = Ember.ObjectController.extend({
 	}.property("all"),
 	
 	current: function () {
-		return this.get("queue")[0] || {};
+		// FIXME: We need to nullify and then asynchronously repopulate
+		// the images whenever the current selection is changed. This
+		// seems like a very un-ember way to achieve that.
+
+		var current = this.get("queue")[0] || {};
+		
+		this.set("images", [{}]);
+		this.set("currentImage", "");
+		
+		this.getImages(current).then(function (images) {
+			if (this.get("currentImage") === "") {
+				this.set("currentImage", viable[0]["standard_resolution"].url);
+			}
+		});
+		
+		return current;
 	}.property("queue"),
 	
-	getImages: function () {
+	getImages: function (current) {
 		var app = this;
 		
-		return getIG(getTagsURL(this.get("current").tag)).then(function (data) {
+		return getIG(getTagsURL(current.tag)).then(function (data) {
 			var seenIDs = app.controller.get("seenIDs");
 
 			var viable = data.data.filter(function(item) {
@@ -229,20 +244,14 @@ App.NavigateController = Ember.ObjectController.extend({
 			});
 			
 			app.set("images", viable);
+			
+			return viable;
 		});
 	},
 
-	images: function() {
-		this.getImages();
-		return [];
-	}.property("current"),
+	images: [],
 	
-	currentImage: function () {
-		var im =  this.get("images")[0];
-		if (im) {
-			return im["standard_resolution"].url;
-		}
-	}.property("images")
+	currentImage: ""
 });
 
 App.MovableImage = Ember.View.extend({
