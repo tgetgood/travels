@@ -243,8 +243,6 @@ var delhiFakes = [
 	 "location": {} }
 	];
 	
-
-
 // Invoke IG
 // this.set("nextURL", getTagsURL(params.location));
 // this.updateQueue();
@@ -299,13 +297,13 @@ App.NavigateRoute = Ember.Route.extend({
 
 App.NavigateController = Ember.ObjectController.extend({
 	viewState: "main",
-	hideMap: function () {
+	"hide-map": function () {
 		return !(this.get("viewState") === "map");
 	}.property("viewState"),
-	hideMain : function () {
+	"hide-main" : function () {
 		return !(this.get("viewState") === "main");
 	}.property("viewState"),
-	hideThumbs: function() {
+	"hide-thumbs": function() {
 		return !(this.get("viewState") === "thumbs");
 	}.property("viewState"),
 
