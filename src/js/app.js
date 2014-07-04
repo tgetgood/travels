@@ -127,10 +127,22 @@ var findAFace = function(url) {
 
 var bombayFakes = [
 	{ "name": "Gateway to India",
-		"tag": "gatewaytoindia",
+		"tags": ["gatewaytoindia"],
 		"description": "Big arch, not much to see.",
 		"location": {"lat": 17, "long": 77}
 	}];
+
+var delhiFakes = [
+	{"name": "India Gate and Rajpath",
+	 "tags": ["indiagate", "rajpath"],
+	 "description": "India Gate is a memorial raised in honour of the Indian soldiers who died during the Afghan wars and World War I.[1] The names of the soldiers who died in these wars are inscribed on the walls. The cenotaph (or shrine) in the middle is constructed with black marble and depicts a rifle placed on its barrel, crested by a soldier's helmet. Each face of the cenotaph has inscribed in gold the words Amar Jawan (in Hindi, meaning Immortal Warrior). The green lawns at India Gate are a popular evening and holiday rendezvous for young and old alike. Every year the Republic day celebrations are made in Delhi.The armymen and other citizens of India who are awarded or who participate in the celebration walk through the Rajpath.[2]",
+	 "location": {} },
+	{"name": "Sansad Bhavan",
+	 "tags": ["sansadbhavan"],
+	 "description": "Sansad Bhavan or the Parliament of India is a circular building designed by the British architects Sir Edwin Lutyens and Sir Herbert Baker in 1912–1913. Construction began in 1921, and in 1927 the building was opened as the home of the Council of State, the Central Legislative Assembly, and the Chamber of Princes.",
+	 "location": {} }
+	];
+	
 
 
 // Invoke IG
@@ -165,7 +177,7 @@ App.NavigateRoute = Ember.Route.extend({
 		},
 		
 		"set-image": function (im) {
-			this.controller.set("current", im);
+			this.controller.set("current-image", im.images["standard_resolution"].url);
 			this.controller.set("viewState", "main");
 		},
 		
@@ -199,7 +211,10 @@ App.NavigateController = Ember.ObjectController.extend({
 
 	accepted: [],
 	rejected: [],
-	all: bombayFakes,
+	all: delhiFakes,
+
+	images: [],
+	"current-image": "",
 
 	seenIDs: function () {
 		return this.get("accepted").mapBy("id").
@@ -217,41 +232,46 @@ App.NavigateController = Ember.ObjectController.extend({
 		// the images whenever the current selection is changed. This
 		// seems like a very un-ember way to achieve that.
 
+		var app = this;
 		var current = this.get("queue")[0] || {};
 		
 		this.set("images", [{}]);
-		this.set("currentImage", "");
+		this.set("current-image", "");
 		
-		this.getImages(current).then(function (images) {
-			if (this.get("currentImage") === "") {
-				this.set("currentImage", viable[0]["standard_resolution"].url);
-			}
-		});
+		for (var i = 0; i < current.tags.length; i++) {
+			this.getImages(current.tags[i]).then(function (images) {
+				var existing = app.get("images");
+				app.set("images", existing.concat(images));
+				
+				if (images.length > 0 && app.get("current-image") === "") {
+					app.set("current-image", images[0].images["standard_resolution"].url);
+				}
+			});
+		}
 		
 		return current;
 	}.property("queue"),
 	
-	getImages: function (current) {
+	getImages: function (tag) {
 		var app = this;
 		
-		return getIG(getTagsURL(current.tag)).then(function (data) {
-			var seenIDs = app.controller.get("seenIDs");
+		return getIG(getTagsURL(tag)).then(function (data) {
+			var seenIDs = app.get("seenIDs");
 
 			var viable = data.data.filter(function(item) {
 				return item.type = "image" && item.location !== null;
 			}).filter(function (item) {
 				return !seenIDs.contains(item.id);
 			});
-			
-			app.set("images", viable);
-			
+
 			return viable;
 		});
 	},
-
-	images: [],
 	
-	currentImage: ""
+	description: function () {
+		var des = this.get("current").description;
+		return des.substring(0, 255);
+	}.property("current")
 });
 
 App.MovableImage = Ember.View.extend({
