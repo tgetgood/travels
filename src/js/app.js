@@ -248,11 +248,18 @@ var delhiFakes = [
 // this.updateQueue();
 
 
+var getCityData = function (location) {
+	return new Promise(function (s, f) {
+		s(delhiFakes);
+	});
+}
+
 
 App.NavigateRoute = Ember.Route.extend({
 	model: function (params) {
 		var location = params.location;
-		return location;
+		//		return location;
+		return "new delhi";
 	},
 
 	actions: {
@@ -311,11 +318,27 @@ App.NavigateController = Ember.ObjectController.extend({
 
 	accepted: [],
 	rejected: [],
-	all: delhiFakes,
+	all: [],
 
 	images: [],
 	"current-image": "",
 
+	location: function () {
+		return this.get("model");
+	}.property("model"),
+	
+	rawResults: function () {
+		var app = this;
+
+		this.set("all", []);
+		var dp = getCityData(this.get("location"));
+		dp.then(function (data) {
+			app.set("all", data);
+		});
+		
+		return dp;
+	}.property("location"),
+	
 	seenIDs: function () {
 		return this.get("accepted").mapBy("id").
 			concat(this.get("rejected").mapBy("id"));
@@ -344,8 +367,12 @@ App.NavigateController = Ember.ObjectController.extend({
 
 		var app = this;
 		var index = this.get("index");
-		var current = this.get("queue")[index] || {};
+		var current = this.get("queue")[index];
 		
+		if (current === undefined) {
+			return {};
+		}
+
 		this.set("images", [{}]);
 		this.set("current-image", "");
 		
@@ -385,20 +412,30 @@ App.NavigateController = Ember.ObjectController.extend({
 	}.property("current")
 });
 
+
+var mapSetup = function (location) {
+
+	var geocoder = new google.maps.Geocoder();
+
+	var map;
+
+	geocoder.geocode({address: location}, function (results, status) {
+		var mapOptions = {
+			zoom: 8,
+			center: results[0].geometry.location
+		};
+		map = new google.maps.Map(document.getElementById('map-canvas'),
+															mapOptions);
+	});
+	
+	return map;
+};
+
 App.NavigateView = Ember.View.extend({
 	didInsertElement: function() {
-	//	var geocoder = new google.maps.Geocoder();
-//		geocoder.geocode({address: "new delhi"}, function (results, status) {
-/*			var map;
-			var mapOptions = {
-				zoom: 8,
-				center: new google.maps.LatLng(-34.397, 150.644)
-			};
-			map = new google.maps.Map(document.getElementById('map-canvas'),
-																mapOptions);
-			
-			console.log(map); */
-//		});
+		var location = this.controller.get("location");
+		console.log(location);
+		mapSetup("new delhi");
 	}
 });
 
