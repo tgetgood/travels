@@ -389,7 +389,7 @@ App.NavigateView = Ember.View.extend({
 	didInsertElement: function() {
 	//	var geocoder = new google.maps.Geocoder();
 //		geocoder.geocode({address: "new delhi"}, function (results, status) {
-			var map;
+/*			var map;
 			var mapOptions = {
 				zoom: 8,
 				center: new google.maps.LatLng(-34.397, 150.644)
@@ -397,7 +397,7 @@ App.NavigateView = Ember.View.extend({
 			map = new google.maps.Map(document.getElementById('map-canvas'),
 																mapOptions);
 			
-			console.log(map);
+			console.log(map); */
 //		});
 	}
 });
