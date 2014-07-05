@@ -53,7 +53,7 @@ App.GoController = Ember.Controller.extend({
 App.GoView = Ember.View.extend({
 	didInsertElement: function() {
 		var geocoder = new google.maps.Geocoder();
-		geocoder.geocode({address: "bombay"}, function (results, status) {
+		geocoder.geocode({address: "delhi"}, function (results, status) {
 			var map;
 			var mapOptions = {
 				zoom: 8,
@@ -261,9 +261,11 @@ App.NavigateRoute = Ember.Route.extend({
 		},
 
 		next: function () {
+			this.controller.set("rawIndex", this.controller.get("rawIndex") + 1);
 		},
 
 		previous: function () {
+			this.controller.set("rawIndex", this.controller.get("rawIndex") - 1);
 		},
 
 		"view-map": function () {
@@ -324,6 +326,16 @@ App.NavigateController = Ember.ObjectController.extend({
 
 		return all;
 	}.property("all"),
+
+	rawIndex: 0,
+	index: function () {
+		var i = this.get("rawIndex");
+		var l = this.get("queue").length;
+		while (i < 0) {
+			i += l;
+		}
+		return i % l;
+	}.property("rawIndex"),
 	
 	current: function () {
 		// FIXME: We need to nullify and then asynchronously repopulate
@@ -331,7 +343,8 @@ App.NavigateController = Ember.ObjectController.extend({
 		// seems like a very un-ember way to achieve that.
 
 		var app = this;
-		var current = this.get("queue")[0] || {};
+		var index = this.get("index");
+		var current = this.get("queue")[index] || {};
 		
 		this.set("images", [{}]);
 		this.set("current-image", "");
@@ -348,7 +361,7 @@ App.NavigateController = Ember.ObjectController.extend({
 		}
 		
 		return current;
-	}.property("queue"),
+	}.property("queue", "index"),
 	
 	getImages: function (tag) {
 		var app = this;
@@ -371,6 +384,27 @@ App.NavigateController = Ember.ObjectController.extend({
 		return des.substring(0, 255);
 	}.property("current")
 });
+
+App.NavigateView = Ember.View.extend({
+	didInsertElement: function() {
+	//	var geocoder = new google.maps.Geocoder();
+//		geocoder.geocode({address: "new delhi"}, function (results, status) {
+			var map;
+			var mapOptions = {
+				zoom: 8,
+				center: new google.maps.LatLng(-34.397, 150.644)
+			};
+			map = new google.maps.Map(document.getElementById('map-canvas'),
+																mapOptions);
+			
+			console.log(map);
+//		});
+	}
+});
+
+
+// Widgets
+//====================================================================
 
 App.MovableImage = Ember.View.extend({
 	touchStart: function (evt) {
