@@ -258,8 +258,7 @@ var getCityData = function (location) {
 App.NavigateRoute = Ember.Route.extend({
 	model: function (params) {
 		var location = params.location;
-		//		return location;
-		return "new delhi";
+		return location;
 	},
 
 	actions: {
@@ -318,7 +317,7 @@ App.NavigateController = Ember.ObjectController.extend({
 
 	accepted: [],
 	rejected: [],
-	all: [],
+	all: delhiFakes,
 
 	images: [],
 	"current-image": "",
@@ -326,18 +325,6 @@ App.NavigateController = Ember.ObjectController.extend({
 	location: function () {
 		return this.get("model");
 	}.property("model"),
-	
-	rawResults: function () {
-		var app = this;
-
-		this.set("all", []);
-		var dp = getCityData(this.get("location"));
-		dp.then(function (data) {
-			app.set("all", data);
-		});
-		
-		return dp;
-	}.property("location"),
 	
 	seenIDs: function () {
 		return this.get("accepted").mapBy("id").
