@@ -1,5 +1,7 @@
 <div id="main-view" draggable="true" {{bind-attr hidden=hide-main}}
-  {{action "drag" on="touchstart"}}>
+  {{action "dragStart" on="dragStart"}}
+  {{action "drag" on="drag"}}
+  {{action "dragEnd" on="dragEnd"}}>
   <div class="centre">
     <button id="previous" class="pure-button pure-button-primary"
       {{action "previous"}}>
@@ -45,6 +47,12 @@
 
 <div id="map-view" {{bind-attr hidden=hide-map}}>
   <div id="map-canvas">
+  </div>
+  <hr>
+  <div class="centre">
+    <button class="pure-button pure-button-primary" {{action "view-main"}}>
+      back
+    </button>
   </div>
 </div>
 

@@ -262,8 +262,13 @@ App.NavigateRoute = Ember.Route.extend({
 	},
 
 	actions: {
-		drag: function (event) {
+		dragStart: function () {
+			console.log(this);
 //			this.controller.set("description", event);
+		},
+
+		drag: function () {
+			console.log(this);
 		},
 
 		next: function () {
@@ -272,6 +277,10 @@ App.NavigateRoute = Ember.Route.extend({
 
 		previous: function () {
 			this.controller.set("rawIndex", this.controller.get("rawIndex") - 1);
+		},
+		
+		"view-main": function () {
+			this.controller.set("viewState", "main");
 		},
 
 		"view-map": function () {
@@ -325,7 +334,7 @@ App.NavigateController = Ember.ObjectController.extend({
 	location: function () {
 		return this.get("model");
 	}.property("model"),
-	
+		
 	seenIDs: function () {
 		return this.get("accepted").mapBy("id").
 			concat(this.get("rejected").mapBy("id"));
@@ -408,21 +417,30 @@ var mapSetup = function (location) {
 
 	geocoder.geocode({address: location}, function (results, status) {
 		var mapOptions = {
-			zoom: 8,
-			center: results[0].geometry.location
+			disableDefaultUI: true,
+			zoom: 14,
+			center: results[0].geometry.location,
+			mapTypeId: google.maps.MapTypeId.ROADMAP
 		};
-		map = new google.maps.Map(document.getElementById('map-canvas'),
+		
+		map = new google.maps.Map( $('#map-canvas')[0],
 															mapOptions);
+
+		google.maps.event.addListenerOnce(map, 'idle', function() {
+			google.maps.event.trigger(map, 'resize');
+});
 	});
 	
 	return map;
 };
 
+
 App.NavigateView = Ember.View.extend({
 	didInsertElement: function() {
 		var location = this.controller.get("location");
-		console.log(location);
-		mapSetup("new delhi");
+		if (typeof(google) !== "undefined") {
+			mapSetup("new delhi");
+		}
 	}
 });
 

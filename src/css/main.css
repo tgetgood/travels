@@ -61,3 +61,8 @@
 #image-grid {
 		height: 50%;
 }
+
+#map-canvas {
+		width: 100%;
+		height: 100%;
+}
