@@ -72,55 +72,30 @@ var getIG = function (url) {
 	});
 };				
 
-var filterCaption = function (text) {
-	return text.replace(/#[0-9a-zA-Z-']+/g, "").trim();
-}
-
-// Look for faces in the given image.
-var findAFace = function(url) {
-	var image = new Image();
-	
-	image.onload = function () {
-		new HAAR.Detector(haarcascade_frontalface_alt, Parallel).
-			image(image).
-			interval(40).
-			complete(function () {
-				console.log(this);
-			}).
-			detect(1, 1.25, 0.5, 1, true); 
-	};
-
-	image.src = url;
-};
-
 var bombayFakes = [
 	{ "name": "Gateway to India",
 		"tags": ["gatewaytoindia"],
 		"description": "Big arch, not much to see.",
-		"location": {"lat": 17, "long": 77}
+		"location": {"lat": 17, "lng": 77}
 	}];
 
 var delhiFakes = [
 	{"name": "India Gate and Rajpath",
 	 "tags": ["indiagate", "rajpath"],
-	 "description": "India Gate is a memorial raised in honour of the Indian soldiers who died during the Afghan wars and World War I.[1] The names of the soldiers who died in these wars are inscribed on the walls. The cenotaph (or shrine) in the middle is constructed with black marble and depicts a rifle placed on its barrel, crested by a soldier's helmet. Each face of the cenotaph has inscribed in gold the words Amar Jawan (in Hindi, meaning Immortal Warrior). The green lawns at India Gate are a popular evening and holiday rendezvous for young and old alike. Every year the Republic day celebrations are made in Delhi.The armymen and other citizens of India who are awarded or who participate in the celebration walk through the Rajpath.[2]",
-	 "location": {} },
-	{"name": "Sansad Bhavan",
-	 "tags": ["sansadbhavan"],
-	 "description": "Sansad Bhavan or the Parliament of India is a circular building designed by the British architects Sir Edwin Lutyens and Sir Herbert Baker in 1912–1913. Construction began in 1921, and in 1927 the building was opened as the home of the Council of State, the Central Legislative Assembly, and the Chamber of Princes.",
-	 "location": {} },
+	 "description": "India Gate is a memorial raised in honour of the Indian soldiers who died during the Afghan wars and World War I. The cenotaph (or shrine) in the middle is constructed with black marble and depicts a rifle placed on its barrel, crested by a soldier's helmet.",
+	 "location": {"lat":28.613110, "lng":77.229553} },
 	{"name": "Rashtrapati Bhavan",
 	 "tags": ["rashtrapatibhavan"],
 	 "description": "Built with a mix of European and Mughal/Indian styles, Rashtrapati Bhavan was originally built for the Governor General of India. Inaugurated in 1931 as the Viceregal Lodge, the name was changed in 1959 after India became a republic. Now it is the Presidential Palace of India.",
-	 "location": {} },
+	 "location": {"lat":28.614459, "lng":77.199642} },
 	{"name": "Connaught Place",
 	 "tags": ["connaughtplace"],
-	 "description": "Connaught Place is known for its vibrant atmosphere and planned layout. It has been the hot-spot both for the business men as well as tourists both from the country and abroad. The present day Connaught Place plays the role of a welcoming host to the continuous down stepping of huge masses who are attracted to the popular tourist destinations here. Some must places to be visited are Hanuman Mandir, an ancient temple with a mention in Guinness Book of Record, Jantar Mantar, an astronomical observatory of 18th century, Maharaja Agrasen ki Baoli and State Emporiums with the collection of ethnic specialties of the states.",
-	 "location": {} },
+	 "description": "Connaught Place is known for its vibrant atmosphere and planned layout. It has been the hot-spot both for the business men as well as tourists both from the country and abroad. The present day Connaught Place plays the role of a welcoming host to the continuous down stepping of huge masses who are attracted to the popular tourist destinations here.",
+	 "location": {"lat":28.632305, "lng":77.218602} },
 	{"name": "Lodhi Gardens",
 	 "tags": ["lodhigardens"],
 	 "description": "Lodhi Gardens, once called Lady Willingdon Park, laid out in 1930 this beautiful park contains 15th and 16th century monuments that are scattered among its well-kept lawns, flowers, shady trees and ponds. During the early morning and evening hours, the sprawling garden is a favourite spot for fitness freaks and those in search of solitude.",
-	 "location": {} },
+	 "location": {"lat":28.593326, "lng":77.219581} },
 	{"name": "Purana Quila",
 	 "tags": ["puranaquila"],
 	 "description": "The Purana Quila (Old Fort) is a very good example of Mughal military architecture.[2] Built by Pandavas, renovated by Humayun, with later modifications by Sher Shah Suri, the Purana Quila is a monument of bold design, which is strong, straightforward, and every inch a fortress. It is different from the well-planned, carefully decorated, and palatial forts of the later Mughal rulers. Purana Quila is also different from the later forts of the Mughals, as it does not have a complex of palaces, administrative, and recreational buildings as is generally found in the forts built later on. The main purpose of this now dilapidated fort was its utility with less emphasis on decoration. The Qal'a-I-Kunha Masjid and the Sher are two important monuments inside the fort. It was made by Aqeel in 1853.-----------------",
@@ -236,12 +211,10 @@ App.NavigateRoute = Ember.Route.extend({
 
 	actions: {
 		dragStart: function () {
-			console.log(this);
 //			this.controller.set("description", event);
 		},
 
 		drag: function () {
-			console.log(this);
 		},
 
 		next: function () {
@@ -287,6 +260,12 @@ App.NavigateController = Ember.ObjectController.extend({
 		return !(this.get("viewState") === "map");
 	}.property("viewState"),
 	"hide-main" : function () {
+
+		var map = this.get("map");
+		if (map) {
+			google.maps.event.trigger(map, 'resize');
+		}
+
 		return !(this.get("viewState") === "main");
 	}.property("viewState"),
 	"hide-thumbs": function() {
@@ -307,7 +286,7 @@ App.NavigateController = Ember.ObjectController.extend({
 	queue: function () {
 		var all = this.get("model");
 		var seen = this.get("seenIDs");
-		console.log(seen);
+
 		return all.filter(function (item, i, e) {
 			return !seen.contains(item.name);
 		});
@@ -354,25 +333,18 @@ App.NavigateController = Ember.ObjectController.extend({
 	}.property("queue", "index"),
 	
 	getImages: function (tag) {
-		var app = this;
-		
 		return getIG(getTagsURL(tag)).then(function (data) {
-			var seenIDs = app.get("seenIDs");
-
-			var viable = data.data.filter(function(item) {
-				return item.type = "image" && item.location !== null;
-			}).filter(function (item) {
-				return !seenIDs.contains(item.id);
+			return data.data.filter(function(item) {
+				return item.type === "image" && item.location !== null;
 			});
-
-			return viable;
 		});
 	},
 	
 	description: function () {
-		var des = this.get("current").description;
-		return des.substring(0, 255);
+		return this.get("current").description;
 	}.property("current"),
+
+	map: null,
 
 	currentMarkers: [],
 	markers: function () {
@@ -394,24 +366,24 @@ var mapSetup = function (location) {
 			mapTypeId: google.maps.MapTypeId.ROADMAP
 		};
 		
-		map = new google.maps.Map( $('#map-canvas')[0],
+		map = new google.maps.Map($('#map-canvas')[0],
 															mapOptions);
 
 		google.maps.event.addListenerOnce(map, 'idle', function() {
 			google.maps.event.trigger(map, 'resize');
-});
+		});
 	});
 	
 	return map;
 };
-
 
 App.NavigateView = Ember.View.extend({
 	didInsertElement: function() {
 		var location = this.controller.get("location");
 		
 		if (typeof(google) !== "undefined") {
-			mapSetup("new delhi");
+			var map = mapSetup("new delhi");
+			this.controller.set("map", map);
 		}
 	}
 });
@@ -427,17 +399,11 @@ App.MovableImage = Ember.View.extend({
 	touchMove: function (evt) {
 	},
 	dragStart: function (evt) {
-		console.log("START");
-		console.log(evt);
 		this.get("controller").send("drag", evt);
 	},
 	drag: function (evt) {
-		console.log("MOVE");
-		console.log(evt);
 	},
 	dragEnd: function (evt) {
-		console.log("END");
-		console.log(evt);
 	},
 	didInsertElement: function () {
 	}
