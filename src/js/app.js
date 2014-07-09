@@ -35,38 +35,6 @@ App.Router.map(function () {
 	this.route("newsight", { path: "sights/new" });
 });
 
-// Go (map)
-//====================================================================
-
-App.GoRoute = Ember.Route.extend({
-});
-
-App.GoController = Ember.Controller.extend({
-	location: function () {
-		var geocoder = new google.maps.Geocoder();
-		geocoder.geocode({address: "bombay"}, function (results, status) {
-			console.log(results);
-		});
-	}
-});
-
-App.GoView = Ember.View.extend({
-	didInsertElement: function() {
-		var geocoder = new google.maps.Geocoder();
-		geocoder.geocode({address: "delhi"}, function (results, status) {
-			var map;
-			var mapOptions = {
-				zoom: 8,
-				center: results[0].geometry.location
-			};
-			map = new google.maps.Map(document.getElementById('map-canvas'),
-																mapOptions);
-			
-			console.log(map);
-		});
-	}
-});
-
 
 // Navigate
 //====================================================================
@@ -238,15 +206,10 @@ var delhiFakes = [
 	 "description": "Lying close to the Raj Ghat, the Shanti Vana (literally, the forest of peace) is the place where India's first Prime Minister Jawaharlal Nehru was cremated. The area is now a beautiful park adorned by trees planted by visiting dignitaries and heads of state.",
 	 "location": {} },
 	{"name": "National Zoological Park",
-	 "tags": ["nationalzoologicalparkdelhi"],
+	 "tags": ["delhizoo"],
 	 "description": "The National Zoological Park is a 176-acre (71 ha) zoo near the Old Fort in Delhi, India. The zoo is home to about 1350 animals representing almost 130 species of animals and birds from around the world.",
 	 "location": {} }
 	];
-	
-// Invoke IG
-// this.set("nextURL", getTagsURL(params.location));
-// this.updateQueue();
-
 
 var getCityData = function (location) {
 	return new Promise(function (s, f) {
@@ -254,12 +217,22 @@ var getCityData = function (location) {
 	});
 }
 
-
 App.NavigateRoute = Ember.Route.extend({
 	model: function (params) {
 		var location = params.location;
-		return location;
+
+		return getCityData(location);
 	},
+
+	setupController: function(controller, model){
+    this._super(controller, model);
+		controller.setProperties({
+				viewState: "main",
+				accepted: [],
+				rejected: [],
+				currentMarkers: []
+			});
+  },
 
 	actions: {
 		dragStart: function () {
@@ -297,15 +270,11 @@ App.NavigateRoute = Ember.Route.extend({
 		},
 		
 		accept: function (post) {
-			this.controller.set("all", this.controller.get("all").without(post));
-			
 			var a = this.controller.get("accepted");
 			this.controller.set("accepted", a.concat([post]));
 		},
 		
 		reject: function (post) {
-			this.controller.set("all", this.controller.get("all").without(post));
-
 			var r = this.controller.get("rejected");
 			this.controller.set("rejected", r.concat([post]));
 		}
@@ -326,25 +295,23 @@ App.NavigateController = Ember.ObjectController.extend({
 
 	accepted: [],
 	rejected: [],
-	all: delhiFakes,
 
 	images: [],
 	"current-image": "",
 
-	location: function () {
-		return this.get("model");
-	}.property("model"),
-		
 	seenIDs: function () {
-		return this.get("accepted").mapBy("id").
-			concat(this.get("rejected").mapBy("id"));
+		return this.get("accepted").mapBy("name").
+			concat(this.get("rejected").mapBy("name"));
 	}.property("accepted", "rejected"),
 	
 	queue: function () {
-		var all = this.get("all");
-
-		return all;
-	}.property("all"),
+		var all = this.get("model");
+		var seen = this.get("seenIDs");
+		console.log(seen);
+		return all.filter(function (item, i, e) {
+			return !seen.contains(item.name);
+		});
+	}.property("model", "seenIDs"),
 
 	rawIndex: 0,
 	index: function () {
@@ -369,7 +336,7 @@ App.NavigateController = Ember.ObjectController.extend({
 			return {};
 		}
 
-		this.set("images", [{}]);
+		this.set("images", []);
 		this.set("current-image", "");
 		
 		for (var i = 0; i < current.tags.length; i++) {
@@ -405,7 +372,11 @@ App.NavigateController = Ember.ObjectController.extend({
 	description: function () {
 		var des = this.get("current").description;
 		return des.substring(0, 255);
-	}.property("current")
+	}.property("current"),
+
+	currentMarkers: [],
+	markers: function () {
+	}.property("accepted")
 });
 
 
@@ -438,6 +409,7 @@ var mapSetup = function (location) {
 App.NavigateView = Ember.View.extend({
 	didInsertElement: function() {
 		var location = this.controller.get("location");
+		
 		if (typeof(google) !== "undefined") {
 			mapSetup("new delhi");
 		}
