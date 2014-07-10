@@ -453,7 +453,7 @@ App.NavigateWheretogoRoute = Ember.Route.extend({
 
 		var map = controller.get("map");
 		
-		if (!map) {
+		if (!map || !controller.get("initialised")) {
 			return;
 		}
 
@@ -473,7 +473,10 @@ App.NavigateWheretogoRoute = Ember.Route.extend({
 		for (var i = 0; i < toAdd.length; i++) {
 			(function (m) {
 				geocoder.geocode({address: m.name}, function (results, status) {
-					console.log(results[0].geometry.location)
+					if (!results || results.length === 0) {
+						return;
+					}
+
 					var marker = new google.maps.Marker({
 						position: results[0].geometry.location,
 						map: map,
@@ -497,6 +500,8 @@ App.NavigateWheretogoRoute = Ember.Route.extend({
 
 App.NavigateWheretogoController = Ember.ObjectController.extend({
 	needs: "navigate",
+
+	initialised: false,
 	
 	location: function () {
 		return this.get("model").location;
@@ -509,6 +514,7 @@ App.NavigateWheretogoController = Ember.ObjectController.extend({
 
 App.NavigateWheretogoView = Ember.View.extend({
 	didInsertElement: function() {
+	
 		var app = this;
 //		var location = this.controller.get("location");
 		var location = "new delhi";
@@ -531,6 +537,7 @@ App.NavigateWheretogoView = Ember.View.extend({
 				app.controller.set("map", map);
 
 				google.maps.event.addListenerOnce(map, 'idle', function() {
+					app.controller.set("initialised", true);
 					google.maps.event.trigger(map, 'resize');
 				});
 			});
