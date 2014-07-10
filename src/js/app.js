@@ -273,11 +273,7 @@ App.NavigateRoute = Ember.Route.extend({
 
 			this.transitionTo("navigate.sight", this.controller.get("current").id);
 		},
-		
-		"set-image": function (im) {
-			this.controller.set("current-image", im.images["standard_resolution"].url);
-		},
-				
+			
 		accept: function (post) {
 			var a = this.controller.get("accepted");
 			this.controller.set("accepted", a.concat([post]));
@@ -328,8 +324,6 @@ App.NavigateController = Ember.ArrayController.extend({
 		return i % l;
 	}.property("rawIndex"),
 	
-	currentImage: "http://www.kashmirwallpapers.com/wallpapers/new3/DSC01202.jpg",
-
 	current: function () {
 		// FIXME: We need to nullify and then asynchronously repopulate
 		// the images whenever the current selection is changed. This
@@ -351,9 +345,30 @@ App.NavigateController = Ember.ArrayController.extend({
 App.NavigateSightRoute = Ember.Route.extend({
 	model: function(params) {
 		var id = params.sight_id;
-		return cs.getByID(parseInt(id));
+		var current = cs.getByID(parseInt(id));
+		var app = this;
 
+		if (this.get("last") && this.get("last") === id) {
+			return current;
+		}
+		else {
+			this.set("last", id);
+		}
+
+		for (var i = 0; i < current.tags.length; i++) {
+			 getIG(getTagsURL(current.tags[i])).then(function (data) {
+				 var viable = data.data.filter(function(item) {
+					 return item.type === "image" && item.location !== null;
+				 });
+				 app.controller.set("images", app.controller.get("images").concat(viable));
+			 });
+		}
+		
+		return current;
 	},
+
+	last: null,
+	
 	actions: {
 		"view-map": function () {
 			this.transitionTo("navigate.wheretogo");
@@ -361,21 +376,22 @@ App.NavigateSightRoute = Ember.Route.extend({
 		
 		"view-thumbs": function () {
 			this.transitionTo("navigate.thumbnails", this.controller.get("id"));
-		},
-
-		switch: function (c) {
-			this.transitionTo("navigate.sight", c.id);
-			return false;
 		}
 	}
 });
 
 App.NavigateSightController = Ember.ObjectController.extend({
-	needs: "navigate",
+	needs: ["navigate", "navigateThumbnails"],
+
+	curl: undefined,
+	images: [],
 
 	current: function () {
-		return this.get("controllers.navigate").get("current");
-	}.property("content"),
+		this.set("images", []);
+		this.set("curl", undefined);
+		
+		return this.get("controllers.navigate.current");
+	}.property("controllers.navigate.current"),
 
 	id: function () {
 		return this.get("model").id;
@@ -390,50 +406,39 @@ App.NavigateSightController = Ember.ObjectController.extend({
 	}.property("model"),
 	
 	image: function () {
-		return this.get("controllers.navigate").get("currentImage")
-	}.property("content")
+		var images = this.get("images");
+		var curl = this.get("curl");
+
+		if (typeof(curl) === "undefined" && images.length > 0) {
+			return images[0].images["standard_resolution"].url;
+		}
+		return curl;
+	}.property("images", "curl"),
 });
 
 App.NavigateThumbnailsRoute = Ember.Route.extend({
 	model: function(params) {
-		return [];
+		return params.sight_id;
 	},
 	actions: {
-		getImages: function (tag) {
-			return getIG(getTagsURL(tag)).then(function (data) {
-				return data.data.filter(function(item) {
-					return item.type === "image" && item.location !== null;
-				});
-			});
+		"set-image": function (image) {
+			this.controller.get("controllers.navigateSight").set("curl",
+																													 image.images["standard_resolution"].url);
+
+			this.transitionTo("navigate.sight", this.controller.get("controllers.navigate.current").id);
 		}
 	}
 });
 
-App.NavigateThumbnailsController = Ember.ArrayController.extend({
-	
+App.NavigateThumbnailsController = Ember.Controller.extend({
+	needs: ["navigate", "navigateSight"],
+	images: function () {
+		return this.get("controllers.navigateSight.images");
+	}.property("controllers.navigateSight.images")
 });
 
 var mapSetup = function (location) {
 
-	var geocoder = new google.maps.Geocoder();
-
-	var map;
-
-	geocoder.geocode({address: location}, function (results, status) {
-		var mapOptions = {
-			disableDefaultUI: true,
-			zoom: 14,
-			center: results[0].geometry.location,
-			mapTypeId: google.maps.MapTypeId.ROADMAP
-		};
-		
-		map = new google.maps.Map($('#map-canvas')[0],
-															mapOptions);
-
-		google.maps.event.addListenerOnce(map, 'idle', function() {
-			google.maps.event.trigger(map, 'resize');
-		});
-	});
 	
 	return map;
 };
@@ -442,66 +447,93 @@ App.NavigateWheretogoRoute = Ember.Route.extend({
 	model: function (params) {
 		return {location:this.modelFor("navigate").location};
 	},
+
+	setupController: function(controller, model){
+    this._super(controller, model);
+
+		var map = controller.get("map");
+		
+		if (!map) {
+			return;
+		}
+
+		var accepted = controller.get("controllers.navigate.accepted");
+		
+		var markers = controller.get("currentMarkers");
+		
+		var geocoder = new google.maps.Geocoder();
+		
+		var toAdd = accepted.filter(function (n, i, that) {
+			return markers.filter(function (o, j, that) {
+				return o.title === n.name;
+			}).length === 0;
+		});
+
+		
+		for (var i = 0; i < toAdd.length; i++) {
+			(function (m) {
+				geocoder.geocode({address: m.name}, function (results, status) {
+					console.log(results[0].geometry.location)
+					var marker = new google.maps.Marker({
+						position: results[0].geometry.location,
+						map: map,
+						title: m.name
+					});
+
+					controller.set("currentMarkers",
+									controller.get("currentMarkers").concat([marker]));
+				});
+			})(toAdd[i]);
+		}
+	},
+
 	actions: {
 		"view-main": function () {
-			var current = this.controllerFor("navigateIndex").get("current").id;
+			var current = this.controllerFor("navigate").get("current").id;
 			this.transitionTo("navigate.sight", current);
 		}
 	}
 });
 
 App.NavigateWheretogoController = Ember.ObjectController.extend({
+	needs: "navigate",
+	
 	location: function () {
 		return this.get("model").location;
 	}.property("model"),
 	
 	map: null,
 
-	currentMarkers: [],
-
-	markers: function () {
-		var map = this.get("map");
-
-		if (!map) {
-			return;
-		}
-
-		var app = this;
-		var markers = this.get("currentMarkers");
-		
-		var toAdd = this.get("accepted").filter(function (n, i, that) {
-			return markers.filter(function (o, j, that) {
-				return o.title === n.name;
-			}).length === 0;
-		});
-
-		console.log(toAdd);
-		
-		for (var i = 0; i < toAdd.length; i++) {
-			(function (m) {
-				geocoder.geocode({address: m.name}, function (results, status) {
-					console.log(results[0]);
-					var marker = new google.maps.Marker({
-						position: results[0].geomertry.location,
-						map: map,
-						title: m.name
-					});
-					app.controller.set("currentMarkers",
-														 app.controller.get("currentMarkers").concat([marker]));
-				});
-			})(toAdd[i]);
-		}
-		
-		return toAdd;
-	}.property("accepted")
+	currentMarkers: []
 });
 
 App.NavigateWheretogoView = Ember.View.extend({
 	didInsertElement: function() {
-		var location = this.controller.get("location");
+		var app = this;
+//		var location = this.controller.get("location");
+		var location = "new delhi";
+
 		if (typeof(google) !== "undefined") {
-			var map = mapSetup("new delhi");
-			this.controller.set("map", map);
+			var geocoder = new google.maps.Geocoder();
+			var map;
+
+			geocoder.geocode({address: location}, function (results, status) {
+				var mapOptions = {
+//					disableDefaultUI: true,
+					zoom: 14,
+					center: results[0].geometry.location,
+					mapTypeId: google.maps.MapTypeId.ROADMAP
+				};
+				
+				map = new google.maps.Map($('#map-canvas')[0],
+																	mapOptions);
+
+				app.controller.set("map", map);
+
+				google.maps.event.addListenerOnce(map, 'idle', function() {
+					google.maps.event.trigger(map, 'resize');
+				});
+			});
 		}
 	}
 });
