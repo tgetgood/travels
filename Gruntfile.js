@@ -57,7 +57,7 @@ module.exports = function(grunt) {
 				tasks: ['emberTemplates']
 			},
       scripts :{
-        files : ['src/js/**/*', "src/css/**/*", "src/html/**/*"], 
+        files : ['src/js/**/*', "src/css/**/*", "resources/templates.js"], 
         options : {
           livereload : 9090,
         }
