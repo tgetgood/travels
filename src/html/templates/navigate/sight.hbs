@@ -1,4 +1,4 @@
-<div id="main-view" draggable="true" {{bind-attr hidden=hide-main}}
+<div id="main-view" draggable="true" 
   {{action "dragStart" on="dragStart"}}
   {{action "drag" on="drag"}}
   {{action "dragEnd" on="dragEnd"}}>
@@ -15,9 +15,9 @@
         no
       </button>
     </div>
-    <div id="image-container" class="pure-u-2-3" {{action 'view-thumbs'}}>
+    <div id="image-container" class="pure-u-2-3" {{action "view-thumbs"}}>
       {{#view App.MovableImage}}
-        <img {{bind-attr src=current-image}}></img>
+        <img {{bind-attr src=image}}></img>
       {{/view}}
     </div>
     <div id="positive" class="pure-u-1-6 v-centre">
@@ -27,7 +27,7 @@
     </div>
   </div>
   <br>
-  <div id="site-name">{{current.name}}</div>
+  <div id="site-name">{{name}}</div>
   <br>
   <div id="description">{{description}}</div>
   <br>
@@ -37,30 +37,10 @@
       next
     </button>
   </div>
-  <hr>
-  <div class="centre">
-    <button id="map" class="pure-button pure-button-primary" {{action "view-map"}}>
-      Go to Map
-    </button>
-  </div>
 </div>
-
-<div id="map-view" {{bind-attr hidden=hide-map}}>
-  <div id="map-canvas">
-  </div>
-  <hr>
-  <div class="centre">
-    <button class="pure-button pure-button-primary" {{action "view-main"}}>
-      back
-    </button>
-  </div>
+<hr>
+<div class="centre">
+  <button id="map" class="pure-button pure-button-primary" {{action "view-map"}}>
+    Go to Map
+  </button>
 </div>
-
-<div id="more-pictures" class="pure-g" {{bind-attr hidden=hide-thumbs}}>
-  {{#each image in images}}
-    <div class="pure-u-1-3 nav-thumb" {{action 'set-image' image}}>
-      <img {{bind-attr src=image.images.thumbnail.url}}>
-    </div>
-  {{/each}}
-</div>
-    
