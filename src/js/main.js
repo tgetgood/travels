@@ -1,5 +1,13 @@
 'use strict';
 
+/*
+ * Intergalactic Travel Prototype.
+ * 2014-07-10
+
+ * Copyright Thomas Getgood
+`* All rights reserved.
+*/
+
 // JS extensions
 //====================================================================
  /*
@@ -225,6 +233,15 @@ var getIG = function (url) {
 	});
 };				
 
+// Helpers
+//====================================================================
+
+function parseUrl( url ) {
+    var a = document.createElement('a');
+    a.href = url;
+    return a;
+}
+
 // State...
 //====================================================================
 
@@ -236,8 +253,12 @@ var state = {
 	index: 0,
 	current: {},
 	queue: [],
+	data: delhiFakes,
 	viewState:"main"
 };
+
+var maintainQueue = function (state) {
+}	
 
 state.watch("seen", function(p, oldval, newval) {
 	state.queue = _.filter(delhiFakes, function(x) {
@@ -262,7 +283,7 @@ state.watch("index", function (p, oldval, newval) {
 	state.current = state.queue[newval];
 });
 
-state.seen = [];
+//state.seen = [];
 
 // Main View
 // ====================================================================
@@ -310,7 +331,9 @@ var render = function (current) {
 	});	
 };
 
-var hideMulti = function (state) {
+var hideMulti = function (hash) {
+	var state = hash.substring(1);
+
 	$("#main-view").hide();
 	$("#more-photos").hide();
 	$("#map-view").hide();
@@ -325,17 +348,19 @@ var hideMulti = function (state) {
 		$("#map-view").show();
 	}
 	else {
-		throw "What kind of state are you in?";
+		$("#main-view").show(); //...
 	}
 };
 
 // Global watchers
 //====================================================================
 
-state.watch("viewState", function (prop, oldval, newval) {
-	hideMulti(newval);
-});
-hideMulti(state.viewState);
+window.onhashchange = function (evt) {
+	var hash = parseUrl(evt.newURL).hash;
+	console.log(hash);
+	hideMulti(hash);
+}
+hideMulti(document.location.hash);
 
 state.watch("index", function (prop, oldval, newval) {
 	oldval.unwatch("images");
