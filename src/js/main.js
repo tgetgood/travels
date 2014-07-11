@@ -249,47 +249,78 @@ var state = {
 	map: null,
 	markers: [],
 	accepted: [],
-	seen: [],
+	rejected: [],
 	index: 0,
-	current: {},
-	queue: [],
 	data: delhiFakes,
-	viewState:"main"
+	current: delhiFakes[0]
 };
 
 var maintainQueue = function (state) {
+	var sids = _.map(state.accepted, function (x) {
+		return x.id;
+	}).concat(_.map(state.rejected, function (x) {
+		return x.id;
+	}));
+	
+	var queue = _.filter(state.data, function (d) {
+		return !_.contains(sids, d.id);
+	});
+
+
+	var index = state.index;
+	var len = queue.length;
+
+	while (index < 0) {
+		index += len;
+	}
+	
+	index = index % len;
+	
+	state.index = index;
+	
+	return queue[index];
 }	
 
-state.watch("seen", function(p, oldval, newval) {
-	state.queue = _.filter(delhiFakes, function(x) {
-		return true;//return !_.contains(newval, x.id);
-	});
-});
-						
-state.watch("queue", function (p, oldval, newval) {
-	state.index = state.index % newval.length;
-
-	state.current = newval[state.index];
+state.watch("accepted", function(p, o, newval) {
+	state.accepted  = newval;
+	state.current = maintainQueue(state);
 });
 
-state.watch("index", function (p, oldval, newval) {
-	var len = state.queue.length;
-	while (newval < 0) {
-		newval += len;
-	}
-	newval = newval % len;
-	state.index = newval;
-
-	state.current = state.queue[newval];
+state.watch("rejected", function(p, o, newval) {
+	state.rejected  = newval;
+	state.current = maintainQueue(state);
 });
-
-//state.seen = [];
+state.watch("index", function(p, o, newval) {
+	state.index  = newval;
+	state.current = maintainQueue(state);
+});
 
 // Main View
 // ====================================================================
 
-var getCurrent = function (current) {
-	var current = _.clone(current);
+var hideMulti = function (hash) {
+	var state = hash.substring(1);
+
+	$("#main-view").hide();
+	$("#more-pictures").hide();
+	$("#map-view").hide();
+	
+	if (state === "main") {
+		$("#main-view").show();
+	}
+	else if (state === "thumbs") {
+		$("#more-pictures").show();
+	}
+	else if (state === "map") {
+		$("#map-view").show();
+	}
+	else {
+		$("#main-view").show(); //...
+	}
+};
+
+var getCurrent = function (c) {
+	var current = _.clone(c);
 	
 	current.images = [];
 	current.shownImage = "";
@@ -299,10 +330,16 @@ var getCurrent = function (current) {
 			var viable = data.data.filter(function(item) {
 				return item.type === "image" && item.location !== null;
 			});
-			current.images = current.images.concat(viable);
+
 			if (current.shownImage === "") {
 				current.shownImage = viable[0].images["standard_resolution"].url;
 			}
+
+			if (!current.images) {
+				// Weirdest bug...
+				return;
+			}
+			current.images = current.images.concat(viable);
 		});
 	}
 	
@@ -322,7 +359,6 @@ var render = function (current) {
 		mp.html();
 		for (var i = 0; i < newval.length; i++) {
 			(function (i) {
-				console.log(newval[i])
 				mp.append($('<div>').attr('class', "pure-u-1-3 nav-thumb").on("click", function (evt) {
 					current.shownImage = newval[i].images["standard_resolution"].url;
 				}).append($("<img>").attr("src", newval[i].images.thumbnail.url)));
@@ -331,38 +367,16 @@ var render = function (current) {
 	});	
 };
 
-var hideMulti = function (hash) {
-	var state = hash.substring(1);
-
-	$("#main-view").hide();
-	$("#more-photos").hide();
-	$("#map-view").hide();
-	
-	if (state === "main") {
-		$("#main-view").show();
-	}
-	else if (state === "thumbs") {
-		$("#more-photos").show();
-	}
-	else if (state === "map") {
-		$("#map-view").show();
-	}
-	else {
-		$("#main-view").show(); //...
-	}
-};
-
 // Global watchers
 //====================================================================
 
 window.onhashchange = function (evt) {
 	var hash = parseUrl(evt.newURL).hash;
-	console.log(hash);
 	hideMulti(hash);
 }
 hideMulti(document.location.hash);
 
-state.watch("index", function (prop, oldval, newval) {
+state.watch("current", function (prop, oldval, newval) {
 	oldval.unwatch("images");
 	oldval.unwatch("shownImage");
 
@@ -414,6 +428,9 @@ var addMarker = function(map, location) {
 	});
 };
 
+// Bindings
+//====================================================================
+
 // Test
 // ====================================================================
 
@@ -422,3 +439,4 @@ initMap("new delhi");
 _.delay(function () {return addMarker(state.map, {name: "G.B. Road delhi"});}, 2000);;
 
 
+state.index = 8;
