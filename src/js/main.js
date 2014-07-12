@@ -337,13 +337,16 @@ var render = function (current) {
 	$("#site-name").text(current.name);
 	$("#description").text(current.description);
 	
+	$("#principle-image").attr("src", current.shownImage);
 	current.watch("shownImage", function (prop, oldval, newval) {
 		$("#principle-image").attr("src", newval);
 	});
 	
+	
+	var mp = $("#more-pictures");
+	mp.html("");
+
 	current.watch("images", function (prop, oldval, newval) {
-		var mp = $("#more-pictures");
-		mp.html();
 		for (var i = 0; i < newval.length; i++) {
 			(function (i) {
 				mp.append($('<div>').attr('class', "pure-u-1-3 nav-thumb").on("click", function (evt) {
@@ -395,7 +398,6 @@ state.watch("current", function (prop, oldval, newval) {
 	if (oldval) {
 		oldval.unwatch("images");
 		oldval.unwatch("shownImage");
-		$("#principle-image").attr("src", ""); // hack to wipe image while switching.
 	}
 	
 	var current = getCurrent(newval);
