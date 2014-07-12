@@ -246,8 +246,9 @@ function parseUrl( url ) {
 //====================================================================
 
 var state = {
+	location: null,
+	mapInit:false,
 	map: null,
-	markers: [],
 	accepted: [],
 	rejected: [],
 	index: 0,
@@ -281,9 +282,6 @@ var maintainQueue = function (state) {
 state.watch("accepted", function(p, o, newval) {
 	var s = _.clone(state);
 
-	console.log(o);
-	console.log(newval);
-
 	s.accepted  = newval;
 	state.current = maintainQueue(s);
 
@@ -313,17 +311,21 @@ state.watch("index", function(p, o, newval) {
 // ====================================================================
 
 var hideMulti = function (hash) {
-	var state = hash.substring(1);
+	var view = hash.substring(1);
 
 	$("#main-view").hide();
 	$("#more-pictures").hide();
 	$("#map-view").hide();
 	
- if (state === "thumbs") {
+ if (view === "thumbs") {
 		$("#more-pictures").show();
 	}
-	else if (state === "map") {
+	else if (view === "map") {
 		$("#map-view").show();
+		if (!state.mapInit) {
+			initMap(state.location);
+			state.mapInit = true;
+		}
 	}
 	else {
 		$("#main-view").show(); //...
@@ -388,7 +390,6 @@ window.onhashchange = function (evt) {
 	var hash = parseUrl(evt.newURL).hash;
 	hideMulti(hash);
 }
-hideMulti(document.location.hash);
 
 state.watch("current", function (prop, oldval, newval) {
 	if (oldval) {
@@ -414,7 +415,7 @@ var initMap = function(location) {
 		geocoder.geocode({address: location}, function (results, status) {
 			var mapOptions = {
 				disableDefaultUI: true,
-				zoom: 14,
+				zoom: 13,
 				center: results[0].geometry.location,
 				mapTypeId: google.maps.MapTypeId.ROADMAP
 			};
@@ -432,7 +433,8 @@ var initMap = function(location) {
 var addMarker = function(map, location) {	
 
  	if (!map) {
-		return;
+		// FIXME: Not the worst leak, but terrible practice.
+		_.delay(function () {addMarker(state.map, location);}, 2000);
 	}
 	
 	var geocoder = new google.maps.Geocoder();
@@ -483,7 +485,7 @@ var accept = function (c) {
 //====================================================================
 
 var buttonMap = {
-	"#map":             goToMap,
+	"#map": 	        	goToMap,
 	"#image-container": goToThumbs,
 	"#back-to-main":    goToMain,
 
@@ -506,9 +508,14 @@ var attachHandlers = function(map) {
 
 attachHandlers(buttonMap);
 
-// Test
+// Init
 // ====================================================================
 
-initMap("new delhi");
+// Fake search
+state.location = "new delhi";
 
-state.current=delhiFakes[0];
+// Fake data retrieval
+state.current = delhiFakes[0];
+
+// Set view based on hash
+hideMulti(document.location.hash);
