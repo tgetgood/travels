@@ -1,0 +1,91 @@
+<html>
+	<head>
+		<link rel="stylesheet" href="../libs/pure-min.css"/>
+
+	</head>
+	<body>
+		<script src="../libs/jquery-2.1.0.js"></script>
+		<script src="../libs/handlebars-v1.3.0.js"></script>
+		<script src="../libs/ember.js"></script>
+			  
+		<script type="text/x-handlebars" data-template-name="application">
+			{{outlet}}
+		</script>
+		
+		<script type="text/x-handlebars" data-template-name="index">
+			<div class="pure-g">
+				{{#each image in images}}
+				  <div class="pure-u-1-5" {{action 'c' image}}>
+						<img {{bind-attr src=image.images.thumbnail.url}}>
+					</div>
+				{{/each}}
+			</div>
+		</script>
+
+		<script type="application/javascript">
+			var App = Ember.Application.create();
+			
+//			App.Router.map(function () {
+//			  this.route('index', {path:"/"});
+//			});
+
+			App.IndexController = Ember.Controller.extend({
+			  images: []
+			});
+
+			App.IndexRoute = Ember.Route.extend({
+			  actions: {
+			    c: function (x) {
+			      console.log(JSON.stringify(x.images));
+          }
+			  }
+			});
+
+			var clientID = "4a6a3fb4b8464bfe9098d1e901d2aa6e"
+
+			var appendAuth = function (url) {
+			var res = url;
+			if (url.indexOf("?") !== -1) {
+			res = res + "&";
+			}
+			else {
+			res = res + "?";
+			}
+			return res + "client_id=" + clientID;
+			};
+
+			// Currently Set to get 100 results at a time, if IG respects that...
+			var getTagsURL = function (tag) {
+			var url = "https://api.instagram.com/v1/tags/" + tag + "/media/recent?count=40";
+			return appendAuth(url);
+			};
+
+			var getIG = function (url) {
+			return $.ajax(url, {
+			type: "GET",
+			"method": "GET",
+			dataType: "jsonp",
+			headers: {"Access-Control-Allow-Origin": "true"}
+			});
+			};				
+
+			App.IndexView = Ember.View.extend({
+			  didInsertElement: function getim() {
+			    var tag = "delhizoo";
+			    var app = this;
+			
+			    getIG(getTagsURL(tag)).then(function(data) {
+			      var viable = data.data.filter(function(item) {
+					    return item.type === "image";
+				    });
+				    app.controller.set("images", app.controller.get("images").concat(viable));
+			      
+			      console.log(data.data.length);
+			      setTimeout(2000, function () {getim(data.pagination.next_url);});
+			     });
+			   }
+			 });
+
+		</script>
+	</body>
+</html>

@@ -87,7 +87,7 @@ var delhiFakes = [
 	{"name": "Purana Quila",
 	 "id":5,
 	 "tags": ["puranaquila"],
-	 "description": "The Purana Quila (Old Fort) is a very good example of Mughal military architecture.[2] Built by Pandavas, renovated by Humayun, with later modifications by Sher Shah Suri, the Purana Quila is a monument of bold design, which is strong, straightforward, and every inch a fortress. It is different from the well-planned, carefully decorated, and palatial forts of the later Mughal rulers. Purana Quila is also different from the later forts of the Mughals, as it does not have a complex of palaces, administrative, and recreational buildings as is generally found in the forts built later on. The main purpose of this now dilapidated fort was its utility with less emphasis on decoration. The Qal'a-I-Kunha Masjid and the Sher are two important monuments inside the fort. It was made by Aqeel in 1853."},
+	 "description": "The Purana Quila (Old Fort) is a very good example of Mughal military architecture. Built by Pandavas, renovated by Humayun, with later modifications by Sher Shah Suri, the Purana Quila is a monument of bold design, which is strong, straightforward, and every inch a fortress. It is different from the well-planned, carefully decorated, and palatial forts of the later Mughal rulers. Purana Quila is also different from the later forts of the Mughals, as it does not have a complex of palaces, administrative, and recreational buildings as is generally found in the forts built later on. The main purpose of this now dilapidated fort was its utility with less emphasis on decoration. The Qal'a-I-Kunha Masjid and the Sher are two important monuments inside the fort. It was made by Aqeel in 1853."},
 	{"name": "Red Fort",
 	 "id": 6,
 	 "tags": ["redfort"],
@@ -331,6 +331,7 @@ var render = function (current) {
 		for (var i = 0; i < newval.length; i++) {
 			(function (i) {
 				mp.append($('<div>').attr('class', "pure-u-1-3 nav-thumb").on("click", function (evt) {
+					console.log(JSON.stringify(newval[i].images));
 					current.shownImage = newval[i].images["standard_resolution"].url;
 					location.hash = "";
 				}).append($("<img>").attr("src", newval[i].images.thumbnail.url)));
