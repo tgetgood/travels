@@ -24,7 +24,7 @@
  ) 
 
 (defroutes dev-router
-  (GET  "/" [] (slurp "src/html/delhi.html"))
+  (GET  "/" [] (slurp "src/html/delhi-dev.html"))
   (GET  "/templates.js" [] (slurp "resources/templates.js"))
   (POST "/fileupload" req (files/upload req))
   (GET  "/images/:name" [name] (when
@@ -40,7 +40,7 @@
 )
 
 (defroutes prod-router
-  (GET "/" [] (slurp "src/html/index.html"))
+  (GET "/" [] (slurp "src/html/delhi.html"))
   (route/resources ""))
 
 (defroutes main-router

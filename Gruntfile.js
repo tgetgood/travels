@@ -15,8 +15,8 @@ module.exports = function(grunt) {
 
 		concat: {
 			js: {
-				src: 'src/js/**/*.js',
-				dest: 'resources/app.js'
+				src: 'src/js/main.js',
+				dest: 'resources/main.js'
 			},
 			css: {
 				src: 'src/css/**/*.css',
@@ -29,7 +29,7 @@ module.exports = function(grunt) {
 			},
 			dist: {
 				files: {
-					'resources/public/app.min.js': ['resources/app.js'],
+					'resources/public/main.min.js': ['resources/main.js'],
 					'resources/public/templates.min.js': ['resources/templates.js']
 				}
 			}
