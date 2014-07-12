@@ -23,27 +23,27 @@
 // object.watch
 if (!Object.prototype.watch) {
 	Object.defineProperty(Object.prototype, "watch", {
-		enumerable: false
-		, configurable: true
-		, writable: false
-		, value: function (prop, handler) {
-			var
-			oldval = this[prop]
-			, newval = oldval
-			, getter = function () {
+		enumerable: false,
+		configurable: true,
+		writable: false,
+		value: function (prop, handler) {
+			var	oldval = this[prop];
+			var newval = oldval;
+			var getter = function () {
 				return newval;
-			}
-			, setter = function (val) {
+			};
+			var setter = function (val) {
 				oldval = newval;
-				return newval = handler.call(this, prop, oldval, val);
-			}
-			;
+				newval = handler.call(this, prop, oldval, val);
+				return newval;
+			};
+			
 			if (delete this[prop]) { // can't watch constants
 				Object.defineProperty(this, prop, {
-					get: getter
-					, set: setter
-					, enumerable: true
-					, configurable: true
+					get: getter,
+					set: setter,
+					enumerable: true,
+					configurable: true
 				});
 			}
 		}
@@ -252,7 +252,7 @@ var state = {
 	rejected: [],
 	index: 0,
 	data: delhiFakes,
-	current: delhiFakes[0]
+	current: {}
 };
 
 var maintainQueue = function (state) {
@@ -266,7 +266,6 @@ var maintainQueue = function (state) {
 		return !_.contains(sids, d.id);
 	});
 
-
 	var index = state.index;
 	var len = queue.length;
 
@@ -276,24 +275,39 @@ var maintainQueue = function (state) {
 	
 	index = index % len;
 	
-	state.index = index;
-	
 	return queue[index];
 }	
 
 state.watch("accepted", function(p, o, newval) {
-	state.accepted  = newval;
-	state.current = maintainQueue(state);
+	var s = _.clone(state);
+
+	console.log(o);
+	console.log(newval);
+
+	s.accepted  = newval;
+	state.current = maintainQueue(s);
+
+	return newval;
 });
 
 state.watch("rejected", function(p, o, newval) {
-	state.rejected  = newval;
-	state.current = maintainQueue(state);
+	var s = _.clone(state);
+
+	s.rejected  = newval;
+	state.current = maintainQueue(s);
+
+	return newval;
 });
+
 state.watch("index", function(p, o, newval) {
-	state.index  = newval;
-	state.current = maintainQueue(state);
+	var s = _.clone(state);
+
+	s.index  = newval;
+	state.current = maintainQueue(s);
+
+	return newval;
 });
+
 
 // Main View
 // ====================================================================
@@ -305,10 +319,7 @@ var hideMulti = function (hash) {
 	$("#more-pictures").hide();
 	$("#map-view").hide();
 	
-	if (state === "main") {
-		$("#main-view").show();
-	}
-	else if (state === "thumbs") {
+ if (state === "thumbs") {
 		$("#more-pictures").show();
 	}
 	else if (state === "map") {
@@ -317,6 +328,29 @@ var hideMulti = function (hash) {
 	else {
 		$("#main-view").show(); //...
 	}
+};
+
+
+var render = function (current) {
+	$("#site-name").text(current.name);
+	$("#description").text(current.description);
+	
+	current.watch("shownImage", function (prop, oldval, newval) {
+		$("#principle-image").attr("src", newval);
+	});
+	
+	current.watch("images", function (prop, oldval, newval) {
+		var mp = $("#more-pictures");
+		mp.html();
+		for (var i = 0; i < newval.length; i++) {
+			(function (i) {
+				mp.append($('<div>').attr('class', "pure-u-1-3 nav-thumb").on("click", function (evt) {
+					current.shownImage = newval[i].images["standard_resolution"].url;
+					location.hash = "";
+				}).append($("<img>").attr("src", newval[i].images.thumbnail.url)));
+			})(i);
+		}
+	});	
 };
 
 var getCurrent = function (c) {
@@ -346,26 +380,6 @@ var getCurrent = function (c) {
 	return current;
 }
 
-var render = function (current) {
-	$("#site-name").text(current.name);
-	$("#description").text(current.description);
-	
-	current.watch("shownImage", function (prop, oldval, newval) {
-		$("#principle-image").attr("src", newval);
-	});
-	
-	current.watch("images", function (prop, oldval, newval) {
-		var mp = $("#more-pictures");
-		mp.html();
-		for (var i = 0; i < newval.length; i++) {
-			(function (i) {
-				mp.append($('<div>').attr('class', "pure-u-1-3 nav-thumb").on("click", function (evt) {
-					current.shownImage = newval[i].images["standard_resolution"].url;
-				}).append($("<img>").attr("src", newval[i].images.thumbnail.url)));
-			})(i);
-		}
-	});	
-};
 
 // Global watchers
 //====================================================================
@@ -377,10 +391,17 @@ window.onhashchange = function (evt) {
 hideMulti(document.location.hash);
 
 state.watch("current", function (prop, oldval, newval) {
-	oldval.unwatch("images");
-	oldval.unwatch("shownImage");
+	if (oldval) {
+		oldval.unwatch("images");
+		oldval.unwatch("shownImage");
+		$("#principle-image").attr("src", ""); // hack to wipe image while switching.
+	}
+	
+	var current = getCurrent(newval);
+	
+	render(current);
 
-	render(getCurrent(newval));
+	return current;;
 });
 
 // Maps
@@ -410,7 +431,7 @@ var initMap = function(location) {
 	
 var addMarker = function(map, location) {	
 
-	if (!map) {
+ 	if (!map) {
 		return;
 	}
 	
@@ -428,15 +449,66 @@ var addMarker = function(map, location) {
 	});
 };
 
-// Bindings
+// Event Handlers
 //====================================================================
+
+var go = function (h) {
+	return function() {
+		location.hash = h;
+	};
+};
+
+var goToMap    = go("#map");
+var goToThumbs = go("#thumbs");
+var goToMain   = go("");
+
+var scrollUp = function () {
+	state.index = state.index - 1;
+};
+
+var scrollDown = function () {
+	state.index = state.index + 1;
+};
+
+var reject = function (c) {
+	state.rejected = state.rejected.concat([c]);
+};
+
+var accept = function (c) {
+	state.accepted = state.accepted.concat([c]);
+	addMarker(state.map, state.current);
+};
+
+// Static Bindings
+//====================================================================
+
+var buttonMap = {
+	"#map":             goToMap,
+	"#image-container": goToThumbs,
+	"#back-to-main":    goToMain,
+
+	"#previous":   scrollUp,
+	"#next":       scrollDown,
+	"#no-button":  function () {reject(state.current);},
+	"#yes-button": function () {accept(state.current);}
+};
+
+// Apply Bindings
+//====================================================================
+
+var attachHandlers = function(map) {
+	for (var b in map) {
+		if (_.has(map, b)) {
+			$(b).on("click", map[b]);
+		}
+	}
+};
+
+attachHandlers(buttonMap);
 
 // Test
 // ====================================================================
 
 initMap("new delhi");
 
-_.delay(function () {return addMarker(state.map, {name: "G.B. Road delhi"});}, 2000);;
-
-
-state.index = 8;
+state.current=delhiFakes[0];
