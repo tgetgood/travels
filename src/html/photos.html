@@ -4,6 +4,8 @@
 
 	</head>
 	<body>
+		<script src="http://localhost:9090/livereload.js"></script>
+
 		<script src="../libs/jquery-2.1.0.js"></script>
 		<script src="../libs/handlebars-v1.3.0.js"></script>
 		<script src="../libs/ember.js"></script>
@@ -69,10 +71,19 @@
 			});
 			};				
 
+			var tagInfoURL = function (tag) {
+			var baseURL = "https://api.instagram.com/v1/tags/";
+			return appendAuth(baseURL + tag);
+			};
+
 			App.IndexView = Ember.View.extend({
 			  didInsertElement: function getim() {
-			    var tag = "delhizoo";
+			    var tag = "ChandniChowk";
 			    var app = this;
+
+			    getIG(tagInfoURL(tag)).then(function(data) {
+      			console.log(data);
+    			});
 			
 			    getIG(getTagsURL(tag)).then(function(data) {
 			      var viable = data.data.filter(function(item) {
@@ -81,7 +92,7 @@
 				    app.controller.set("images", app.controller.get("images").concat(viable));
 			      
 			      console.log(data.data.length);
-			      setTimeout(2000, function () {getim(data.pagination.next_url);});
+//			      setTimeout(2000, function () {getim(data.pagination.next_url);});
 			     });
 			   }
 			 });

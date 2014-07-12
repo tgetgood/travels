@@ -70,36 +70,104 @@ if (!Object.prototype.unwatch) {
 var delhiFakes = [
 	{"id": 1,
 	 "name": "India Gate and Rajpath",
-	 "tags": ["indiagate", "rajpath"],
-	 "description": "India Gate is a memorial raised in honour of the Indian soldiers who died during the Afghan wars and World War I. The cenotaph (or shrine) in the middle is constructed with black marble and depicts a rifle placed on its barrel, crested by a soldier's helmet." },
+	 "description": "India Gate is a memorial raised in honour of the Indian soldiers who died during the Afghan wars and World War I. The cenotaph (or shrine) in the middle is constructed with black marble and depicts a rifle placed on its barrel, crested by a soldier's helmet.",
+	"images":[
+		{"low_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xaf1/t51.2885-15/10413852_1440915649520615_401579729_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-a.cdninstagram.com/hphotos-xaf1/t51.2885-15/10413852_1440915649520615_401579729_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xaf1/t51.2885-15/10413852_1440915649520615_401579729_n.jpg","width":640,"height":640}},
+{"low_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xap1/t51.2885-15/925314_1655808077976793_1833730716_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-a.cdninstagram.com/hphotos-xap1/t51.2885-15/925314_1655808077976793_1833730716_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xap1/t51.2885-15/925314_1655808077976793_1833730716_n.jpg","width":640,"height":640}},
+{"low_resolution":{"url":"http://scontent-b.cdninstagram.com/hphotos-xap1/t51.2885-15/10554183_1450892225164089_263938657_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-b.cdninstagram.com/hphotos-xap1/t51.2885-15/10554183_1450892225164089_263938657_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-b.cdninstagram.com/hphotos-xap1/t51.2885-15/10554183_1450892225164089_263938657_n.jpg","width":640,"height":640}},
+{"low_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xpf1/t51.2885-15/10507865_1435186200095558_2020763554_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-a.cdninstagram.com/hphotos-xpf1/t51.2885-15/10507865_1435186200095558_2020763554_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xpf1/t51.2885-15/10507865_1435186200095558_2020763554_n.jpg","width":640,"height":640}},
+{"low_resolution":{"url":"http://scontent-b.cdninstagram.com/hphotos-xap1/t51.2885-15/10488705_490107687790500_2111000839_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-b.cdninstagram.com/hphotos-xap1/t51.2885-15/10488705_490107687790500_2111000839_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-b.cdninstagram.com/hphotos-xap1/t51.2885-15/10488705_490107687790500_2111000839_n.jpg","width":640,"height":640}},
+{"low_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xpa1/t51.2885-15/923698_1438699059741632_989549904_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-a.cdninstagram.com/hphotos-xpa1/t51.2885-15/923698_1438699059741632_989549904_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xpa1/t51.2885-15/923698_1438699059741632_989549904_n.jpg","width":640,"height":640}},
+{"low_resolution":{"url":"http://scontent-b.cdninstagram.com/hphotos-xfp1/t51.2885-15/10453911_1525378421018409_69573855_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-b.cdninstagram.com/hphotos-xfp1/t51.2885-15/10453911_1525378421018409_69573855_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-b.cdninstagram.com/hphotos-xfp1/t51.2885-15/10453911_1525378421018409_69573855_n.jpg","width":640,"height":640}},
+{"low_resolution":{"url":"http://scontent-b.cdninstagram.com/hphotos-xpa1/t51.2885-15/927130_1441864916082093_766144570_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-b.cdninstagram.com/hphotos-xpa1/t51.2885-15/927130_1441864916082093_766144570_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-b.cdninstagram.com/hphotos-xpa1/t51.2885-15/927130_1441864916082093_766144570_n.jpg","width":640,"height":640}}] 
+	},
 	{"id": 2,
 	 "name": "Rashtrapati Bhavan",
-	 "tags": ["rashtrapatibhavan"],
-	 "description": "Built with a mix of European and Mughal/Indian styles, Rashtrapati Bhavan was originally built for the Governor General of India. Inaugurated in 1931 as the Viceregal Lodge, the name was changed in 1959 after India became a republic. Now it is the Presidential Palace of India." },
+	 "description": "Built with a mix of European and Mughal/Indian styles, Rashtrapati Bhavan was originally built for the Governor General of India. Inaugurated in 1931 as the Viceregal Lodge, the name was changed in 1959 after India became a republic. Now it is the Presidential Palace of India.",
+	"images":[
+	{"low_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xpf1/t51.2885-15/10471801_360764827411532_1183704838_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-a.cdninstagram.com/hphotos-xpf1/t51.2885-15/10471801_360764827411532_1183704838_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xpf1/t51.2885-15/10471801_360764827411532_1183704838_n.jpg","width":640,"height":640}},
+{"low_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xfp1/t51.2885-15/10540236_788816707824880_1669958834_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-a.cdninstagram.com/hphotos-xfp1/t51.2885-15/10540236_788816707824880_1669958834_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xfp1/t51.2885-15/10540236_788816707824880_1669958834_n.jpg","width":640,"height":640}},
+{"low_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xap1/t51.2885-15/10499055_688484281189051_931354857_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-a.cdninstagram.com/hphotos-xap1/t51.2885-15/10499055_688484281189051_931354857_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xap1/t51.2885-15/10499055_688484281189051_931354857_n.jpg","width":640,"height":640}},
+{"low_resolution":{"url":"http://scontent-b.cdninstagram.com/hphotos-xfa1/t51.2885-15/914734_302675239919612_2140787216_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-b.cdninstagram.com/hphotos-xfa1/t51.2885-15/914734_302675239919612_2140787216_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-b.cdninstagram.com/hphotos-xfa1/t51.2885-15/914734_302675239919612_2140787216_n.jpg","width":640,"height":640}},
+{"low_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xfp1/t51.2885-15/10375615_1473083696268664_107648572_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-a.cdninstagram.com/hphotos-xfp1/t51.2885-15/10375615_1473083696268664_107648572_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xfp1/t51.2885-15/10375615_1473083696268664_107648572_n.jpg","width":640,"height":640}},
+{"low_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xpf1/t51.2885-15/10414060_1443448815908869_657118072_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-a.cdninstagram.com/hphotos-xpf1/t51.2885-15/10414060_1443448815908869_657118072_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xpf1/t51.2885-15/10414060_1443448815908869_657118072_n.jpg","width":640,"height":640}},
+{"low_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xpa1/t51.2885-15/10424384_1444430999140033_1378195874_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-a.cdninstagram.com/hphotos-xpa1/t51.2885-15/10424384_1444430999140033_1378195874_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xpa1/t51.2885-15/10424384_1444430999140033_1378195874_n.jpg","width":640,"height":640}},
+{"low_resolution":{"url":"http://scontent-b.cdninstagram.com/hphotos-xfp1/t51.2885-15/10401712_735138499861978_1205125954_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-b.cdninstagram.com/hphotos-xfp1/t51.2885-15/10401712_735138499861978_1205125954_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-b.cdninstagram.com/hphotos-xfp1/t51.2885-15/10401712_735138499861978_1205125954_n.jpg","width":640,"height":640}},
+		{"low_resolution":{"url":"http://scontent-b.cdninstagram.com/hphotos-xpf1/t51.2885-15/10387955_780436498657624_1566362724_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-b.cdninstagram.com/hphotos-xpf1/t51.2885-15/10387955_780436498657624_1566362724_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-b.cdninstagram.com/hphotos-xpf1/t51.2885-15/10387955_780436498657624_1566362724_n.jpg","width":640,"height":640}}]},
 	{"id":3,
 	 "name": "Connaught Place",
-	 "tags": ["connaughtplace"],
-	 "description": "Connaught Place is known for its vibrant atmosphere and planned layout. It has been the hot-spot both for the business men as well as tourists both from the country and abroad. The present day Connaught Place plays the role of a welcoming host to the continuous down stepping of huge masses who are attracted to the popular tourist destinations here." },
+	 "description": "Connaught Place is known for its vibrant atmosphere and planned layout. It has been the hot-spot both for the business men as well as tourists both from the country and abroad. The present day Connaught Place plays the role of a welcoming host to the continuous down stepping of huge masses who are attracted to the popular tourist destinations here.",
+	"images":[
+		{"low_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xpa1/t51.2885-15/10518217_480023288809272_1964106769_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-a.cdninstagram.com/hphotos-xpa1/t51.2885-15/10518217_480023288809272_1964106769_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xpa1/t51.2885-15/10518217_480023288809272_1964106769_n.jpg","width":640,"height":640}},
+		{"low_resolution":{"url":"http://scontent-b.cdninstagram.com/hphotos-xpa1/t51.2885-15/924451_288084841362791_336997579_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-b.cdninstagram.com/hphotos-xpa1/t51.2885-15/924451_288084841362791_336997579_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-b.cdninstagram.com/hphotos-xpa1/t51.2885-15/924451_288084841362791_336997579_n.jpg","width":640,"height":640}},
+		{"low_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xpa1/t51.2885-15/10508045_251517158379485_933453337_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-a.cdninstagram.com/hphotos-xpa1/t51.2885-15/10508045_251517158379485_933453337_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xpa1/t51.2885-15/10508045_251517158379485_933453337_n.jpg","width":640,"height":640}},
+		{"low_resolution":{"url":"http://scontent-b.cdninstagram.com/hphotos-xpa1/t51.2885-15/10499180_300912520083338_1569303035_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-b.cdninstagram.com/hphotos-xpa1/t51.2885-15/10499180_300912520083338_1569303035_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-b.cdninstagram.com/hphotos-xpa1/t51.2885-15/10499180_300912520083338_1569303035_n.jpg","width":640,"height":640}},
+		{"low_resolution":{"url":"http://scontent-b.cdninstagram.com/hphotos-xpf1/t51.2885-15/10413161_1470363146545091_1014292822_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-b.cdninstagram.com/hphotos-xpf1/t51.2885-15/10413161_1470363146545091_1014292822_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-b.cdninstagram.com/hphotos-xpf1/t51.2885-15/10413161_1470363146545091_1014292822_n.jpg","width":640,"height":640}},
+		{"low_resolution":{"url":"http://scontent-b.cdninstagram.com/hphotos-xpa1/t51.2885-15/924452_652594264831341_304241917_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-b.cdninstagram.com/hphotos-xpa1/t51.2885-15/924452_652594264831341_304241917_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-b.cdninstagram.com/hphotos-xpa1/t51.2885-15/924452_652594264831341_304241917_n.jpg","width":640,"height":640}}]
+	},
 	{"name": "Lodhi Gardens",
 	 "id":4,
-	 "tags": ["lodhigardens"],
-	 "description": "Lodhi Gardens, once called Lady Willingdon Park, laid out in 1930 this beautiful park contains 15th and 16th century monuments that are scattered among its well-kept lawns, flowers, shady trees and ponds. During the early morning and evening hours, the sprawling garden is a favourite spot for fitness freaks and those in search of solitude."},
+	 "description": "Lodhi Gardens, once called Lady Willingdon Park, laid out in 1930 this beautiful park contains 15th and 16th century monuments that are scattered among its well-kept lawns, flowers, shady trees and ponds. During the early morning and evening hours, the sprawling garden is a favourite spot for fitness freaks and those in search of solitude.",
+	"images":[
+		{"low_resolution":{"url":"http://scontent-b.cdninstagram.com/hphotos-xap1/t51.2885-15/925566_1443649592562887_1570896602_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-b.cdninstagram.com/hphotos-xap1/t51.2885-15/925566_1443649592562887_1570896602_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-b.cdninstagram.com/hphotos-xap1/t51.2885-15/925566_1443649592562887_1570896602_n.jpg","width":640,"height":640}},
+		{"low_resolution":{"url":"http://scontent-b.cdninstagram.com/hphotos-xpa1/t51.2885-15/929182_799801413387362_965681437_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-b.cdninstagram.com/hphotos-xpa1/t51.2885-15/929182_799801413387362_965681437_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-b.cdninstagram.com/hphotos-xpa1/t51.2885-15/929182_799801413387362_965681437_n.jpg","width":640,"height":640}},
+		{"low_resolution":{"url":"http://scontent-b.cdninstagram.com/hphotos-xpf1/t51.2885-15/10502630_1512998688930599_605206178_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-b.cdninstagram.com/hphotos-xpf1/t51.2885-15/10502630_1512998688930599_605206178_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-b.cdninstagram.com/hphotos-xpf1/t51.2885-15/10502630_1512998688930599_605206178_n.jpg","width":640,"height":640}},
+		{"low_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xpf1/t51.2885-15/1517339_709826942422984_1220794147_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-a.cdninstagram.com/hphotos-xpf1/t51.2885-15/1517339_709826942422984_1220794147_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xpf1/t51.2885-15/1517339_709826942422984_1220794147_n.jpg","width":640,"height":640}},
+		{"low_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xfp1/t51.2885-15/10431966_1497871460444871_2014958201_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-a.cdninstagram.com/hphotos-xfp1/t51.2885-15/10431966_1497871460444871_2014958201_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xfp1/t51.2885-15/10431966_1497871460444871_2014958201_n.jpg","width":640,"height":640}},
+		{"low_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xfp1/t51.2885-15/10349797_665774780187039_1929982876_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-a.cdninstagram.com/hphotos-xfp1/t51.2885-15/10349797_665774780187039_1929982876_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xfp1/t51.2885-15/10349797_665774780187039_1929982876_n.jpg","width":640,"height":640}},
+		{"low_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xap1/t51.2885-15/924384_1503708776531517_797172993_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-a.cdninstagram.com/hphotos-xap1/t51.2885-15/924384_1503708776531517_797172993_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xap1/t51.2885-15/924384_1503708776531517_797172993_n.jpg","width":640,"height":640}},
+		{"low_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xpa1/t51.2885-15/10454128_1620250754867259_648769767_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-a.cdninstagram.com/hphotos-xpa1/t51.2885-15/10454128_1620250754867259_648769767_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xpa1/t51.2885-15/10454128_1620250754867259_648769767_n.jpg","width":640,"height":640}},
+		{"low_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xfp1/t51.2885-15/10413259_1500259710187672_2003943137_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-a.cdninstagram.com/hphotos-xfp1/t51.2885-15/10413259_1500259710187672_2003943137_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xfp1/t51.2885-15/10413259_1500259710187672_2003943137_n.jpg","width":640,"height":640}},
+		{"low_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xpa1/t51.2885-15/10424663_645153242242985_880066595_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-a.cdninstagram.com/hphotos-xpa1/t51.2885-15/10424663_645153242242985_880066595_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xpa1/t51.2885-15/10424663_645153242242985_880066595_n.jpg","width":640,"height":640}},
+		{"low_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xfp1/t51.2885-15/10249201_687279927998103_1307675353_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-a.cdninstagram.com/hphotos-xfp1/t51.2885-15/10249201_687279927998103_1307675353_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xfp1/t51.2885-15/10249201_687279927998103_1307675353_n.jpg","width":640,"height":640}},
+		{"low_resolution":{"url":"http://scontent-b.cdninstagram.com/hphotos-xfp1/t51.2885-15/10424496_794216353931287_2057171827_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-b.cdninstagram.com/hphotos-xfp1/t51.2885-15/10424496_794216353931287_2057171827_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-b.cdninstagram.com/hphotos-xfp1/t51.2885-15/10424496_794216353931287_2057171827_n.jpg","width":640,"height":640}},
+		{"low_resolution":{"url":"http://scontent-b.cdninstagram.com/hphotos-xpa1/t51.2885-15/925859_1436406329948818_1511826217_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-b.cdninstagram.com/hphotos-xpa1/t51.2885-15/925859_1436406329948818_1511826217_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-b.cdninstagram.com/hphotos-xpa1/t51.2885-15/925859_1436406329948818_1511826217_n.jpg","width":612,"height":612}},
+		{"low_resolution":{"url":"http://scontent-b.cdninstagram.com/hphotos-xfa1/t51.2885-15/10387769_886216921394669_1957632839_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-b.cdninstagram.com/hphotos-xfa1/t51.2885-15/10387769_886216921394669_1957632839_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-b.cdninstagram.com/hphotos-xfa1/t51.2885-15/10387769_886216921394669_1957632839_n.jpg","width":640,"height":640}}]
+	},
 	{"name": "Purana Quila",
 	 "id":5,
-	 "tags": ["puranaquila"],
-	 "description": "The Purana Quila (Old Fort) is a very good example of Mughal military architecture. Built by Pandavas, renovated by Humayun, with later modifications by Sher Shah Suri, the Purana Quila is a monument of bold design, which is strong, straightforward, and every inch a fortress. It is different from the well-planned, carefully decorated, and palatial forts of the later Mughal rulers. Purana Quila is also different from the later forts of the Mughals, as it does not have a complex of palaces, administrative, and recreational buildings as is generally found in the forts built later on. The main purpose of this now dilapidated fort was its utility with less emphasis on decoration. The Qal'a-I-Kunha Masjid and the Sher are two important monuments inside the fort. It was made by Aqeel in 1853."},
+	 "description": "The Purana Quila (Old Fort) is a very good example of Mughal military architecture. Built by Pandavas, renovated by Humayun, with later modifications by Sher Shah Suri, the Purana Quila is a monument of bold design, which is strong, straightforward, and every inch a fortress. It is different from the well-planned, carefully decorated, and palatial forts of the later Mughal rulers. Purana Quila is also different from the later forts of the Mughals, as it does not have a complex of palaces, administrative, and recreational buildings as is generally found in the forts built later on. The main purpose of this now dilapidated fort was its utility with less emphasis on decoration. The Qal'a-I-Kunha Masjid and the Sher are two important monuments inside the fort. It was made by Aqeel in 1853.",
+	"images":[
+		{"low_resolution":{"url":"http://scontent-b.cdninstagram.com/hphotos-xfa1/t51.2885-15/10246090_632259353523809_482878483_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-b.cdninstagram.com/hphotos-xfa1/t51.2885-15/10246090_632259353523809_482878483_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-b.cdninstagram.com/hphotos-xfa1/t51.2885-15/10246090_632259353523809_482878483_n.jpg","width":640,"height":640}},
+		{"low_resolution":{"url":"http://scontent-b.cdninstagram.com/hphotos-xfp1/t51.2885-15/10299621_497114457060282_678891909_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-b.cdninstagram.com/hphotos-xfp1/t51.2885-15/10299621_497114457060282_678891909_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-b.cdninstagram.com/hphotos-xfp1/t51.2885-15/10299621_497114457060282_678891909_n.jpg","width":640,"height":640}},
+		{"low_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xpa1/t51.2885-15/10251350_1414164182188275_1487010318_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-a.cdninstagram.com/hphotos-xpa1/t51.2885-15/10251350_1414164182188275_1487010318_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xpa1/t51.2885-15/10251350_1414164182188275_1487010318_n.jpg","width":640,"height":640}},
+		{"low_resolution":{"url":"http://scontent-b.cdninstagram.com/hphotos-xpf1/t51.2885-15/10358249_641457075939000_1354548914_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-b.cdninstagram.com/hphotos-xpf1/t51.2885-15/10358249_641457075939000_1354548914_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-b.cdninstagram.com/hphotos-xpf1/t51.2885-15/10358249_641457075939000_1354548914_n.jpg","width":640,"height":640}},
+		{"low_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xpa1/t51.2885-15/927350_299238013569111_1735262275_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-a.cdninstagram.com/hphotos-xpa1/t51.2885-15/927350_299238013569111_1735262275_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xpa1/t51.2885-15/927350_299238013569111_1735262275_n.jpg","width":640,"height":640}},
+		{"low_resolution":{"url":"http://scontent-b.cdninstagram.com/hphotos-xfa1/t51.2885-15/10013320_447697385360589_1629024019_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-b.cdninstagram.com/hphotos-xfa1/t51.2885-15/10013320_447697385360589_1629024019_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-b.cdninstagram.com/hphotos-xfa1/t51.2885-15/10013320_447697385360589_1629024019_n.jpg","width":640,"height":640}}]
+	},
 	{"name": "Red Fort",
 	 "id": 6,
-	 "tags": ["redfort"],
-	 "description": "The decision for constructing the Red Fort was made in 1639, when Shah Jahan decided to shift his capital from Agra to Delhi. Within eight years, Shahjahanabad was completed with the Red Fort-Qila-i-Mubarak (fortunate citadel) — Delhi's first fort — ready in all its magnificence to receive the Emperor. This entire architecture is constructed of huge blocks red sandstone. Though much has changed with the large-scale demolitions during the British occupation of the fort, its important structures have survived.On every independence day the Flag of India is hoisted by the Prime Minister of India here."},
+	 "description": "The decision for constructing the Red Fort was made in 1639, when Shah Jahan decided to shift his capital from Agra to Delhi. Within eight years, Shahjahanabad was completed with the Red Fort-Qila-i-Mubarak (fortunate citadel) — Delhi's first fort — ready in all its magnificence to receive the Emperor. This entire architecture is constructed of huge blocks red sandstone. Though much has changed with the large-scale demolitions during the British occupation of the fort, its important structures have survived.On every independence day the Flag of India is hoisted by the Prime Minister of India here.",
+	 "images":[
+		 {"low_resolution":{"url":"http://scontent-b.cdninstagram.com/hphotos-xfp1/t51.2885-15/10549801_266718710198612_78823987_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-b.cdninstagram.com/hphotos-xfp1/t51.2885-15/10549801_266718710198612_78823987_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-b.cdninstagram.com/hphotos-xfp1/t51.2885-15/10549801_266718710198612_78823987_n.jpg","width":640,"height":640}},
+		 {"low_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xap1/t51.2885-15/924537_660755510665525_1029330930_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-a.cdninstagram.com/hphotos-xap1/t51.2885-15/924537_660755510665525_1029330930_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xap1/t51.2885-15/924537_660755510665525_1029330930_n.jpg","width":640,"height":640}},
+		 {"low_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xfp1/t51.2885-15/10547200_607175899398757_1804230990_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-a.cdninstagram.com/hphotos-xfp1/t51.2885-15/10547200_607175899398757_1804230990_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xfp1/t51.2885-15/10547200_607175899398757_1804230990_n.jpg","width":640,"height":640}},
+		 {"low_resolution":{"url":"http://scontent-b.cdninstagram.com/hphotos-xfp1/t51.2885-15/10547044_783970208320329_195501957_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-b.cdninstagram.com/hphotos-xfp1/t51.2885-15/10547044_783970208320329_195501957_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-b.cdninstagram.com/hphotos-xfp1/t51.2885-15/10547044_783970208320329_195501957_n.jpg","width":640,"height":640}},
+		 {"low_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xpf1/t51.2885-15/10507847_1519581971598731_181796944_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-a.cdninstagram.com/hphotos-xpf1/t51.2885-15/10507847_1519581971598731_181796944_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xpf1/t51.2885-15/10507847_1519581971598731_181796944_n.jpg","width":640,"height":640}},
+		 {"low_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xap1/t51.2885-15/926826_238866642990803_1661938173_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-a.cdninstagram.com/hphotos-xap1/t51.2885-15/926826_238866642990803_1661938173_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xap1/t51.2885-15/926826_238866642990803_1661938173_n.jpg","width":640,"height":640}},
+		 {"low_resolution":{"url":"http://scontent-b.cdninstagram.com/hphotos-xap1/t51.2885-15/10251303_1474928582754226_590997420_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-b.cdninstagram.com/hphotos-xap1/t51.2885-15/10251303_1474928582754226_590997420_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-b.cdninstagram.com/hphotos-xap1/t51.2885-15/10251303_1474928582754226_590997420_n.jpg","width":640,"height":640}},
+		 {"low_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xpa1/t51.2885-15/10520200_508887189210961_1567632205_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-a.cdninstagram.com/hphotos-xpa1/t51.2885-15/10520200_508887189210961_1567632205_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xpa1/t51.2885-15/10520200_508887189210961_1567632205_n.jpg","width":640,"height":640}},
+		 {"low_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xap1/t51.2885-15/10483341_667025973388929_486155390_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-a.cdninstagram.com/hphotos-xap1/t51.2885-15/10483341_667025973388929_486155390_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xap1/t51.2885-15/10483341_667025973388929_486155390_n.jpg","width":640,"height":640}}]	
+	},
 	{"name": "Salimgarh Fort",
 	 "id": 7,
-	 "tags": ["salimgarhfort"],
-	 "description": "Salimgarh Fort, which is now part of the Red Fort complex, was constructed on an island of the Yamuna River in 1546. But a gate called the Bahadur Shahi Gate for entry into the Fort from the northern side was constructed only in 1854-55 by Bahadur Shah Zafar, the last Mughal ruler of India. The gate was built in brick masonry with moderate use of red sandstone. The fort was used during the Uprising in 1857 and also as a prison which housed Zebunnisa daughter of Aurangzeb and the British imprisoned the freedom fighters of the INA. The layout of the Red Fort was organized to retain and integrate this site with the Salimgarh Fort through the Bahadur Shah Gate. The fort has been renamed as Swatantrata Senani Smarak and a plaque at the entrance to the fort attests to this."},
+	 "description": "Salimgarh Fort, which is now part of the Red Fort complex, was constructed on an island of the Yamuna River in 1546. But a gate called the Bahadur Shahi Gate for entry into the Fort from the northern side was constructed only in 1854-55 by Bahadur Shah Zafar, the last Mughal ruler of India. The gate was built in brick masonry with moderate use of red sandstone. The fort was used during the Uprising in 1857 and also as a prison which housed Zebunnisa daughter of Aurangzeb and the British imprisoned the freedom fighters of the INA. The layout of the Red Fort was organized to retain and integrate this site with the Salimgarh Fort through the Bahadur Shah Gate. The fort has been renamed as Swatantrata Senani Smarak and a plaque at the entrance to the fort attests to this.",
+	 "images":[
+		 {"low_resolution":{"url":"http://scontent-b.cdninstagram.com/hphotos-xfa1/t51.2885-15/1799656_1419918494925910_1751951788_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-b.cdninstagram.com/hphotos-xfa1/t51.2885-15/1799656_1419918494925910_1751951788_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-b.cdninstagram.com/hphotos-xfa1/t51.2885-15/1799656_1419918494925910_1751951788_n.jpg","width":612,"height":612}},
+		 {"low_resolution":{"url":"http://scontent-b.cdninstagram.com/hphotos-xpa1/t51.2885-15/1742768_620534571316778_1262812784_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-b.cdninstagram.com/hphotos-xpa1/t51.2885-15/1742768_620534571316778_1262812784_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-b.cdninstagram.com/hphotos-xpa1/t51.2885-15/1742768_620534571316778_1262812784_n.jpg","width":640,"height":640}},
+		 {"low_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xpa1/outbound-distilleryimage10/t0.0-17/OBPTH/5d2d0a8c787c11e3abd4129eb955129a_6.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-a.cdninstagram.com/hphotos-xpa1/outbound-distilleryimage10/t0.0-17/OBPTH/5d2d0a8c787c11e3abd4129eb955129a_5.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xpa1/outbound-distilleryimage10/t0.0-17/OBPTH/5d2d0a8c787c11e3abd4129eb955129a_7.jpg","width":612,"height":612}}]
+	 },
 	{"name": "Chandni Chowk",
 	 "id": 8,
-	 "tags": ["chandnichowk"],
-	 "description": "Chandni Chowk, a main marketplace in Delhi, keeps alive the city's living legacy of Shahjahanabad. Created by Shah Jahan the builder of Taj Mahal, the old city, with the Red Fort as its focal point and Jama Masjid as the praying centre, has a fascinating market called Chandni Chowk. Legend has it that Shah Jahan planned Chandni Chowk so that his daughter could shop for all that she wanted. The market was divided by canals. The canals are now closed, but Chandni Chowk remains Asia's largest wholesale market. Crafts once patronized by the Mughals continue to flourish there. Chowk is one of the oldest and busiest markets in central north Delhi, the Laal Quila (The Red Fort) and Fateh Puri Masjid. With the most famous mosque of Delhi Jama Masjid in the vicinity, along with Sis Ganj Gurudwara, Gauri Shankar Mandir, Jain Mandir and a lot of small temples, the place witnesses a genuine cultural harmony."},
+	 "description": "Chandni Chowk, a main marketplace in Delhi, keeps alive the city's living legacy of Shahjahanabad. Created by Shah Jahan the builder of Taj Mahal, the old city, with the Red Fort as its focal point and Jama Masjid as the praying centre, has a fascinating market called Chandni Chowk. Legend has it that Shah Jahan planned Chandni Chowk so that his daughter could shop for all that she wanted. The market was divided by canals. The canals are now closed, but Chandni Chowk remains Asia's largest wholesale market. Crafts once patronized by the Mughals continue to flourish there. Chowk is one of the oldest and busiest markets in central north Delhi, the Laal Quila (The Red Fort) and Fateh Puri Masjid. With the most famous mosque of Delhi Jama Masjid in the vicinity, along with Sis Ganj Gurudwara, Gauri Shankar Mandir, Jain Mandir and a lot of small temples, the place witnesses a genuine cultural harmony.",
+	"images":[
+	{"low_resolution":{"url":"http://scontent-b.cdninstagram.com/hphotos-xfa1/t51.2885-15/914765_656940827731026_1620177386_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-b.cdninstagram.com/hphotos-xfa1/t51.2885-15/914765_656940827731026_1620177386_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-b.cdninstagram.com/hphotos-xfa1/t51.2885-15/914765_656940827731026_1620177386_n.jpg","width":640,"height":640}},
+{"low_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xap1/t51.2885-15/10508076_276383725879760_777280584_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-a.cdninstagram.com/hphotos-xap1/t51.2885-15/10508076_276383725879760_777280584_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xap1/t51.2885-15/10508076_276383725879760_777280584_n.jpg","width":640,"height":640}},
+{"low_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xfp1/t51.2885-15/10549597_662279183867149_397529019_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-a.cdninstagram.com/hphotos-xfp1/t51.2885-15/10549597_662279183867149_397529019_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xfp1/t51.2885-15/10549597_662279183867149_397529019_n.jpg","width":640,"height":640}},
+{"low_resolution":{"url":"http://scontent-b.cdninstagram.com/hphotos-xpf1/t51.2885-15/10499141_803017919742588_1411765596_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-b.cdninstagram.com/hphotos-xpf1/t51.2885-15/10499141_803017919742588_1411765596_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-b.cdninstagram.com/hphotos-xpf1/t51.2885-15/10499141_803017919742588_1411765596_n.jpg","width":640,"height":640}},
+{"low_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xpa1/t51.2885-15/10499065_895645527115747_1110900292_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-a.cdninstagram.com/hphotos-xpa1/t51.2885-15/10499065_895645527115747_1110900292_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xpa1/t51.2885-15/10499065_895645527115747_1110900292_n.jpg","width":640,"height":640}},
+{"low_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xpf1/t51.2885-15/10467727_628434630586697_1578209651_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-a.cdninstagram.com/hphotos-xpf1/t51.2885-15/10467727_628434630586697_1578209651_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xpf1/t51.2885-15/10467727_628434630586697_1578209651_n.jpg","width":640,"height":640}}]
+	},
 	{"name": "Safdarjung's Tomb",
 	 "id": 9,
 	 "tags": ["safdarjungstomb"],
@@ -164,18 +232,17 @@ var delhiFakes = [
 	 "id": 24,
 	 "tags": ["rajghat"],
 	 "description": "On the bank Yamuna River, which flows past Delhi, there is Raj Ghat, the final resting place of Mahatma Gandhi, the father of the nation. It has become an essential point of call for all visiting dignitaries. Two museums dedicated to Gandhi are situated nearby."},
-	{"name": "Shanti Vana",
-	 "id": 25,
-	 "tags": ["shantivana"],
-	 "description": "Lying close to the Raj Ghat, the Shanti Vana (literally, the forest of peace) is the place where India's first Prime Minister Jawaharlal Nehru was cremated. The area is now a beautiful park adorned by trees planted by visiting dignitaries and heads of state."},
 	{"name": "National Zoological Park",
 	 "id": 26,
-	 "tags": ["delhizoo"],
-	 "description": "The National Zoological Park is a 176-acre (71 ha) zoo near the Old Fort in Delhi, India. The zoo is home to about 1350 animals representing almost 130 species of animals and birds from around the world."},
-	 {"name": "Garstin Bastion Road",
-		"tags": ["gbroad"],
-		"id": 27,
-		"description": "Delhi's infamous red light district. Famous market of mechanical parts and services by day. Not considered safe at night."}
+	 "description": "The National Zoological Park is a 176-acre (71 ha) zoo near the Old Fort in Delhi, India. The zoo is home to about 1350 animals representing almost 130 species of animals and birds from around the world.",
+	"images":[
+		{"low_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xpa1/t51.2885-15/929126_662733077153866_1755831133_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-a.cdninstagram.com/hphotos-xpa1/t51.2885-15/929126_662733077153866_1755831133_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xpa1/t51.2885-15/929126_662733077153866_1755831133_n.jpg","width":640,"height":640}},
+		{"low_resolution":{"url":"http://scontent-b.cdninstagram.com/hphotos-xap1/t51.2885-15/10424541_503763896390641_28557449_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-b.cdninstagram.com/hphotos-xap1/t51.2885-15/10424541_503763896390641_28557449_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-b.cdninstagram.com/hphotos-xap1/t51.2885-15/10424541_503763896390641_28557449_n.jpg","width":640,"height":640}},
+{"low_resolution":{"url":"http://scontent-b.cdninstagram.com/hphotos-xpa1/t51.2885-15/10499066_596914630423002_1608333358_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-b.cdninstagram.com/hphotos-xpa1/t51.2885-15/10499066_596914630423002_1608333358_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-b.cdninstagram.com/hphotos-xpa1/t51.2885-15/10499066_596914630423002_1608333358_n.jpg","width":640,"height":640}},
+{"low_resolution":{"url":"http://scontent-b.cdninstagram.com/hphotos-xap1/t51.2885-15/10508037_1486117841625717_265981921_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-b.cdninstagram.com/hphotos-xap1/t51.2885-15/10508037_1486117841625717_265981921_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-b.cdninstagram.com/hphotos-xap1/t51.2885-15/10508037_1486117841625717_265981921_n.jpg","width":640,"height":640}},
+{"low_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xpa1/t51.2885-15/10401688_308253792684286_921733798_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-a.cdninstagram.com/hphotos-xpa1/t51.2885-15/10401688_308253792684286_921733798_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xpa1/t51.2885-15/10401688_308253792684286_921733798_n.jpg","width":640,"height":640}},
+{"low_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xpf1/t51.2885-15/10499177_1433226926951700_1291503955_a.jpg","width":306,"height":306},"thumbnail":{"url":"http://scontent-a.cdninstagram.com/hphotos-xpf1/t51.2885-15/10499177_1433226926951700_1291503955_s.jpg","width":150,"height":150},"standard_resolution":{"url":"http://scontent-a.cdninstagram.com/hphotos-xpf1/t51.2885-15/10499177_1433226926951700_1291503955_n.jpg","width":640,"height":640}}]
+	}
 ];
 
 // IG Interaction
@@ -287,7 +354,6 @@ state.watch("index", function(p, o, newval) {
 	return newval;
 });
 
-
 // Main View
 // ====================================================================
 
@@ -313,7 +379,6 @@ var hideMulti = function (hash) {
 	}
 };
 
-
 var render = function (current) {
 	$("#site-name").text(current.name);
 	$("#description").text(current.description);
@@ -327,42 +392,43 @@ var render = function (current) {
 	var mp = $("#more-pictures");
 	mp.html("");
 
-	current.watch("images", function (prop, oldval, newval) {
-		for (var i = 0; i < newval.length; i++) {
-			(function (i) {
-				mp.append($('<div>').attr('class', "pure-u-1-3 nav-thumb").on("click", function (evt) {
-					console.log(JSON.stringify(newval[i].images));
-					current.shownImage = newval[i].images["standard_resolution"].url;
-					location.hash = "";
-				}).append($("<img>").attr("src", newval[i].images.thumbnail.url)));
-			})(i);
-		}
-	});	
+	for (var i = 0; i < current.images.length; i++) {
+		(function (i) {
+			mp.append($('<div>').attr('class', "pure-u-1-3 nav-thumb").on("click", function (evt) {
+				current.shownImage = current.images[i]["standard_resolution"].url;
+				location.hash = "";
+			}).append($("<img>").attr("src", current.images[i].thumbnail.url)));
+		})(i);
+	}
 };
 
 var getCurrent = function (c) {
 	var current = _.clone(c);
 	
-	current.images = [];
-	current.shownImage = "";
+//	current.images = [];
 
-	for (var i = 0; i < current.tags.length; i++) {
-		getIG(getTagsURL(current.tags[i])).then(function (data) {
-			var viable = data.data.filter(function(item) {
-				return item.type === "image" && item.location !== null;
-			});
-
-			if (current.shownImage === "" && viable.length > 0) {
-				current.shownImage = viable[0].images["standard_resolution"].url;
-			}
-
-			if (!current.images) {
-				// Weirdest bug...
-				return;
-			}
-			current.images = current.images.concat(viable);
-		});
+	if (current.images && current.images.length > 0 &&
+			(current.shownImage === "" || current.shownImage === undefined)) {
+		current.shownImage = current.images[0]["standard_resolution"].url;
 	}
+
+	// for (var i = 0; i < current.tags.length; i++) {
+	// 	getIG(getTagsURL(current.tags[i])).then(function (data) {
+	// 		var viable = data.data.filter(function(item) {
+	// 			return item.type === "image" && item.location !== null;
+	// 		});
+
+	// 		if (current.shownImage === "" && viable.length > 0) {
+	// 			current.shownImage = viable[0].images["standard_resolution"].url;
+	// 		}
+
+	// 		if (!current.images) {
+	// 			// Weirdest bug...
+	// 			return;
+	// 		}
+	// 		current.images = current.images.concat(viable);
+	// 	});
+	// }
 	
 	return current;
 }
