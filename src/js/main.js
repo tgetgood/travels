@@ -119,7 +119,7 @@ var state = {
 	accepted: [],
 	rejected: [],
 	index: 0,
-	data: delhiFakes,
+	data: [],
 	current: {}
 };
 
@@ -383,8 +383,12 @@ attachHandlers(buttonMap);
 // Fake search
 state.location = "new delhi";
 
-// Fake data retrieval
-state.current = delhiFakes[0];
+// Get fake data
+$.get("/api/fakedatadelhi").then(function(data) {
+	var data = JSON.parse(data);
+	state.data = data;
+	state.current = data[0];
+});
 
 // Set view based on hash
 hideMulti(document.location.hash);
