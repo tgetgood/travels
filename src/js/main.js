@@ -224,30 +224,10 @@ var render = function (current) {
 var getCurrent = function (c) {
 	var current = _.clone(c);
 	
-//	current.images = [];
-
 	if (current.images && current.images.length > 0 &&
 			(current.shownImage === "" || current.shownImage === undefined)) {
 		current.shownImage = current.images[0]["standard_resolution"].url;
 	}
-
-	// for (var i = 0; i < current.tags.length; i++) {
-	// 	getIG(getTagsURL(current.tags[i])).then(function (data) {
-	// 		var viable = data.data.filter(function(item) {
-	// 			return item.type === "image" && item.location !== null;
-	// 		});
-
-	// 		if (current.shownImage === "" && viable.length > 0) {
-	// 			current.shownImage = viable[0].images["standard_resolution"].url;
-	// 		}
-
-	// 		if (!current.images) {
-	// 			// Weirdest bug...
-	// 			return;
-	// 		}
-	// 		current.images = current.images.concat(viable);
-	// 	});
-	// }
 	
 	return current;
 }
