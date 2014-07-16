@@ -215,10 +215,13 @@ var render = function (current) {
 
 	for (var i = 0; i < current.images.length; i++) {
 		(function (i) {
-			mp.append($('<div>').attr('class', "pure-u-1-3 nav-thumb").on("click", function (evt) {
+			var el = $('<div>').attr('class', "pure-u-1-3 nav-thumb").attr("id", "th-" + i);
+			mp.append(el.append($("<img>").attr("src", current.images[i].thumbnail.url)));
+
+			(new Hammer($("#th-" + i)[0])).on("tap", function (evt) {
 				current.shownImage = current.images[i]["low_resolution"].url;
 				location.hash = "";
-			}).append($("<img>").attr("src", current.images[i].thumbnail.url)));
+			});
 		})(i);
 	}
 };
@@ -358,6 +361,8 @@ ges.on("pan", function(ev) {
 });
 
 // Using Hammer for buttons prevents swipe-press issues.
+var lastTap;
+
 (new Hammer($("#image-container")[0])).on("tap", goToThumbs);
 (new Hammer($("#map")[0])).on("tap", goToMap);
 (new Hammer($("#back-to-main")[0])).on("tap", goToMain);
