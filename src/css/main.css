@@ -88,8 +88,8 @@
 
 .drag-side {
 		left: 0px;
-    -webkit-transition:left 0.8s linear;
-    -moz-transition: left 0.8s linear;
-    -o-transition: left 0.8s linear;
-		transition: left 0.8s linear;
+    -webkit-transition:left 0.5s linear;
+    -moz-transition: left 0.5s linear;
+    -o-transition: left 0.5s linear;
+		transition: left 0.5s linear;
 }
