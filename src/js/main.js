@@ -198,10 +198,12 @@ var hideMulti = function (hash) {
 	}
 };
 
+
+
 var render = function (current) {
 	$("#site-name").text(current.name);
 	$("#description").text(current.description);
-	
+
 	$("#principle-image").attr("src", current.shownImage);
 	current.watch("shownImage", function (prop, oldval, newval) {
 		$("#principle-image").attr("src", newval);
@@ -214,7 +216,7 @@ var render = function (current) {
 	for (var i = 0; i < current.images.length; i++) {
 		(function (i) {
 			mp.append($('<div>').attr('class', "pure-u-1-3 nav-thumb").on("click", function (evt) {
-				current.shownImage = current.images[i]["standard_resolution"].url;
+				current.shownImage = current.images[i]["low_resolution"].url;
 				location.hash = "";
 			}).append($("<img>").attr("src", current.images[i].thumbnail.url)));
 		})(i);
@@ -226,10 +228,18 @@ var getCurrent = function (c) {
 	
 	if (current.images && current.images.length > 0 &&
 			(current.shownImage === "" || current.shownImage === undefined)) {
-		current.shownImage = current.images[0]["standard_resolution"].url;
+		current.shownImage = current.images[0]["low_resolution"].url;
 	}
 	
 	return current;
+}
+
+var unrender = function () {
+	// Post animation cleanup
+	var el = $("#main-drag");
+	el.removeClass("drag-side");
+	el.css("left", "0px");
+	_.delay(function() {el.addClass("drag-side");}, 200)
 }
 
 
@@ -242,9 +252,7 @@ window.onhashchange = function (evt) {
 }
 
 state.watch("current", function (prop, oldval, newval) {
-	// reverse drag animation
-	$("#main-drag").removeClass("drag-side swipe-left swipe-right");
-	_.delay(function() {$("#main-drag").addClass("drag-side");}, 200)
+	unrender();
 
 	if (oldval) {
 		oldval.unwatch("images");
@@ -336,11 +344,11 @@ ges.on("swipe", function (ev) {
 	var el = $("#main-drag");
 
 	if (ev.deltaX > 0) {
-		el.toggleClass("swipe-right");
+		el.css("left", screen.width + "px");
 		_.delay(accept, 500, state.current);
 	}
 	else {
-		el.toggleClass("swipe-left");
+		el.css("left", "-" + screen.width + "px");
 		_.delay(reject, 500, state.current);
 }
 });
