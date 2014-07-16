@@ -85,3 +85,19 @@
 .top-right {
 		text-align: right;
 }
+
+.drag-side {
+		left: 0px;
+    -webkit-transition:left 0.5s linear;
+    -moz-transition: left 0.5s linear;
+    -o-transition: left 0.5s linear;
+		transition: left 0.5s linear;
+}
+
+.swipe-left {
+		left: -640px;
+}
+
+.swipe-right {
+		left: 640px;
+}
