@@ -1,5 +1,5 @@
-module.exports = function(grunt) {
-  
+	module.exports = function(grunt) {
+		
   grunt.initConfig({
  
 		emberTemplates: {
@@ -57,7 +57,7 @@ module.exports = function(grunt) {
 				tasks: ['emberTemplates']
 			},
       scripts :{
-        files : ["src/html/photos.html", 'src/js/**/*', "src/css/**/*", "resources/templates.js"], 
+        files : ["src/html/**/*.html", 'src/js/**/*', "src/css/**/*", "resources/templates.js"], 
         options : {
           livereload : 9090,
         }

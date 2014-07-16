@@ -313,22 +313,7 @@ var goToMap    = go("#map");
 var goToThumbs = go("#thumbs");
 var goToMain   = go("");
 
-var scrollUp = function () {
-	state.index = state.index - 1;
-};
 
-var scrollDown = function () {
-	state.index = state.index + 1;
-};
-
-var reject = function (c) {
-	state.rejected = state.rejected.concat([c]);
-};
-
-var accept = function (c) {
-	state.accepted = state.accepted.concat([c]);
-	addMarker(state.map, state.current);
-};
 
 // Static Bindings
 //====================================================================
@@ -344,18 +329,22 @@ var buttonMap = {
 	"#yes-button": function () {accept(state.current);}
 };
 
-// Apply Bindings
-//====================================================================
+// Hammer Time
+//=====================================================================
 
-var attachHandlers = function(map) {
-	for (var b in map) {
-		if (_.has(map, b)) {
-			$(b).on("click", map[b]);
-		}
-	}
-};
+var ges = new Hammer($("#main-drag")[0]);
+ges.on("swipe", function (ev) {
+	console.log(ev);
+});
 
-attachHandlers(buttonMap);
+ges.on("pan", function(ev) {
+	console.log(ev);
+});
+
+// Using Hammer for buttons prevents swipe-press issues.
+(new Hammer($("#image-container")[0])).on("tap", goToThumbs);
+(new Hammer($("#map")[0])).on("tap", goToMap);
+(new Hammer($("#back-to-main")[0])).on("tap", goToMain);
 
 // Init
 // ====================================================================
@@ -374,90 +363,3 @@ $.get("/api/fakedatadelhi").then(function(data) {
 hideMulti(document.location.hash);
 
 
-// Begin shamelessly stolen dragging code.
-//====================================================================
-
-function mouseX (e) {
-  if (e.pageX) {
-    return e.pageX;
-  }
-  if (e.clientX) {
-    return e.clientX + (document.documentElement.scrollLeft ?
-      document.documentElement.scrollLeft :
-      document.body.scrollLeft);
-  }
-  return null;
-}
-
-function mouseY (e) {
-  if (e.pageY) {
-    return e.pageY;
-  }
-  if (e.clientY) {
-    return e.clientY + (document.documentElement.scrollTop ?
-      document.documentElement.scrollTop :
-      document.body.scrollTop);
-  }
-  return null;
-}
-
-function draggable (clickCl) {
-  var p = $(clickCl);
-  var drag = false;
-  var offsetX = 0;
-  var offsetY = 0;
-  var mousemoveTemp = null;
-
-  if (p) {
-    var move = function (x,y) {
-			console.log(x)
-      p.css("left", (parseInt(p.css("left"))+x) + "px");
-      p.css("top", (parseInt(p.css("top")) +y) + "px");
-    }
-    var mouseMoveHandler = function (e) {
-      e = e || window.event;
-
-      if(!drag){return true};
-
-      var x = mouseX(e);
-      var y = mouseY(e);
-      if (x != offsetX || y != offsetY) {
-        move(x-offsetX,y-offsetY);
-        offsetX = x;
-        offsetY = y;
-      }
-      return false;
-    }
-    var start_drag = function (e) {
-      e = e || window.event;
-			
-      offsetX=mouseX(e);
-      offsetY=mouseY(e);
-      drag=true; // basically we're using this to detect dragging
-
-      // save any previous mousemove event handler:
-      if (document.body.onmousemove) {
-        mousemoveTemp = document.body.onmousemove;
-      }
-      document.body.onmousemove = mouseMoveHandler;
-      return false;
-    }
-    var stop_drag = function () {
-      drag=false;      
-
-      // restore previous mousemove event handler if necessary:
-      if (mousemoveTemp) {
-        document.body.onmousemove = mousemoveTemp;
-        mousemoveTemp = null;
-      }
-      return false;
-    }
-    p.on("mousedown", start_drag);
-		p.on("touchstart", start_drag);
-		
-    p.on("mouseup", stop_drag);
-		p.on("touchend", stop_drag);
-  }
-}
-
-draggable("#main-drag");
