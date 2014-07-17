@@ -198,8 +198,6 @@ var hideMulti = function (hash) {
 	}
 };
 
-
-
 var render = function (current) {
 	$("#site-name").text(current.name);
 	$("#description").text(current.description);
@@ -226,6 +224,16 @@ var render = function (current) {
 	}
 };
 
+var unrender = function () {
+	// Post animation cleanup This is really sloppy. I wonder if it
+	// would be reasonable to destroy the old element when it swipes off
+	// screen an create a new one afresh.
+	var el = $("#main-drag");
+	el.removeClass("drag-side");
+	el.css("left", "0px");
+	_.delay(function() {el.addClass("drag-side");}, 200)
+}
+
 var getCurrent = function (c) {
 	var current = _.clone(c);
 	
@@ -236,15 +244,6 @@ var getCurrent = function (c) {
 	
 	return current;
 }
-
-var unrender = function () {
-	// Post animation cleanup
-	var el = $("#main-drag");
-	el.removeClass("drag-side");
-	el.css("left", "0px");
-	_.delay(function() {el.addClass("drag-side");}, 200)
-}
-
 
 // Global watchers
 //====================================================================
@@ -356,13 +355,29 @@ ges.on("swipe", function (ev) {
 }
 });
 
-ges.on("pan", function(ev) {
+var hpan = 0;
+var vpan = 0;
+
+ges.on("pan", function (ev) {
+	var el = $("#main-drag");
+	el.removeClass("drag-side");
+	el.css("left", (parseInt(el.css("left")) + ev.deltaX + "px"));
+
+	console.log(el.css("left"))
+	console.log(ev.deltaX)
+	
+if (ev.isFinal) {
+		el.addClass("drag-side");
+		el.css("left", "0px");
+	}
+
+});
+
+ges.on("panstop", function (ev) {
 //	console.log(ev);
 });
 
 // Using Hammer for buttons prevents swipe-press issues.
-var lastTap;
-
 (new Hammer($("#image-container")[0])).on("tap", goToThumbs);
 (new Hammer($("#map")[0])).on("tap", goToMap);
 (new Hammer($("#back-to-main")[0])).on("tap", goToMain);
