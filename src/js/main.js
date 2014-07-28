@@ -385,6 +385,9 @@ ges.on("panstop", function (ev) {
 // Init
 // ====================================================================
 
+// Set view based on hash
+hideMulti(document.location.hash);
+
 // Fake search
 state.location = "new delhi";
 
@@ -394,9 +397,6 @@ $.get("/api/fakedatadelhi").then(function(data) {
 	state.data = data;
 	state.current = data[0];
 });
-
-// Set view based on hash
-hideMulti(document.location.hash);
 
 
 // Begin shamelessly stolen dragging code.
