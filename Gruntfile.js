@@ -1,23 +1,8 @@
-	module.exports = function(grunt) {
-		
+module.exports = function(grunt) {
+	
   grunt.initConfig({
- 
-		emberTemplates: {
-			compile: {
-				options: {
-					templateBasePath: /src\/html\/templates/
-				},
-				files: {
-					'resources/templates.js': 'src/html/templates/**/*.hbs'
-				}
-			}
-		},
 
 		concat: {
-			js: {
-				src: 'src/js/main.js',
-				dest: 'resources/main.js'
-			},
 			css: {
 				src: 'src/css/**/*.css',
 				dest: 'resources/all.css'
@@ -52,27 +37,22 @@
 		},
 
     watch :{
-			emberTemplates: {
-				files: 'src/html/templates/**/*.hbs',
-				tasks: ['emberTemplates']
-			},
       scripts :{
-        files : ["src/html/**/*.html", 'src/js/**/*', "src/css/**/*", "resources/templates.js"], 
+        files : ["src/html/**/*.html", 'src/js/**/*', "src/css/**/*", "resources/templates.js", "resources/main.js"], 
         options : {
           livereload : 9090,
         }
       }
     }
-   });
- 
+  });
+	
   grunt.loadNpmTasks('grunt-contrib-watch');
-	grunt.loadNpmTasks('grunt-ember-templates');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-concat');
 	grunt.loadNpmTasks('grunt-css');
 	grunt.loadNpmTasks('grunt-shell');
- 
+	
 	grunt.registerTask('clean', ['shell:rmtmp', 'shell:mkresources']);
-  grunt.registerTask('heroku', ['clean', 'emberTemplates', 'concat', 'uglify', 'cssmin']);  
+  grunt.registerTask('heroku', ['concat', 'uglify', 'cssmin']);  
 	grunt.registerTask('default', ['heroku']);
 };

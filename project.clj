@@ -35,15 +35,20 @@
   :main travels.server
 
   :cljsbuild {:builds
-              [{
-                :source-paths ["src/cljs"]
-                :compiler {;; CLS generated JS script filename
-                           :output-to "resources/public/js/cljs.js"
+              {:dev {:source-paths ["src/cljs"]
+                     :compiler {:id "dev"
+                                :output-to "resources/public/js/main.js"
+                                :output-dir "resources/public/js/out"
+                                :optimizations :none
+                                :pretty-print true
+                                :source-map true}}
+               :prod {:source-paths ["src/cljs"]
+                      :compiler {
+                                 :output-to "resources/main.js"
+                                 :optimizations :advanced
+;                                 :source-map false
+                                 :pretty-print false}}
 
-                           ;; minimal JS optimization directive
-                           :optimizations :whitespace
-
-                           ;; generated JS code prettyfication
-                           :pretty-print true}}]}
-) 
+               }}
+  ) 
                  

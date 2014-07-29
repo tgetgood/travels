@@ -1,3 +1,0 @@
-(ns core)
-
-(println "asdasd")
