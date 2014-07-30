@@ -14,7 +14,7 @@
 
 (def port (edn/read-string (getenv :port "8000")))
 
-(def dev-server? (= (getenv :dev-mode "") "TRUE"))
+(defmacro dev-server? [] (= (getenv :dev-mode "") "TRUE"))
 
 (def devdb? (= (getenv :dev-mode "") "TRUE"))
 
