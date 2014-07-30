@@ -9,7 +9,7 @@
   :plugins [[lein-environ "0.4.0"]
             [lein-cljsbuild "1.0.3"]]
 
-  :source-paths ["src"]
+  :source-paths ["src/clj" "src/cljs"]
 
   :profiles {:dev {:env {:dev-mode "TRUE"}}
              :production {:env {:prod-mode "TRUE"}}}
@@ -41,7 +41,7 @@
   :main travels.server
 
   :cljsbuild {:builds
-              {:dev {:source-paths ["src/travels/cljs"]
+              {:dev {:source-paths ["src/cljs" "src/clj"]
                      :compiler {:id "dev"
                                 :output-to "resources/public/js/main.js"
                                 :output-dir "resources/public/js/out"
@@ -50,7 +50,7 @@
                                 :source-map true}}
                :prod {:source-paths ["src/cljs"]
                       :compiler {
-                                 :output-to "resources/main.js"
+                                 :output-to "resources/public/js/main.js"
                                  :optimizations :advanced
 ;                                 :source-map false
                                  :pretty-print false}}

@@ -1,5 +1,5 @@
-(ns travels.cljs.connect
-  (:require [travels.clj.config :as config]
+(ns travels.connect
+  (:require [travels.config :as config]
             [clojure.browser.repl :as repl]))
 
 (when config/dev-mode?
