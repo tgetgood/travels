@@ -9,7 +9,7 @@
   :plugins [[lein-environ "0.4.0"]
             [lein-cljsbuild "1.0.3"]]
 
-  :source-paths ["src/clojure" "src/cljs"]
+  :source-paths ["src"]
 
   :profiles {:dev {:env {:dev-mode "TRUE"}}
              :production {:env {:prod-mode "TRUE"}}}
@@ -19,6 +19,9 @@
 
                  [prismatic/dommy "0.1.2"]
                  [domina "1.0.2"]
+
+                 [com.cognitect/transit-cljs "0.8.158"]
+                 [com.cognitect/transit-clj "0.8.229"]
 
                  [environ "0.4.0"]
                  [clj-time "0.7.0"]
@@ -30,12 +33,15 @@
                  [ring "1.2.2"]
                  [compojure "1.1.6"]
                  [http-kit "2.1.18"]
-                 [ring/ring-json "0.3.1"]]
+                 [ring/ring-json "0.3.1"]
+                 
+                 ;; dev
+                 [com.cemerick/piggieback "0.1.3"]]
 
   :main travels.server
 
   :cljsbuild {:builds
-              {:dev {:source-paths ["src/cljs"]
+              {:dev {:source-paths ["src/travels/cljs"]
                      :compiler {:id "dev"
                                 :output-to "resources/public/js/main.js"
                                 :output-dir "resources/public/js/out"

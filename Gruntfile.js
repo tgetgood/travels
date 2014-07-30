@@ -14,7 +14,6 @@ module.exports = function(grunt) {
 			},
 			dist: {
 				files: {
-					'resources/public/main.min.js': ['resources/main.js'],
 					'resources/public/templates.min.js': ['resources/templates.js']
 				}
 			}
@@ -38,7 +37,7 @@ module.exports = function(grunt) {
 
     watch :{
       scripts :{
-        files : ["src/html/**/*.html", 'src/js/**/*', "src/css/**/*", "resources/templates.js", "resources/main.js"], 
+        files : ["src/html/**/*.html", 'src/js/**/*', "src/css/**/*", "resources/public/js/main.js"], 
         options : {
           livereload : 9090,
         }
