@@ -1,7 +1,8 @@
 (ns travels.connect
-  (:require-macros [travels.config :as config])
   (:require [clojure.browser.repl :as repl]))
 
-(when (config/dev-mode?)
+
+(defn ^:export connect
+  []
   (repl/connect "http://localhost:9000/repl"))
 

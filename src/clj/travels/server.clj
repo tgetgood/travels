@@ -25,7 +25,7 @@
  ) 
 
 (defroutes dev-router
-  (GET  "/" [] (slurp "src/html/delhi-dev.html"))
+  (GET  "/" [] (slurp "src/html/graphtest.html"))
   (GET "/photoeditor/" [] (slurp "src/html/photos.html"))
   (GET  "/templates.js" [] (slurp "resources/templates.js"))
   (POST "/fileupload" req (files/upload req))
@@ -71,3 +71,4 @@
     (run-server handler opts)
     (println (str "Server running on port " config/port))))
            
+

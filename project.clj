@@ -9,6 +9,8 @@
   :plugins [[lein-environ "0.4.0"]
             [lein-cljsbuild "1.0.3"]]
 
+  :repl-options {:nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}
+
   :source-paths ["src/clj" "src/cljs"]
 
   :profiles {:dev {:env {:dev-mode "TRUE"}}
