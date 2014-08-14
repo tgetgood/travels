@@ -1,0 +1,63 @@
+cl<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+		<link rel="stylesheet" href="libs/pure-min.css"/>
+
+		<link rel="stylesheet" href="css/main.css"/>
+	</head>
+	<body>
+
+		<div id="main-view">
+			<div class="top-right">
+				<button id="map" class="pure-button pure-button-primary">
+					Go to Map
+				</button>
+			</div>
+			<div id="main-drag" class="drag-side"  draggable="true">
+				<div id="site-name"></div>
+				<br>
+				<div id="image-text-align">
+					<div id="image-container">
+						<img id="principle-image">
+					</div>
+					<br>
+					<div id="description"></div>
+				</div>
+			</div>
+		</div>
+
+		<div id="more-pictures" class="pure-g">
+		</div>
+
+		<div id="map-view">
+			<div class="top-right">
+				<button id="back-to-main" class="pure-button pure-button-primary">
+					back
+				</button>
+			</div>
+			<div id="map-canvas">
+			</div>
+		</div>
+
+		<script src="http://localhost:9090/livereload.js"></script>
+ 		
+		<script src="libs/jquery-2.1.0.js"></script>
+		<script src="libs/underscore.js"></script>
+		<script src="libs/hammer.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
+
+		<script src="js/out/goog/base.js"></script>
+		<script src="js/main.js"></script>	
+
+		<script>
+			goog.require("travels.core");
+			goog.require("travels.connect");
+		</script>
+
+		<script>
+			travels.core.init();
+			travels.connect.connect();
+		</script>
+	</body>
+</html>

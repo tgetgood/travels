@@ -21,7 +21,9 @@
 (defroutes api-router
   ;;  (POST "/api/sights" {body :body} (api/create-sight body))
   ;;  (GET "/api/sights/:id" req (api/get-sight (-> req :route-params :id)))
-  (GET "/api/fakedatadelhi" [] (slurp "src/js/fakedata.js"))
+  (GET "/api/fakedatadelhi" [] (-> (slurp "src/js/fakedata.js")
+                                   response/response
+                                   (response/header "Content-Type" "application/json")))
  ) 
 
 (defroutes dev-router
