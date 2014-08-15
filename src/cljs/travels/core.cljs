@@ -4,7 +4,9 @@
    (:require [cljs.core.async :refer [>! <! chan]]
              [ajax.core :as $]
              [dommy.utils :as domu]
-             [dommy.core :as dom]))
+             [dommy.core :as dom]
+             
+             [travels.gmaps :as gm]))
 
 
 (defn get-fake-data
@@ -21,52 +23,27 @@
     [out err]))
           
 
-(defn get-geocode
-  [loc]
-  (.log js/console loc)
-  (let [out (chan)
-        gc (google.maps.Geocoder.)
-        address (clj->js {:address loc})]
-    (.geocode gc address (fn [res status]
-                             ;; TODO: check status, handle errors
-                             (when (< 0 (count res))
-                               (go (>! out (first res))))))
-    out))
-
-(defn init-map
-  [loc]
-  (let [geoc (get-geocode loc)
-        out (chan)]
-    (go 
-      (let [coords (<! geoc)
-            opts {:disableDefaultUI true
-                  :zoom 13
-                  :center (-> coords .-geometry .-location)
-                  :mapTypeId google.maps.MapTypeId.ROADMAP}
-            m (google.maps.Map. (domm/sel1 :#map-canvas) (clj->js opts))]
-        (>! out m)))
-    out))
-        
-
-(defn create-marker
-  [map loc]
-  (let [out (chan)
-        geo (get-geocode loc)]
-    (go 
-      (let [coords (<! geo) 
-            opts {:position (-> coords .-geometry .-location)
-                  :map map
-                  :title loc}]
-        (>! out (google.maps.Marker. (clj->js opts)))))
-    out))
 
 
 (defn ^:export init 
   []
   (go
-    (let [m (<! (init-map "new delhi"))
+    (let [m (<! (gm/init-map "new delhi" (domm/sel1 :#map-canvas)))
           [out err] (get-fake-data)
-           data (<! out)]
-        (doall (map (fn [d] (create-marker m (get d "name"))) data)))))
+          data (<! out)]
+      (doall (map (fn [d] (gm/create-marker m (get d "name"))) data))
+      (gm/create-marker m "new delhi")
+      (let [dists (<! (gm/get-distances "new delhi" data))
+            proc (->> dists
+                      .-rows 
+                      first 
+                      .-elements 
+                      (map (fn [x] (-> x .-duration)))
+                      (filter (comp not nil?))
+                      (map #(.-text %))
+                      (clj->js))]
+        (.log js/console proc)))))
+
+
 
 
