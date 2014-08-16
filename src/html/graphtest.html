@@ -1,4 +1,4 @@
-cl<html>
+<html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
@@ -7,36 +7,39 @@ cl<html>
 		<link rel="stylesheet" href="css/main.css"/>
 	</head>
 	<body>
-
-		<div id="main-view">
-			<div class="top-right">
-				<button id="map" class="pure-button pure-button-primary">
-					Go to Map
-				</button>
-			</div>
-			<div id="main-drag" class="drag-side"  draggable="true">
-				<div id="site-name"></div>
-				<br>
-				<div id="image-text-align">
-					<div id="image-container">
-						<img id="principle-image">
-					</div>
+		<div id="container" class="pure-g-r">
+			<div id="main-view" class="pure-u-1-5">
+				<div class="top-right">
+					<button id="map" class="pure-button pure-button-primary">
+						Go to Map
+					</button>
+				</div>
+				<div id="main-drag" class="drag-side"  draggable="true">
+					<div id="site-name"></div>
 					<br>
-					<div id="description"></div>
+					<div id="image-text-align">
+						<div id="image-container">
+							<img id="principle-image">
+						</div>
+						<br>
+						<div id="description"></div>
+					</div>
 				</div>
 			</div>
-		</div>
 
-		<div id="more-pictures" class="pure-g">
-		</div>
-
-		<div id="map-view">
-			<div class="top-right">
-				<button id="back-to-main" class="pure-button pure-button-primary">
-					back
-				</button>
+			<div id="details" class="pure-u-2-5">
+				<div class="pure-g">
+				</div>
 			</div>
-			<div id="map-canvas">
+
+			<div id="map-view" class="pure-u-2-5">
+				<div class="top-right">
+					<button id="back-to-main" class="pure-button pure-button-primary">
+						back
+					</button>
+				</div>
+				<div id="map-canvas">
+				</div>
 			</div>
 		</div>
 

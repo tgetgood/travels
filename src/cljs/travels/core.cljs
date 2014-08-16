@@ -38,7 +38,7 @@
                       .-rows 
                       first 
                       .-elements 
-                      (map (fn [x] (-> x .-duration)))
+                      (map (fn [x] (.-duration x)))
                       (filter (comp not nil?))
                       (map #(.-text %))
                       (clj->js))]

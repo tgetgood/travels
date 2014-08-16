@@ -50,7 +50,7 @@
   [me dests]
   (let [out  (chan (quot (count dests) 25))
         opts {:origins [me]
-              :destinations (map #(get % "name") dests)
+              :destinations (map #(.-name %) dests)
               :travelMode google.maps.TravelMode.WALKING,
               :unitSystem google.maps.UnitSystem.METRIC}
         dm   (google.maps.DistanceMatrixService.)]
