@@ -3,7 +3,7 @@
    (:require [cljs.core.async :refer [>! <! chan]]))
 
 (defn get-geocode
-  ([loc] 
+  ([loc]
    (let [out (chan)]
      (get-geocode loc out)))
   ([loc out]
@@ -23,7 +23,7 @@
   [loc elem]
   (let [geoc (get-geocode loc)
         out  (chan)]
-    (go 
+    (go
       (let [coords (<! geoc)
             opts {:disableDefaultUI true
                   :zoom 13
@@ -32,25 +32,25 @@
             m    (google.maps.Map. elem (clj->js opts))]
         (>! out m)))
     out))
-        
+
 
 (defn create-marker
   [map loc]
   (let [out (chan)
         geo (get-geocode loc)]
-    (go 
-      (let [coords (<! geo) 
+    (go
+      (let [coords (<! geo)
             opts {:position (-> coords .-geometry .-location)
                   :map map
                   :title loc}]
         (>! out (google.maps.Marker. (clj->js opts)))))
     out))
 
-(defn get-distances 
+(defn get-distances
   [me dests]
   (let [out  (chan (quot (count dests) 25))
         opts {:origins [me]
-              :destinations (map #(.-name %) dests)
+              :destinations (map #(get % "name") dests)
               :travelMode google.maps.TravelMode.WALKING,
               :unitSystem google.maps.UnitSystem.METRIC}
         dm   (google.maps.DistanceMatrixService.)]

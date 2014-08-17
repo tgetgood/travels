@@ -24,6 +24,7 @@
                  [prismatic/dommy "0.1.2"]
                  [domina "1.0.2"]
                  [cljs-ajax "0.2.6"]
+                 [tailrecursion/javelin "3.6.0"]
 
                  [com.cognitect/transit-cljs "0.8.158"]
                  [com.cognitect/transit-clj "0.8.229"]

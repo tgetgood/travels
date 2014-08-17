@@ -37,7 +37,7 @@ if (!Object.prototype.watch) {
 				newval = handler.call(this, prop, oldval, val);
 				return newval;
 			};
-			
+
 			if (delete this[prop]) { // can't watch constants
 				Object.defineProperty(this, prop, {
 					get: getter,
@@ -98,7 +98,7 @@ var getIG = function (url) {
 		dataType: "jsonp",
 		headers: {"Access-Control-Allow-Origin": "true"}
 	});
-};				
+};
 
 // Helpers
 //====================================================================
@@ -129,7 +129,7 @@ var maintainQueue = function (state) {
 	}).concat(_.map(state.rejected, function (x) {
 		return x.id;
 	}));
-	
+
 	var queue = _.filter(state.data, function (d) {
 		return !_.contains(sids, d.id);
 	});
@@ -140,11 +140,11 @@ var maintainQueue = function (state) {
 	while (index < 0) {
 		index += len;
 	}
-	
+
 	index = index % len;
-	
+
 	return queue[index];
-}	
+}
 
 state.watch("accepted", function(p, o, newval) {
 	var s = _.clone(state);
@@ -182,7 +182,7 @@ var hideMulti = function (hash) {
 	$("#main-view").hide();
 	$("#more-pictures").hide();
 	$("#map-view").hide();
-	
+
  if (view === "thumbs") {
 		$("#more-pictures").show();
 	}
@@ -206,8 +206,8 @@ var render = function (current) {
 	current.watch("shownImage", function (prop, oldval, newval) {
 		$("#principle-image").attr("src", newval);
 	});
-	
-	
+
+
 	var mp = $("#more-pictures");
 	mp.html("");
 
@@ -236,12 +236,12 @@ var unrender = function () {
 
 var getCurrent = function (c) {
 	var current = _.clone(c);
-	
+
 	if (current.images && current.images.length > 0 &&
 			(current.shownImage === "" || current.shownImage === undefined)) {
 		current.shownImage = current.images[0]["low_resolution"].url;
 	}
-	
+
 	return current;
 }
 
@@ -260,9 +260,9 @@ state.watch("current", function (prop, oldval, newval) {
 		oldval.unwatch("images");
 		oldval.unwatch("shownImage");
 	}
-	
+
 	var current = getCurrent(newval);
-	
+
 	render(current);
 
 	return current;;
@@ -282,7 +282,7 @@ var initMap = function(location) {
 				center: results[0].geometry.location,
 				mapTypeId: google.maps.MapTypeId.ROADMAP
 			};
-			
+
 			state.map = new google.maps.Map($('#map-canvas')[0],
 																			mapOptions);
 
@@ -292,14 +292,14 @@ var initMap = function(location) {
 		});
 	}
 };
-	
-var addMarker = function(map, location) {	
+
+var addMarker = function(map, location) {
 
  	if (!map) {
 		// FIXME: Not the worst leak, but terrible practice.
 		_.delay(function () {addMarker(state.map, location);}, 2000);
 	}
-	
+
 	var geocoder = new google.maps.Geocoder();
 	geocoder.geocode({address: location.name}, function (results, status) {
 		if (!results || results.length === 0) {
@@ -365,7 +365,7 @@ ges.on("pan", function (ev) {
 
 	console.log(el.css("left"))
 	console.log(ev.deltaX)
-	
+
 if (ev.isFinal) {
 		el.addClass("drag-side");
 		el.css("left", "0px");
@@ -455,7 +455,7 @@ function draggable (clickCl) {
     }
     var start_drag = function (e) {
       e = e || window.event;
-			
+
       offsetX=mouseX(e);
       offsetY=mouseY(e);
       drag=true; // basically we're using this to detect dragging
@@ -468,7 +468,7 @@ function draggable (clickCl) {
       return false;
     }
     var stop_drag = function () {
-      drag=false;      
+      drag=false;
 
       // restore previous mousemove event handler if necessary:
       if (mousemoveTemp) {
@@ -479,7 +479,7 @@ function draggable (clickCl) {
     }
     p.on("mousedown", start_drag);
 		p.on("touchstart", start_drag);
-		
+
     p.on("mouseup", stop_drag);
 		p.on("touchend", stop_drag);
   }
