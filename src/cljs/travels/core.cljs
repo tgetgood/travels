@@ -6,7 +6,7 @@
              [ajax.core :as $]
              [dommy.utils :as domu]
              [dommy.core :as dom]
-             [tailrecursion.javelin :refer [cell lens]]
+             [tailrecursion.javelin :as jav]
 
              [travels.gmaps :as gm]))
 
@@ -16,7 +16,7 @@
   (let [out (chan)
         err (chan)]
     ($/ajax-request "/api/fakedatadelhi" :get
-           {:format ($/json-response-format {})
+           {:format ($/json-response-format {:keywords? true})
             :handler (fn [x]
                        (go
                          (if (first x)
@@ -31,10 +31,19 @@
   ([c]
    (watch c 1))
   ([c buf]
-  (let [out (chan buf)]
-    (cell= (when (not (nil? c)) 
-             (go (>! out c))))
-    out)))
+   (let [out (chan buf)]
+     (cell= (when (not (nil? c)) 
+              (go (>! out c))))
+     out)))
+
+(defn onchange
+  "Calls function on new value of cell every time it changes."
+  [cell func]
+  (let [ch (watch cell)]
+    (go
+      (while true
+        (let [v (<! ch)]
+          (func v))))))
 
 (defc sites [])
 (defc accepted [])
@@ -43,50 +52,45 @@
 (defc= active
   (filter #(not (or (some #{%} accepted) (some #{%} rejected))) sites))
 
-(def q (chan 10))
+(defc selected
+  {})
 
 (defc= urls
   (map (fn [d]
           (-> d
-              clj->js
-              .-images
+              :images
               first
-              .-standard_resolution
-              .-url))
+              :standard_resolution
+              :url))
          active))
 
 (domm/deftemplate imgnode
   [src]
-  [:img {:src src}])
+  [:div
+    [:img.main-image {:src src}]])
 
 (domm/deftemplate thumb
   [src]
-  [:div.pure-u-1-3
+  [:div.pure-u-1-3.thumbnail
    [:img {:src src}]])
 
-(let [ch (watch urls)]
-  (go 
-    (while true
-      (let [urls (<! ch)]
-        (dom/append! (domm/sel1 :#main-view) (map imgnode urls))))))
+(defn render-main-list
+  [urls]
+  (dom/append! (domm/sel1 :#main-view) (map imgnode urls)))
 
-(defc= selected
-  (first active))
+(defn render-details
+  [site]
+  (let [imgs (map (fn [i]
+                    (-> i
+                        :thumbnail
+                        :url))
+                 (:images site))
+        des  (:description site)]
+      (dom/set-text! (domm/sel1 :#description) des)
+      (dom/append! (domm/sel1 :#photos) (map thumb imgs))))
 
-(let [ch (watch selected)]
-  (go-loop
-    [s    (<! ch)
-     imgs (map (fn [i]
-                  (-> i
-                      clj->js
-                      .-thumbnail
-                      .-url))
-               (-> s clj->js .-images))
-      des  (-> s clj->js .-description)]
-    (.log js/console des)
-    (dom/set-text! (domm/sel1 :#description) des)
-    (dom/append! (domm/sel1 :#photos) (map thumb imgs))))
-
+(onchange urls render-main-list)
+(onchange selected render-details)
 
 (defn ^:export init
   []
@@ -95,6 +99,7 @@
           [out err] (get-fake-data)
           data (<! out)]
       (reset! sites data)
+      (reset! selected (first @sites))
 
     )))
 

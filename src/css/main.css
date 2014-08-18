@@ -9,6 +9,7 @@ body {
 }
 
 #main-view {
+	height: 100%;
 	overflow: scroll;
 }
 
@@ -76,13 +77,13 @@ body {
 		height: 100%;
 
 }
-
-#main-drag {
-		height: 100%;
-		width: 100%;
-		position: absolute;
-}
-
+/*  */
+/* #main-drag { */
+/* 		height: 100%; */
+/* 		width: 100%; */
+/* 		position: absolute; */
+/* } */
+/*  */
 .top-right {
 		text-align: right;
 }
@@ -94,3 +95,4 @@ body {
     -o-transition: left 0.5s linear;
 		transition: left 0.5s linear;
 }
+
