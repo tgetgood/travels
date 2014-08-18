@@ -74,20 +74,28 @@
   [:div.pure-u-1-3.thumbnail
    [:img {:src src}]])
 
+(domm/deftemplate details
+  [description imgs]
+  [:div#details
+   [:div#photos 
+    (map thumb imgs)]
+   [:div#description description]])
+
 (defn render-main-list
   [urls]
   (dom/append! (domm/sel1 :#main-view) (map imgnode urls)))
 
 (defn render-details
   [site]
-  (let [imgs (map (fn [i]
+  (let [node (domm/sel1 :#details)
+        imgs (map (fn [i]
                     (-> i
                         :thumbnail
                         :url))
                  (:images site))
         des  (:description site)]
-      (dom/set-text! (domm/sel1 :#description) des)
-      (dom/append! (domm/sel1 :#photos) (map thumb imgs))))
+    (dom/set-html! node "")
+    (dom/append! node (details des imgs))))
 
 (onchange urls render-main-list)
 (onchange selected render-details)
@@ -97,7 +105,8 @@
   (go
     (let [m (<! (gm/init-map "new delhi" (domm/sel1 :#map-canvas)))
           [out err] (get-fake-data)
-          data (<! out)]
+          data (<! out)
+          marker (<! (gm/create-marker m "new delhi"))]
       (reset! sites data)
       (reset! selected (first @sites))
 
@@ -108,7 +117,6 @@
 
 
       ; (doall (map (fn [d] (gm/create-marker m (.-name d))) data))
-      ; (gm/create-marker m "new delhi")
 
 
 
