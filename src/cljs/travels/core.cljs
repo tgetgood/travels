@@ -48,12 +48,14 @@
 (defc sites [])
 (defc accepted [])
 (defc rejected [])
+(defc index 0)
 
 (defc= active
   (filter #(not (or (some #{%} accepted) (some #{%} rejected))) sites))
 
-(defc selected
-  {})
+(defc= selected
+  (when (not (empty? active))
+    (nth active index)))
 
 (defc= urls
   (map (fn [d]
@@ -64,9 +66,15 @@
               :url))
          active))
 
+
+(defn doit
+  [x]
+  (.log js/console x)
+  true)
+
 (domm/deftemplate imgnode
   [src]
-  [:div
+  [:div 
     [:img.main-image {:src src}]])
 
 (domm/deftemplate thumb
@@ -83,7 +91,12 @@
 
 (defn render-main-list
   [urls]
-  (dom/append! (domm/sel1 :#main-view) (map imgnode urls)))
+  (let [nodes (map imgnode urls)]
+    (dom/append! (domm/sel1 :#main-view) nodes)
+    (doall
+      (map (fn [n i] (dom/listen! n :mouseover (fn [ev] (reset! index i))))
+           nodes
+           (range (count nodes))))))
 
 (defn render-details
   [site]
@@ -108,8 +121,7 @@
           data (<! out)
           marker (<! (gm/create-marker m "new delhi"))]
       (reset! sites data)
-      (reset! selected (first @sites))
-
+      (reset! index 0)
     )))
 
 
