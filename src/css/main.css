@@ -21,7 +21,6 @@ body {
     margin: auto;
 		text-align: center;
 }
-
 .main-search {
     margin: auto;
 }
@@ -77,13 +76,7 @@ body {
 		height: 100%;
 
 }
-/*  */
-/* #main-drag { */
-/* 		height: 100%; */
-/* 		width: 100%; */
-/* 		position: absolute; */
-/* } */
-/*  */
+
 .top-right {
 		text-align: right;
 }
@@ -96,3 +89,39 @@ body {
 		transition: left 0.5s linear;
 }
 
+.main-image {
+	padding: 0;
+}
+
+h2.site-name {
+	text-align: center;
+	padding: 10px;
+	color: white;
+	font: bold, serif;
+	letter-spacing: -1px;
+	background: rgb(0, 0, 0);
+	background: rgba(0, 0, 0, 0.7);
+	margin-top: 0;
+	margin-bottom:0;
+}
+
+.dist-bar {
+	color: white;
+	font: bold, sans-serif;
+	background: rgb(0, 0, 0);
+	background: rgba(0, 0, 0, 0.7);
+	padding: 4px;
+	height: 20px;
+	margin-bottom: 5px;
+}
+
+.walk {
+	width: 33%;
+	float: left;
+}
+
+.drive {
+	height: 100%;
+	width: 33%;
+	float: right!important;
+}
