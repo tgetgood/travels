@@ -4,7 +4,8 @@
    (:require [cljs.core.async :refer [>! <! chan]]
              [ajax.core :as $]
 
-             [travels.state :refer [onchange sites active selected]]
+             [travels.state :refer [onchange watch sites active selected
+                                    map-select map-canvas]]
              [travels.render :refer [render-main-list render-details]]
              [travels.gmaps :as gm]))
 
@@ -23,6 +24,15 @@
     [out err]))
 
 
+
+; (onchange map-select (fn [[mc sel]]
+;                        (.log js/console (clj->js sel))
+;                        (when (and mc (:marker sel))
+;                          (.setMap (:marker sel) mc)
+;                          (go
+;                            (<! (watch selected))
+;                            (.setMap (:marker sel) {})))))
+
 (onchange active render-main-list)
 (onchange selected render-details)
 
@@ -33,14 +43,30 @@
           [out err] (get-fake-data)
           data (<! out)
           marker (<! (gm/create-marker m "new delhi"))]
+
       (reset! sites data)
+      (reset! map-canvas m)
+
+      ; (doall (map (fn [d]
+      ;               (go
+      ;                 (let [mark  (<! (gm/create-marker m (.-name d)))]
+      ;                   (loop []
+      ;                     (let [data  @sites
+      ;                           index (.indexOf (map #(.-name %) data) (.-name d))
+      ;                           ndata (concat
+      ;                                   (take index data)
+      ;                                   [(assoc (nth index data) :marker mark)]
+      ;                                   (drop (inc index) data))]
+      ;                       (if (compare-and-set! sites data ndata)
+      ;                         ndata
+      ;                         (recur)))))))
+      ;            data))
     )))
 
 
 
 
 
-      ; (doall (map (fn [d] (gm/create-marker m (.-name d))) data))
 
 
 

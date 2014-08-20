@@ -11,7 +11,7 @@
    (watch c 1))
   ([c buf]
    (let [out (chan buf)]
-     (cell= (when (not (nil? c)) 
+     (cell= (when (not (nil? c))
               (go (>! out c))))
      out)))
 
@@ -23,7 +23,7 @@
         (let [v (<! ch)]
           (func v))))))
 
-;;;;; Logic for maintaining application state. 
+;;;;; Logic for maintaining application state.
 ;;;;;
 ;;;;; Currently state is maintained by a small collection of atoms that are
 ;;;;; accessed directly by various parts of the program. They are declarative
@@ -35,10 +35,15 @@
 (defc rejected [])
 (defc index 0)
 
+(defc map-canvas {})
+
 (defc= active
-  (filter #(not (or (some #{%} accepted) (some #{%} rejected))) sites)) 
+  (filter #(not (or (some #{%} accepted) (some #{%} rejected))) sites))
 
 (defc= selected
   (when (not (empty? active))
     (nth active index)))
+
+(defc= map-select
+  [map-canvas selected])
 

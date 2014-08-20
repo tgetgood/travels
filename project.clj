@@ -1,5 +1,5 @@
 (defproject travels "v0.1"
-  
+
   :description "Intergalactic Travel Guide"
 
   :url "intergalactic.herokuapp.com"
@@ -32,15 +32,15 @@
                  [environ "0.4.0"]
                  [clj-time "0.7.0"]
                  [digest "1.4.4"]
-                 
+
                  [com.novemberain/monger "2.0.0-rc1"]
-                 
+
                  [com.cemerick/friend "0.2.0"]
                  [ring "1.2.2"]
                  [compojure "1.1.6"]
                  [http-kit "2.1.18"]
                  [ring/ring-json "0.3.1"]
-                 
+
                  ;; dev
                  [com.cemerick/piggieback "0.1.3"]]
 
@@ -62,5 +62,5 @@
                                  :pretty-print false}}
 
                }}
-  ) 
-                 
+  )
+
