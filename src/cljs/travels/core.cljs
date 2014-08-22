@@ -6,7 +6,6 @@
 
              [travels.components :as components]))
 
-
 (defn get-fake-data
   []
   (let [out (chan)
@@ -20,17 +19,15 @@
                            (>! err (second x)))))})
     [out err]))
 
-
-
 (defn ^:export init
   []
   (components/attach-root)
   (go
-    (let [;m (<! (gm/init-map "new delhi" (domm/sel1 :#map-canvas)))
-          [out err] (get-fake-data)
+    (let [[out err] (get-fake-data)
           data (<! out)
           ];marker (<! (gm/create-marker m "new delhi"))]
       (swap! components/root-state (fn [x] (assoc x :sites data)))
+
       )))
 
 

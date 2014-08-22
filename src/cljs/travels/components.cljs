@@ -12,7 +12,7 @@
      :accepted []
      :rejected []
      :selected {}
-     :markers []
+     :add-markers (gm/create-marker "new delhi")
      :map-canvas nil}))
 
 (defn travel-bar
@@ -24,8 +24,7 @@
       (dom/div #js {:className "distance-bar"} 
         (dom/div #js {:className "walk"} 
                 (str "Walk: " (-> props :walk :time) " (" 
-                     (-> props :walk :distance) ")"))
-        (dom/div #js {:className "drive"}
+                     (-> props :walk :distance) ")")) (dom/div #js {:className "drive"}
                 (str "drive " (-> props :drive :time) " (" 
                      (-> props :drive :distance) ")"))))))
 
@@ -100,9 +99,13 @@
   (reify
     om/IDidMount
     (did-mount [_]
-      (let [m (gm/init-map "new delhi" (om/get-node owner "map-canvas"))]
-        (om/transact! app :map-canvas 
-          (fn [_] m))))
+      (let [mch (gm/init-map "new delhi" (om/get-node owner "map-canvas"))]
+        (go (let [m (<! mch)]
+          (om/transact! app :map-canvas 
+            (fn [_] m))
+          (let [marker (<! (:add-markers @app))]
+               (.log js/console marker)
+               (.setMap marker  m))))))
     om/IRender
     (render [_]
       (dom/div #js {:className "pure-u-1-3" :id "map-view"}
