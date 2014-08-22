@@ -1,9 +1,7 @@
 (ns travels.core
-   (:require-macros [cljs.core.async.macros :refer [go alt! go-loop]]
-                    [dommy.macros :as domm])
+   (:require-macros [cljs.core.async.macros :refer [go alt! go-loop]])
    (:require [cljs.core.async :refer [>! <! chan]]
              [ajax.core :as $]
-
              [travels.components :as components]))
 
 (defn get-fake-data
@@ -24,10 +22,8 @@
   (components/attach-root)
   (go
     (let [[out err] (get-fake-data)
-          data (<! out)
-          ];marker (<! (gm/create-marker m "new delhi"))]
+          data (<! out)]
       (swap! components/root-state (fn [x] (assoc x :sites data)))
-
       )))
 
 

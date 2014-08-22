@@ -21,11 +21,9 @@
 
                  [org.clojure/core.async "0.1.319.0-6b1aca-alpha"]
 
-                 [prismatic/dommy "0.1.2"]
-                 [domina "1.0.2"]
                  [cljs-ajax "0.2.6"]
-                 [tailrecursion/javelin "3.6.0"]
                  [om "0.7.1"]
+                 [prismatic/om-tools "0.3.2"]
 
                  [com.cognitect/transit-cljs "0.8.158"]
                  [com.cognitect/transit-clj "0.8.229"]
