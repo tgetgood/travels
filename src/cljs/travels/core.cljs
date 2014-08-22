@@ -4,8 +4,7 @@
    (:require [cljs.core.async :refer [>! <! chan]]
              [ajax.core :as $]
 
-             [travels.state :refer [onchange watch sites active selected
-                                    map-select map-canvas]]
+             [travels.components :as components]
              [travels.render :refer [render-main-list render-details]]
              [travels.gmaps :as gm]))
 
@@ -25,31 +24,21 @@
 
 
 
-; (onchange map-select (fn [[mc sel]]
-;                        (.log js/console (clj->js sel))
-;                        (when (and mc (:marker sel))
-;                          (.setMap (:marker sel) mc)
-;                          (go
-;                            (<! (watch selected))
-;                            (.setMap (:marker sel) {})))))
-
-(onchange active render-main-list)
-(onchange selected render-details)
-
 (defn ^:export init
   []
+  (components/attach-root)
   (go
-    (let [m (<! (gm/init-map "new delhi" (domm/sel1 :#map-canvas)))
+    (let [;m (<! (gm/init-map "new delhi" (domm/sel1 :#map-canvas)))
           [out err] (get-fake-data)
           data (<! out)
-          marker (<! (gm/create-marker m "new delhi"))]
+          ];marker (<! (gm/create-marker m "new delhi"))]
+      (swap! components/root-state (fn [x] (assoc x :sites data)))
+      )))
 
-      (reset! sites data)
-      (reset! map-canvas m)
 
       ; (doall (map (fn [d]
       ;               (go
-      ;                 (let [mark  (<! (gm/create-marker m (.-name d)))]
+      ;                 (let [mark (<! (gm/create-marker m (.-name d)))]
       ;                   (loop []
       ;                     (let [data  @sites
       ;                           index (.indexOf (map #(.-name %) data) (.-name d))
@@ -61,7 +50,7 @@
       ;                         ndata
       ;                         (recur)))))))
       ;            data))
-    )))
+    ; )))
 
 
 

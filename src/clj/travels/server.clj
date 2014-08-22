@@ -27,7 +27,7 @@
  ) 
 
 (defroutes dev-router
-  (GET  "/" [] (slurp "src/html/graphtest.html"))
+  (GET  "/" [] (slurp "src/html/index-dev.html"))
   (GET "/photoeditor/" [] (slurp "src/html/photos.html"))
   (GET  "/templates.js" [] (slurp "resources/templates.js"))
   (POST "/fileupload" req (files/upload req))

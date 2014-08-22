@@ -2,7 +2,7 @@
   (:require-macros [dommy.macros :refer [sel1]])
   (:require [travels.templates :as t]
             [travels.state :refer [index]]
-            
+
             [dommy.core :as dom :refer [listen! append! set-html!]]))
 
 (defn display-info
