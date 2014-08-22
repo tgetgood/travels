@@ -35,13 +35,13 @@
 
 
 (defn create-marker
-  [map loc]
+  [loc]
   (let [out (chan)
         geo (get-geocode loc)]
     (go
       (let [coords (<! geo)
             opts {:position (-> coords .-geometry .-location)
-                  :map map
+                  :map nil
                   :title loc}]
         (>! out (google.maps.Marker. (clj->js opts)))))
     out))

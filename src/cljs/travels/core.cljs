@@ -4,9 +4,7 @@
    (:require [cljs.core.async :refer [>! <! chan]]
              [ajax.core :as $]
 
-             [travels.components :as components]
-             [travels.render :refer [render-main-list render-details]]
-             [travels.gmaps :as gm]))
+             [travels.components :as components]))
 
 
 (defn get-fake-data
