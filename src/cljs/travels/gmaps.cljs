@@ -33,18 +33,17 @@
         (>! out m)))
     out))
 
+(defn goog-lat-long
+  [{:keys [latitude longitude]}]
+  (google.maps.LatLng. latitude longitude))
 
 (defn create-marker
   [loc]
-  (let [out (chan)
-        geo (get-geocode loc)]
-    (go
-      (let [coords (<! geo)
-            opts {:position (-> coords .-geometry .-location)
-                  :map nil
-                  :title loc}]
-        (>! out (google.maps.Marker. (clj->js opts)))))
-    out))
+  (let [lat-lng (goog-lat-long loc)
+        opts {:position lat-lng
+              :map nil
+              :title ""}]
+    (google.maps.Marker. (clj->js opts))))
 
 (defn get-distances
   [me dests]

@@ -16,8 +16,8 @@
      :accepted []
      :rejected []
      :selected {}
-     :add-markers (gm/create-marker "new delhi")
-     :map-canvas nil}))
+     :directions nil
+     :user-location nil}))
 
 ;;;;; Data Formatting
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -32,11 +32,12 @@
 
 (defn thumb-urls
   [app]
-  (map (fn [i] (-> i :thumbnail :url))
-       (:images app)))
+  (map (fn [i] (-> i :thumbnail :url)) (:images app))) 
 
 ;;;;; Components
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;; Left Bar
 
 (defcomponent travel-bar [props owner]
   (render [this]
@@ -47,10 +48,10 @@
       (dom/div {:class "drive"}
         (str "drive " (-> props :drive :time) " (" 
              (-> props :drive :distance) ")")))))
-
 (defcomponent site-view [app owner]
   (render-state [this {:keys [focus]}]
-    (dom/div {:on-mouse-over (fn [_] (go (>! focus @app)))}
+    (dom/div {:on-mouse-over (fn [_] (go (>! focus @app)))
+              :on-click (fn[_] (.log js/console (clj->js @app)))}
       (dom/h2  {:class "site-name"} (:name app))
       (dom/img {:class "main-image" :src (get-std-image-src app)})
       (om/build travel-bar app))))
@@ -68,7 +69,9 @@
   (render-state [this state]
     (dom/div {:id "main-view" :class "pure-u-1-3"}
       (om/build-all site-view (:sites app)
-        {:init-state state}))))
+        {:init-state state})))) 
+
+;;;; Details Pane 
 
 (defcomponent thumbnail-view [src owner]
   (render [_]
@@ -85,27 +88,51 @@
         (dom/h2 nil "Description")
         (dom/span nil (:description app))))))
 
+;;;; Map 
+
 (defcomponent map-view [app owner]
+  (init-state [_]
+    {:directions-display nil
+     :selected-marker nil
+     :user-marker nil
+     :directions nil
+     :map nil})
   (did-mount [_]
     (let [mch (gm/init-map "new delhi" (om/get-node owner "map-canvas"))]
-      (go (let [m (<! mch)]
-        (om/transact! app :map-canvas 
-          (fn [_] m))
-        (let [marker (<! (:add-markers @app))]
-             (.log js/console marker)
-             (.setMap marker  m))))))
+      (go (let [m  (<! mch)
+                dd (google.maps.DirectionsRenderer.)]
+            (om/set-state! owner :map m)
+            (.setMap dd m)
+            (om/set-state! owner :directions-display dd)))))
+  (will-update [_ props state]
+    (when (not (nil? (om/get-state owner :map)))
+      (when (not (= (:directions props) (:directions state)))
+        (.setDirections (:directions-display state) (:directions props))
+        (om/set-state! owner :directions (:directions props)))
+      (letfn [(move-marker! [old-key new-key]
+                (let [old-marker   (old-key state)
+                      new-position (new-key props)]
+                  (let [new-marker (gm/create-marker new-position)]
+                    (when old-marker 
+                      (.setMap old-marker nil))
+                    (.setMap new-marker (:map state))
+                    (om/set-state! owner old-key new-marker))))]
+          (move-marker! :selected-marker :selected-location)
+          (move-marker! :user-marker :user-location))))
   (render [_]
     (dom/div {:class "pure-u-1-3" :id "map-view"}
       (dom/div {:id "map-canvas" :ref "map-canvas"}))))
 
+;;;; Global App
 
 (defcomponent browser-view [app owner]
   (render [_]
     (dom/div {:class "pure-g-r" :id "container"}
       (om/build sites-list app)
       (om/build details-view (:selected app))
-      (om/build map-view app))))
-
+      (om/build map-view {:directions (:directions app)
+                          :user-location (:user-location app)
+                          :selected-location (-> app :selected :location)}))))
 
 (defn attach-root []
   (om/root browser-view root-state
