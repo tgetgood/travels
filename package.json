@@ -1,6 +1,6 @@
 {
   "name": "travels",
-  "version": "0.1",
+  "version": "0.1.0",
   "description": "Undiscovered Travel App",
   "dependencies": {
     "grunt": "^0.4.4",
