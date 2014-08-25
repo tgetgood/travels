@@ -28,6 +28,8 @@
                  [com.cognitect/transit-cljs "0.8.158"]
                  [com.cognitect/transit-clj "0.8.229"]
 
+                 [com.newrelic.agent.java/newrelic-agent "3.2.0"]
+
                  [environ "0.4.0"]
                  [clj-time "0.7.0"]
                  [digest "1.4.4"]
@@ -42,6 +44,8 @@
 
                  ;; dev
                  [com.cemerick/piggieback "0.1.3"]]
+
+  :java-agents [[com.newrelic.agent.java/newrelic-agent "3.2.0"]]
 
   :main travels.server
 
