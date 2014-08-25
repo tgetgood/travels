@@ -17,6 +17,8 @@
   :dependencies [[org.clojure/clojure "1.6.0"]
                  [org.clojure/clojurescript "0.0-2268"]
 
+                 [com.newrelic.agent.java/newrelic-agent "3.2.0"]
+
                  [prismatic/dommy "0.1.2"]
                  [domina "1.0.2"]
 
@@ -31,6 +33,8 @@
                  [compojure "1.1.6"]
                  [http-kit "2.1.18"]
                  [ring/ring-json "0.3.1"]]
+
+  :java-agents [[com.newrelic.agent.java/newrelic-agent "3.2.0"]]
 
   :main travels.server
 
