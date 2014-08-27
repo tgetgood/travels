@@ -1,30 +1,19 @@
 (ns travels.components
   (:require-macros [cljs.core.async.macros :refer [go go-loop]])
-  (:require [travels.gmaps :as gm]
+  (:require [travels.maps-data :as maps]
+            [travels.state :refer [root-state]]
             
             [cljs.core.async :refer [<! >! put! chan]]
             [om.core :as om :include-macros true]
             [om-tools.core :refer-macros [defcomponent]]
             [om-tools.dom :as dom :include-macros true]))
 
-;;;;; App State
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(def root-state
-  (atom
-    {:sites []
-     :accepted []
-     :rejected []
-     :selected {}
-     :directions nil
-     :user-location nil}))
 
 ;;;;; Data Formatting
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn get-std-image-src
-  [app]
-  (-> app 
+  [app] (-> app 
       :images
       first
       :standard_resolution
@@ -92,13 +81,11 @@
 
 (defcomponent map-view [app owner]
   (init-state [_]
-    {:directions-display nil
-     :selected-marker nil
-     :user-marker nil
-     :directions nil
+    {:previous {}
+     :directions-display nil
      :map nil})
   (did-mount [_]
-    (let [mch (gm/init-map "new delhi" (om/get-node owner "map-canvas"))]
+    (let [mch (maps/init-map "new delhi" (om/get-node owner "map-canvas"))]
       (go (let [m  (<! mch)
                 dd (google.maps.DirectionsRenderer.)]
             (om/set-state! owner :map m)
@@ -106,33 +93,30 @@
             (om/set-state! owner :directions-display dd)))))
   (will-update [_ props state]
     (when (not (nil? (om/get-state owner :map)))
-      (when (not (= (:directions props) (:directions state)))
-        (.setDirections (:directions-display state) (:directions props))
-        (om/set-state! owner :directions (:directions props)))
-      (letfn [(move-marker! [old-key new-key]
-                (let [old-marker   (old-key state)
-                      new-position (new-key props)]
-                  (let [new-marker (gm/create-marker new-position)]
-                    (when old-marker 
-                      (.setMap old-marker nil))
-                    (.setMap new-marker (:map state))
-                    (om/set-state! owner old-key new-marker))))]
-          (move-marker! :selected-marker :selected-location)
-          (move-marker! :user-marker :user-location))))
+      (when (not (= (:previous state) props))
+      (when (not (= (:directions props) (-> state :previous :directions)))
+        (.setDirections (:directions-display state) (:directions props)))
+      (om/set-state! owner :previous props))))
   (render [_]
     (dom/div {:class "pure-u-1-3" :id "map-view"}
       (dom/div {:id "map-canvas" :ref "map-canvas"}))))
 
 ;;;; Global App
 
+(defn process-map-data
+  [state]
+  (let [current-location (maps/create-marker (:user-location state) "user")
+        loc-of-interest (maps/create-marker (-> state :selected :location) "site")]
+  {:directions (-> state :directions 
+                   (get (:user-location state)) 
+                   (get (-> state :selected :location)))}))
+
 (defcomponent browser-view [app owner]
   (render [_]
     (dom/div {:class "pure-g-r" :id "container"}
       (om/build sites-list app)
       (om/build details-view (:selected app))
-      (om/build map-view {:directions (:directions app)
-                          :user-location (:user-location app)
-                          :selected-location (-> app :selected :location)}))))
+      (om/build map-view (process-map-data app)))))
 
 (defn attach-root []
   (om/root browser-view root-state

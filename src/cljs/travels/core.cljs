@@ -2,21 +2,9 @@
    (:require-macros [cljs.core.async.macros :refer [go alt! go-loop]])
    (:require [cljs.core.async :refer [>! <! chan]]
              [ajax.core :as $]
-             [travels.gmaps :as gm]
+             [travels.state :as state]
              [travels.components :as components]))
 
-(defn get-fake-data
-  []
-  (let [out (chan)
-        err (chan)]
-    ($/ajax-request "/api/fakedatadelhi" :get
-           {:format ($/json-response-format {:keywords? true})
-            :handler (fn [x]
-                       (go
-                         (if (first x)
-                           (>! out (second x))
-                           (>! err (second x)))))})
-    [out err]))
 
 (defn g->loc
   [geo]
@@ -65,12 +53,12 @@
   (go
     (let [[out err] (get-fake-data)
           data (<! out)
-          mark (<! (gm/get-geocode "new delhi"))]
+        ];  mark (<! (gm/get-geocode "new delhi"))]
 
       ;; State management in the main loop...
 
-      (swap! components/root-state (fn [x] (assoc x :sites data)))
-      (swap! components/root-state #(assoc % :user-location (g->loc mark)))
+      (swap! state/root-state (fn [x] (assoc x :sites data)))
+      (swap! state/root-state #(assoc % :user-location (g->loc mark)))
 
       ; (update-locations data)
 

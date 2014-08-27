@@ -1,6 +1,13 @@
-(ns travels.gmaps
+(ns travels.maps-data
    (:require-macros [cljs.core.async.macros :refer [go alt!]])
    (:require [cljs.core.async :refer [>! <! chan]]))
+
+(defn index-of [s v]
+  (loop [idx 0 items s]
+    (cond
+      (empty? items) nil
+      (= v (first items)) idx
+      :else (recur (inc idx) (rest items)))))
 
 (defn get-geocode
   ([loc]
@@ -38,11 +45,11 @@
   (google.maps.LatLng. latitude longitude))
 
 (defn create-marker
-  [loc]
+  [loc loc-name]
   (let [lat-lng (goog-lat-long loc)
         opts {:position lat-lng
               :map nil
-              :title ""}]
+              :title loc-name}]
     (google.maps.Marker. (clj->js opts))))
 
 (defn get-distances
