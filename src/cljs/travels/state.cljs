@@ -11,7 +11,7 @@
 
 (def root-state
   (atom
-    {:sites site-store
+    {:sites {}
      :accepted []
      :rejected []
      :selected {}
@@ -20,8 +20,12 @@
 
 (defn handle-new-data
   [in-ch]
-  (let [[id datum] (<! in-ch)]
-    (if (contains? id @site-store)
-      (update-in site-store [id] #(conj % datum))
-      (swap! site-store #(conj % {id #{datum}})))))
+  (go (loop [] 
+        (let [[id datum] (<! in-ch)]
+          (if (contains? id @site-store)
+            (swap! root-state (fn [s] 
+                                (update-in s [:sites id] #(merge % datum))))
+            (swap! root-state (fn [s] 
+                                (update-in s [:sites] #(conj % {id datum})))))
+          (recur)))))
 

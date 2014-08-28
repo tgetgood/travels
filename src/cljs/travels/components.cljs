@@ -57,7 +57,7 @@
           (recur)))))
   (render-state [this state]
     (dom/div {:id "main-view" :class "pure-u-1-3"}
-      (om/build-all site-view (mapv #(:data %) (:sites app))
+      (om/build-all site-view (mapv #(val %) (:sites app))
         {:init-state state})))) 
 
 ;;;; Details Pane 
