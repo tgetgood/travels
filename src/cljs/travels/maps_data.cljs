@@ -44,6 +44,11 @@
   [{:keys [latitude longitude]}]
   (google.maps.LatLng. latitude longitude))
 
+(defn google-geocode-to-location
+  [geo]
+  (let [pos (-> geo .-geometry .-location)]
+    {:latitude (.-k pos) :longitude (.-B pos)}))
+
 (defn create-marker
   [loc loc-name]
   (let [lat-lng (goog-lat-long loc)
@@ -64,7 +69,10 @@
                         (fn [r s] (go (>! out r))))
     out))
 
-
-
-
-
+(defn get-location
+  [site]
+  (let [out (chan)]
+    (go (let [sitename (:name site)
+              geo (<! (get-geocode sitename))]
+          (>! out {:sitename sitename :location (google-geocode-to-location geo)})))
+    out))
