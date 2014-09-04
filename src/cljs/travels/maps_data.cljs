@@ -10,6 +10,13 @@
     (when (or ( < i (count coll)) (= v (last coll)))
       i)))
 
+(defn- maybe-retry
+  [stat f & args]
+  (when (= stat "OVER_QUERY_LIMIT")
+    (js/setTimeout
+      (fn [] (apply f args))
+      10000)))
+
 (defn get-geocode
   ([loc]
    (let [out (chan)]
@@ -18,12 +25,9 @@
    (let [gc  (google.maps.Geocoder.)
          address (clj->js {:address loc})
          cb  (fn [res status]
-               (cond (= status "OK")
-                       (go (>! out (first res)))
-                     (= status "OVER_QUERY_LIMIT")
-                       (js/setTimeout
-                         (fn [] (get-geocode loc out))
-                         10000)))]
+               (if (= status "OK")
+                 (go (>! out (first res)))
+                 (maybe-retry status get-geocode loc out)))]
      (.geocode gc address cb)
      out)))
 
@@ -75,5 +79,29 @@
   (let [out (chan)]
     (go (let [sitename (:name site)
               geo (<! (get-geocode sitename))]
-          (>! out {:sitename sitename :location (google-geocode-to-location geo)})))
+          (>! out {:sitename sitename 
+                   :location (google-geocode-to-location geo)})))
     out))
+
+(defrecord DirectionsRequest [:origin :destination :travelMode :unitSystem])
+
+(defn directions-request
+  [{:keys [:origin :destination :travelMode :unitSystem]} :or
+   {:travelMode google.maps.TravelMode.DRIVING 
+    :unitSystem google.maps.UnitSystem.METRIC}]
+  (DirectionsRequest. origin destination travelMode unitSystem))
+
+(def directions-service (atom nil))
+
+(defn get-directions
+  [opts]
+  (compare-and-set! directions-service nil (google.maps.DirectionsService.))
+  (let [out (chan)]
+    (.route @directions-service (clj->js opts)
+            (fn [res stat]
+              (if (= stat "OK")
+                (>! out res)
+                (maybe-retry stat get-directions opts))))
+    out))
+
+

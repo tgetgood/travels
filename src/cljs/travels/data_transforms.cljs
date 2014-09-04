@@ -14,9 +14,9 @@
 
 (defn process-map-data
   [state]
-  (let [current-location (maps/create-marker (:user-location state) "user")
-        loc-of-interest (maps/create-marker (-> state :selected :location) "site")]
-  {:directions (-> state :directions
-                   (get (:user-location state))
-                   (get (-> state :selected :location)))}))
+  {:directions (-> 
+                 state
+                 :directions
+                 (get (:user-location state))
+                 (get (-> state :selected :name)))})
 

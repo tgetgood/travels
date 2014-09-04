@@ -65,7 +65,6 @@
 (defcomponent map-view [app owner]
   (init-state [_]
     {:previous {}
-     :directions-display nil
      :map nil})
   (did-mount [_]
     (let [m (mw/create-map (:map-data @app))]

@@ -26,14 +26,24 @@
           markers
           directions-obj))
 
-(defn assoc-map
-  [m & kvs]
-  (assert (zero? (mod (count kvs) 2)) "Wrong number of args")
+(defn- update-map!
+  "Updates a map in place to reflect the given data."
+  [[map-obj old-data] new-data]
+  ())
+
+
+(def maps (atom {}))
 
 ;; TODO: test that attaching a new map to a DOM node removes the old
 ;; one automatically.
 (defn attach-map!
-  [m elem]
-  ())
+  "Creates a new map object attached to the given DOM element if one does not
+  already exist and updates it to match the given data. If there is already a
+  map attached it is modified to show the new data." 
+  [map-data elem]
+  (when (not (contains? @maps elem))
+    (let [map-obj (google.maps.Map. elem (cljs->js (:opts map-data)))]
+      (swap! maps (fn [s] (assoc s elem {:map map-obj :data map-data})))))
+  (update-map! (get @maps elem) map-data))
 
 
