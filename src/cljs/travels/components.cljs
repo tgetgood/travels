@@ -64,19 +64,14 @@
 
 (defcomponent map-view [app owner]
   (init-state [_]
-    {:previous {}
-     :map nil})
+    {:map-data nil})
   (did-mount [_]
-    (let [m (mw/create-map (:map-data @app))]
-      (mw/attach-map! m)
-      (om/set-state! owner :map m)))
+      (mw/attach-map! (om/get-node owner "map-canvas") (:map-data app))
+      (om/set-state! owner :map-data (:map-data app)))
   (will-update [_ props state]
-    (let [old-map (:map state)
-          new-map-state (:map-data props)]
-      (if (= (mw/get-state old-map) new-map-state)
-        (let [new-map (mw/update-state old-map new-map-state)]
-          (mw/attach-map! new-map)
-          (om/set-state! owner :map new-map)))))
+    (when (not= (:map-data state) (:map-data props))
+        (mw/attach-map! (om/get-node owner "map-canvas") (:map-data props))
+        (om/set-state! owner :map-data (:map-data props))))
   (render [_]
     (dom/div {:class "pure-u-1-3" :id "map-view"}
       (dom/div {:id "map-canvas" :ref "map-canvas"}))))

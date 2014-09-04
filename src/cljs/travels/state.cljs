@@ -16,7 +16,7 @@
      :rejected []
      :selected {}
      :directions {}
-     :user-location "New Delhi"}))
+     :user-location {:lat 28.650196 :lng 77.232324}}))
 
 (defn- tap-watch
   [f m]

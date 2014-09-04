@@ -1,4 +1,4 @@
-(ns data-transforms)
+(ns travels.data-transforms)
 
 (defn get-std-image-src
   [state] 
@@ -14,9 +14,11 @@
 
 (defn process-map-data
   [state]
-  {:directions (-> 
-                 state
-                 :directions
-                 (get (:user-location state))
-                 (get (-> state :selected :name)))})
+  {:map-data
+   {:opts {:center (:user-location state)}
+    :directions (-> 
+                  state
+                  :directions
+                  (get (:user-location state))
+                  (get (-> state :selected :name)))}})
 

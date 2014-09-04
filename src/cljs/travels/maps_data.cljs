@@ -83,13 +83,13 @@
                    :location (google-geocode-to-location geo)})))
     out))
 
-(defrecord DirectionsRequest [:origin :destination :travelMode :unitSystem])
-
-(defn directions-request
-  [{:keys [:origin :destination :travelMode :unitSystem]} :or
-   {:travelMode google.maps.TravelMode.DRIVING 
-    :unitSystem google.maps.UnitSystem.METRIC}]
-  (DirectionsRequest. origin destination travelMode unitSystem))
+; (defrecord DirectionsRequest [:origin :destination :travelMode :unitSystem])
+; 
+; (defn directions-request
+;   [{:keys [:origin :destination :travelMode :unitSystem] :or
+;    {:travelMode google.maps.TravelMode.DRIVING 
+;     :unitSystem google.maps.UnitSystem.METRIC}}]
+;   (DirectionsRequest. origin destination travelMode unitSystem))
 
 (def directions-service (atom nil))
 
@@ -100,7 +100,7 @@
     (.route @directions-service (clj->js opts)
             (fn [res stat]
               (if (= stat "OK")
-                (>! out res)
+                (go (>! out res))
                 (maybe-retry stat get-directions opts))))
     out))
 
