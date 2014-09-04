@@ -1,38 +1,13 @@
 (ns travels.components
   (:require-macros [cljs.core.async.macros :refer [go go-loop]])
-  (:require [travels.maps-data :as maps]
+  (:require [travels.maps-wrapper :as mw]
             [travels.state :refer [root-state]]
+            [travels.data-transforms :as dt]
 
             [cljs.core.async :refer [<! >! put! chan]]
             [om.core :as om :include-macros true]
             [om-tools.core :refer-macros [defcomponent]]
             [om-tools.dom :as dom :include-macros true]))
-
-
-;;;;; Data Formatting
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(defn get-std-image-src
-  [app] (-> app
-      :images
-      first
-      :standard_resolution
-      :url))
-
-(defn thumb-urls
-  [app]
-  (map (fn [i] (-> i :thumbnail :url)) (:images app)))
-
-(defn process-map-data
-  [state]
-  (let [current-location (maps/create-marker (:user-location state) "user")
-        loc-of-interest (maps/create-marker (-> state :selected :location) "site")]
-  {:directions (-> state :directions
-                   (get (:user-location state))
-                   (get (-> state :selected :location)))}))
-
-;;;;; Components
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;; Left Bar
 
@@ -50,7 +25,7 @@
     (dom/div {:on-mouse-over (fn [_] (go (>! focus @app)))
               :on-click (fn[_] (.log js/console (clj->js @app)))}
       (dom/h2  {:class "site-name"} (:name app))
-      (dom/img {:class "main-image" :src (get-std-image-src app)})
+      (dom/img {:class "main-image" :src (dt/get-std-image-src app)})
       (om/build travel-bar app))))
 
 (defcomponent sites-list [app owner]
@@ -80,7 +55,7 @@
     (dom/div {:id "details" :class "pure-u-1-3"}
       (dom/h2 {:id "details-title"} (:name app))
       (dom/div {:id "photos" :class "pure-g"}
-        (om/build-all thumbnail-view (thumb-urls app)))
+        (om/build-all thumbnail-view (dt/thumb-urls app)))
       (dom/div {:class "description"}
         (dom/h2 nil "Description")
         (dom/span nil (:description app))))))
@@ -93,18 +68,16 @@
      :directions-display nil
      :map nil})
   (did-mount [_]
-    (let [mch (maps/init-map "new delhi" (om/get-node owner "map-canvas"))]
-      (go (let [m  (<! mch)
-                dd (google.maps.DirectionsRenderer.)]
-            (om/set-state! owner :map m)
-            (.setMap dd m)
-            (om/set-state! owner :directions-display dd)))))
+    (let [m (mw/create-map (:map-data @app))]
+      (mw/attach-map! m)
+      (om/set-state! owner :map m)))
   (will-update [_ props state]
-    (when (not (nil? (om/get-state owner :map)))
-      (when (not (= (:previous state) props))
-      (when (not (= (:directions props) (-> state :previous :directions)))
-        (.setDirections (:directions-display state) (:directions props)))
-      (om/set-state! owner :previous props))))
+    (let [old-map (:map state)
+          new-map-state (:map-data props)]
+      (if (= (mw/get-state old-map) new-map-state)
+        (let [new-map (mw/update-state old-map new-map-state)]
+          (mw/attach-map! new-map)
+          (om/set-state! owner :map new-map)))))
   (render [_]
     (dom/div {:class "pure-u-1-3" :id "map-view"}
       (dom/div {:id "map-canvas" :ref "map-canvas"}))))
@@ -116,7 +89,7 @@
     (dom/div {:class "pure-g-r" :id "container"}
       (om/build sites-list app)
       (om/build details-view (:selected app))
-      (om/build map-view (process-map-data app)))))
+      (om/build map-view (dt/process-map-data app)))))
 
 (defn attach-root []
   (om/root browser-view root-state

@@ -12,12 +12,12 @@
        :travelMode google.maps.TravelMode.WALKING
        :unitSystem google.maps.UnitSystem.METRIC})
 
-
 (defn ^:export init
   []
   (components/attach-root)
 
   (state/handle-new-data (server/fetch))
+
     ; (update-locations data)
 
     ; (let [direct (google.maps.DirectionsService.)

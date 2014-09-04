@@ -2,12 +2,13 @@
    (:require-macros [cljs.core.async.macros :refer [go alt!]])
    (:require [cljs.core.async :refer [>! <! chan]]))
 
-(defn index-of [s v]
-  (loop [idx 0 items s]
-    (cond
-      (empty? items) nil
-      (= v (first items)) idx
-      :else (recur (inc idx) (rest items)))))
+(defn index-of 
+  "Returns first index in coll at which v occurs. Nil if not found. Result
+  won't make sense for non-seqs"
+  [coll v]
+  (let [i (count (take-while #(not= % v) coll))]
+    (when (or ( < i (count coll)) (= v (last coll)))
+      i)))
 
 (defn get-geocode
   ([loc]
