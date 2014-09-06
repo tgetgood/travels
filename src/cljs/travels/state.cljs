@@ -48,6 +48,12 @@
           (swap! root-state 
                  (fn [s] (update-in s [:directions origin] 
                            #(assoc % dest dirs))))
+          (swap! root-state assoc-in [:sites id :travel] 
+                 {:walk 
+                  {:time 
+                   (-> dirs .-routes first .-legs first .-duration .-text)
+                   :distance 
+                   (-> dirs .-routes first .-legs first .-distance .-text)}})
           (recur)))))
 
 (defn handle-new-data

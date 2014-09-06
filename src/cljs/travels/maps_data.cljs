@@ -98,7 +98,6 @@
   (compare-and-set! directions-service nil (google.maps.DirectionsService.))
   (let [out (chan)
         popts (assoc opts :origin (goog-lat-lng (:origin opts)))]
-    (.log js/console (clj->js popts))
     (.route @directions-service (clj->js popts)
             (fn [res stat]
               (if (= stat "OK")
