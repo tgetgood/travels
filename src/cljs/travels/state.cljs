@@ -16,7 +16,7 @@
      :rejected []
      :selected {}
      :directions {}
-     :user-location {}}))
+     :user-location nil}))
 
 (defn- tap-watch
   [f m]
@@ -29,8 +29,10 @@
   (go (loop [] 
         (let [[id datum] (<! in-ch)]
           (if (contains? id @site-store)
-            (swap! root-state update-in [:sites id] #(merge % datum))
-            (swap! root-state update-in [:sites] #(conj % {id datum})))
+            (swap! root-state (fn [s] 
+                                (update-in s [:sites id] #(merge % datum))))
+            (swap! root-state (fn [s] 
+                                (update-in s [:sites] #(conj % {id datum})))))
           (recur)))))
 
 (defn get-directions
@@ -46,18 +48,10 @@
           (swap! root-state 
                  (fn [s] (update-in s [:directions origin] 
                            #(assoc % dest dirs))))
-          ; (swap! root-state assoc-in [:sites id :travel] 
-          ;        {:walk 
-          ;         {:time 
-          ;          (-> dirs .-routes first .-legs first .-duration .-text)
-          ;          :distance 
-          ;          (-> dirs .-routes first .-legs first .-distance .-text)}})
           (recur)))))
 
 (defn handle-new-data
   [in-ch]
-  (update-store in-ch))
-  ; (let [m (mult in-ch)]
-  ;   (tap-watch update-store m)
-    ; (tap-watch get-directions m)))
-
+  (let [m (mult in-ch)]
+    (tap-watch update-store m)
+    (tap-watch get-directions m)))
