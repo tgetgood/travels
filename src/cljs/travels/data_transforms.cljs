@@ -1,4 +1,5 @@
-(ns travels.data-transforms)
+(ns travels.data-transforms
+  (:require [travels.maps-wrapper :refer [create-map]]))
 
 (defn get-std-image-src
   [state] 
@@ -15,10 +16,13 @@
 (defn process-map-data
   [state]
   {:map-data
-   {:opts {:center (:user-location state)}
-    :directions (-> 
-                  state
-                  :directions
-                  (get (:user-location state))
-                  (get (-> state :selected :name)))}})
+   (create-map 
+     {:center (:user-location state)}
+     []
+     (-> 
+       state
+       :directions
+       (get (:user-location state))
+       (get (-> state :selected :name))))})
+
 

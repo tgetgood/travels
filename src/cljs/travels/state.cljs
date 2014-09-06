@@ -16,7 +16,7 @@
      :rejected []
      :selected {}
      :directions {}
-     :user-location {:lat 28.650196 :lng 77.232324}}))
+     :user-location {}}))
 
 (defn- tap-watch
   [f m]
@@ -24,21 +24,13 @@
     (f out)
     (tap m out)))
 
-(defn handle-new-data
-  [in-ch]
-  (let [m (mult in-ch)]
-    (tap-watch update-store m)
-    (tap-watch get-directions m)))
-
 (defn update-store
   [in-ch]  
   (go (loop [] 
         (let [[id datum] (<! in-ch)]
           (if (contains? id @site-store)
-            (swap! root-state (fn [s] 
-                                (update-in s [:sites id] #(merge % datum))))
-            (swap! root-state (fn [s] 
-                                (update-in s [:sites] #(conj % {id datum})))))
+            (swap! root-state update-in [:sites id] #(merge % datum))
+            (swap! root-state update-in [:sites] #(conj % {id datum})))
           (recur)))))
 
 (defn get-directions
@@ -53,5 +45,19 @@
                             :travelMode google.maps.TravelMode.WALKING}))]
           (swap! root-state 
                  (fn [s] (update-in s [:directions origin] 
-                           #(assoc % dest dirs))))))))
+                           #(assoc % dest dirs))))
+          ; (swap! root-state assoc-in [:sites id :travel] 
+          ;        {:walk 
+          ;         {:time 
+          ;          (-> dirs .-routes first .-legs first .-duration .-text)
+          ;          :distance 
+          ;          (-> dirs .-routes first .-legs first .-distance .-text)}})
+          (recur)))))
+
+(defn handle-new-data
+  [in-ch]
+  (update-store in-ch))
+  ; (let [m (mult in-ch)]
+  ;   (tap-watch update-store m)
+    ; (tap-watch get-directions m)))
 

@@ -21,6 +21,10 @@
   [{:keys [map-obj map-data]} new-data]
   ())
 
+(defn valid?
+  [md]
+  (and (-> md :opts :center :lat) (-> md :opts :center :lng)))
+
 (def maps (atom {}))
 
 (defn attach-map!
@@ -28,7 +32,7 @@
   already exist and updates it to match the given data. If there is already a
   map attached it is modified to show the new data." 
   [elem map-data]
-  (when (not (contains? @maps elem))
+  (when (and (valid? map-data) (not (contains? @maps elem)))
     (let [map-obj (google.maps.Map. elem (clj->js (:opts map-data)))]
       (swap! maps (fn [s] (assoc s elem {:map-obj map-obj :map-data map-data})))))
   (update-map! (get @maps elem) map-data))

@@ -20,13 +20,14 @@
       (dom/div {:class "drive"}
         (str "drive " (-> props :drive :time) " ("
              (-> props :drive :distance) ")")))))
+
 (defcomponent site-view [app owner]
   (render-state [this {:keys [focus]}]
     (dom/div {:on-mouse-over (fn [_] (go (>! focus @app)))
               :on-click (fn[_] (.log js/console (clj->js @app)))}
       (dom/h2  {:class "site-name"} (:name app))
       (dom/img {:class "main-image" :src (dt/get-std-image-src app)})
-      (om/build travel-bar app))))
+      (om/build travel-bar (:travel app)))))
 
 (defcomponent sites-list [app owner]
   (init-state [_]
@@ -65,10 +66,7 @@
 (defcomponent map-view [app owner]
   (init-state [_]
     {:map-data nil})
-  (did-mount [_]
-      (mw/attach-map! (om/get-node owner "map-canvas") (:map-data app))
-      (om/set-state! owner :map-data (:map-data app)))
-  (will-update [_ props state]
+  (did-update [_ props state]
     (when (not= (:map-data state) (:map-data props))
         (mw/attach-map! (om/get-node owner "map-canvas") (:map-data props))
         (om/set-state! owner :map-data (:map-data props))))

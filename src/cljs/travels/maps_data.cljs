@@ -45,18 +45,18 @@
         (>! out m)))
     out))
 
-(defn goog-lat-long
-  [{:keys [latitude longitude]}]
-  (google.maps.LatLng. latitude longitude))
+(defn goog-lat-lng
+  [{:keys [lat lng]}]
+  (google.maps.LatLng. lat lng))
 
 (defn google-geocode-to-location
   [geo]
   (let [pos (-> geo .-geometry .-location)]
-    {:latitude (.-k pos) :longitude (.-B pos)}))
+    {:lat (.-k pos) :lng (.-B pos)}))
 
 (defn create-marker
   [loc loc-name]
-  (let [lat-lng (goog-lat-long loc)
+  (let [lat-lng (goog-lat-lng loc)
         opts {:position lat-lng
               :map nil
               :title loc-name}]
@@ -96,8 +96,10 @@
 (defn get-directions
   [opts]
   (compare-and-set! directions-service nil (google.maps.DirectionsService.))
-  (let [out (chan)]
-    (.route @directions-service (clj->js opts)
+  (let [out (chan)
+        popts (assoc opts :origin (goog-lat-lng (:origin opts)))]
+    (.log js/console (clj->js popts))
+    (.route @directions-service (clj->js popts)
             (fn [res stat]
               (if (= stat "OK")
                 (go (>! out res))
