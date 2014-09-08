@@ -10,7 +10,7 @@
   (components/attach-root)
 
   (swap! state/root-state assoc 
-         :user-location {:lat 28.650196 :lng 77.232324})
+         :user-location {:lat 28.650144 :lng 77.232335})
 
   (state/handle-new-data (server/fetch)))
 

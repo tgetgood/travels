@@ -17,9 +17,9 @@
              :production {:env {:prod-mode "TRUE"}}}
 
   :dependencies [[org.clojure/clojure "1.6.0"]
-                 [org.clojure/clojurescript "0.0-2268"]
+                 [org.clojure/clojurescript "0.0-2322"]
 
-                 [org.clojure/core.async "0.1.319.0-6b1aca-alpha"]
+                 [org.clojure/core.async "0.1.338.0-5c5012-alpha"]
 
                  [cljs-ajax "0.2.6"]
                  [om "0.7.1"]

@@ -15,11 +15,8 @@
   (render [this]
     (dom/div {:class "distance-bar"}
       (dom/div {:class "walk"}
-        (str "Walk: " (-> props :walk :time) " ("
-             (-> props :walk :distance) ")"))
-      (dom/div {:class "drive"}
-        (str "drive " (-> props :drive :time) " ("
-             (-> props :drive :distance) ")")))))
+        (str (-> props :walk :time) " ("
+             (-> props :walk :distance) ")")))))
 
 (defcomponent site-view [app owner]
   (render-state [this {:keys [focus]}]
@@ -66,10 +63,16 @@
 (defcomponent map-view [app owner]
   (init-state [_]
     {:map-data nil})
-  (did-update [_ props state]
+  (did-mount [_]
+    (let [map-data (om/get-state owner :map-data)]
+      (mw/attach-map! (om/get-node owner "map-canvas") map-data)
+      (om/set-state! owner :map-data map-data)))
+  (will-update [_ props state]
     (when (not= (:map-data state) (:map-data props))
         (mw/attach-map! (om/get-node owner "map-canvas") (:map-data props))
         (om/set-state! owner :map-data (:map-data props))))
+  (will-unmount [_]
+    (mw/detach-map! (om/get-node owner "map-canvas")))
   (render [_]
     (dom/div {:class "pure-u-1-3" :id "map-view"}
       (dom/div {:id "map-canvas" :ref "map-canvas"}))))

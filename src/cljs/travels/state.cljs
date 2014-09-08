@@ -20,7 +20,7 @@
 
 (defn- tap-watch
   [f m]
-  (let [out (chan)]
+  (let [out (chan 20)]
     (f out)
     (tap m out)))
 
@@ -28,12 +28,13 @@
   [in-ch]  
   (go (loop [] 
         (let [[id datum] (<! in-ch)]
-          (if (contains? id @site-store)
-            (swap! root-state (fn [s] 
-                                (update-in s [:sites id] #(merge % datum))))
-            (swap! root-state (fn [s] 
-                                (update-in s [:sites] #(conj % {id datum})))))
-          (recur)))))
+          ; (when (and (not (nil? id)) (not (nil? datum)))
+            (if (contains? id @site-store)
+              (swap! root-state (fn [s] 
+                                  (update-in s [:sites id] #(merge % datum))))
+              (swap! root-state (fn [s] 
+                                  (update-in s [:sites] #(conj % {id datum})))))
+            (recur)))))
 
 (defn get-directions
   [in-ch]

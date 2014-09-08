@@ -22,7 +22,7 @@
     (go 
       (let [sites (<! in-ch)
             site-map (map (fn [s] [(:name s) s]) sites)]
-        (onto-chan out-ch site-map))))
+        (onto-chan out-ch site-map false))))
 
 (defn fetch
   []
