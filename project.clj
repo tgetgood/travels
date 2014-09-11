@@ -75,7 +75,8 @@
                                  :id "prod"
                                  :libs [""]
                                  :externs 
-                                 ["src/externs/google-maps-js-api-v3-externs.js"]
+                                 ["src/externs/google-maps-js-api-v3-externs.js"
+                                  "src/externs/react-externs.js"]
                                  :output-to "resources/public/js/main.js"
                                  :optimizations :advanced
                                  :pretty-print false}}
