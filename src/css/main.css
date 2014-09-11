@@ -49,12 +49,6 @@ body {
 		text-align: justify;
 }
 
-#description {
-		text-align: center;
-		clear: both;
-		float: bottom;
-}
-
 #image-container {
 		display: block;
 		margin: 0 auto;
@@ -104,6 +98,27 @@ h2.site-name {
 	margin-top: 0;
 	margin-bottom:0;
 }
+
+.title-bar {
+	position: relative;
+	left: 0px;
+	right: 0px;
+	top: 0px;
+	bottom: 0px;
+}
+
+.description {
+	position: absolute;
+	color: white;
+	background: rgb(0, 0, 0);
+	background: rgba(0, 0, 0, 0.6);
+}
+
+.thumb-bar {
+	background: rgb(0, 0, 0);
+	background: rgba(0, 0, 0, 0.9);
+}
+
 
 .distance-bar {
 	color: white;

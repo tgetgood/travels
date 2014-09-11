@@ -2,16 +2,19 @@
   (:require [travels.maps-wrapper :refer [create-map]]))
 
 (defn get-std-image-src
-  [state] 
+  [state n] 
   (-> state
       :images
-      first
+      (nth n)
       :standard_resolution
       :url))
 
 (defn thumb-urls
   [state]
-  (map (fn [i] (-> i :thumbnail :url)) (:images state)))
+  (map (fn [i n] [(-> i :thumbnail :url) n]) 
+       (:images state) 
+       (-> state :images count range)))
+
 
 (defn process-map-data
   [state]

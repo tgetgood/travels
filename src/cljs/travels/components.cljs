@@ -15,15 +15,40 @@
   (render [this]
     (dom/div {:class "distance-bar"}
       (dom/div {:class "walk"}
-        (str (-> props :walk :time) " ("
+        (str "walk time: " 
+             (-> props :walk :time) " ("
              (-> props :walk :distance) ")")))))
 
+(defcomponent thumbnail-view [[src n] owner]
+  (render-state [this {:keys [img-chan]}]
+    (dom/div {:class "pure-u-1-12"
+              :on-mouse-over (fn [_] (put! img-chan n))}
+      (dom/img {:src src}))))
+
 (defcomponent site-view [app owner]
-  (render-state [this {:keys [focus]}]
+  (init-state [_]
+    {:desc false
+     :img-n 0
+     :img-chan (chan)})
+  (will-mount [_]
+    (let [img-chan (om/get-state owner :img-chan)]
+      (go (loop []
+            (om/set-state! owner :img-n (<! img-chan))
+            (recur)))))
+  (render-state [this {:keys [focus desc img-n img-chan]}]
     (dom/div {:on-mouse-over (fn [_] (go (>! focus @app)))
-              :on-click (fn[_] (.log js/console (clj->js @app)))}
-      (dom/h2  {:class "site-name"} (:name app))
-      (dom/img {:class "main-image" :src (dt/get-std-image-src app)})
+              :on-click (fn[_] (.log js/console (clj->js @app)))} ;debug
+      (dom/div {:class "title-bar"
+                :on-mouse-over (fn [_](om/set-state! owner :desc true))
+                :on-mouse-out (fn [_](om/set-state! owner :desc false))} 
+        (dom/h2  {:class "site-name"} (:name app))
+        (when desc
+          (dom/div {:class "description"}
+                   (:description app))))
+      (dom/img {:class "main-image" :src (dt/get-std-image-src app img-n)})
+      (dom/div {:class "pure-g thumb-bar"}
+        (om/build-all thumbnail-view (dt/thumb-urls app)
+                      {:init-state {:img-chan img-chan}}))
       (om/build travel-bar (:travel app)))))
 
 (defcomponent sites-list [app owner]
@@ -40,23 +65,6 @@
     (dom/div {:id "main-view" :class "pure-u-1-3"}
       (om/build-all site-view (dt/sorted-site-list (:sites app))
         {:init-state state}))))
-
-;;;; Details Pane
-
-(defcomponent thumbnail-view [src owner]
-  (render [_]
-    (dom/div {:class "pure-u-1-3"}
-      (dom/img {:src src}))))
-
-(defcomponent details-view [app owner]
-  (render [_]
-    (dom/div {:id "details" :class "pure-u-1-3"}
-      (dom/h2 {:id "details-title"} (:name app))
-      (dom/div {:id "photos" :class "pure-g"}
-        (om/build-all thumbnail-view (dt/thumb-urls app)))
-      (dom/div {:class "description"}
-        (dom/h2 nil "Description")
-        (dom/span nil (:description app))))))
 
 ;;;; Map
 
@@ -75,7 +83,7 @@
   (will-unmount [_]
     (mw/detach-map! (om/get-node owner "map-canvas")))
   (render [_]
-    (dom/div {:class "pure-u-1-3" :id "map-view"}
+    (dom/div {:class "pure-u-2-3" :id "map-view"}
       (dom/div {:id "map-canvas" :ref "map-canvas"}))))
 
 ;;;; Global App
@@ -84,7 +92,6 @@
   (render [_]
     (dom/div {:class "pure-g-r" :id "container"}
       (om/build sites-list app)
-      (om/build details-view (:selected app))
       (om/build map-view {:map-data (dt/process-map-data app)}))))
 
 (defn attach-root []
