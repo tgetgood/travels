@@ -51,12 +51,14 @@
 
   :main travels.server
 
+  :hooks [leiningen.cljsbuild]
+
   :cljsbuild {:builds
               {:dev {:source-paths ["src/cljs" "src/clj"]
                      :compiler {:id "dev"
                                 :libs [""]
-                                :output-to "resources/public/js/main.js"
-                                :output-dir "resources/public/js/out"
+                                :output-to "resources/js/main.js"
+                                :output-dir "resources/js/out"
                                 :optimizations :none
                                 :pretty-print true
                                 :source-map true}}
@@ -70,16 +72,17 @@
                                 :optimizations :whitespace
                                 :pretty-print true}}
 
-               :prod {:source-paths ["src/cljs" "src/clj"]
-                      :compiler {
-                                 :id "prod"
-                                 :libs [""]
-                                 :externs 
-                                 ["src/externs/google-maps-js-api-v3-externs.js"
-                                  "src/externs/react-externs.js"]
-                                 :output-to "resources/public/js/main.js"
-                                 :optimizations :advanced
-                                 :pretty-print false}}
+               :production 
+                 {:source-paths ["src/cljs" "src/clj"]
+                  :compiler {:id "prod"
+                             :libs [""]
+                             :jar true
+                             :externs 
+                             ["src/externs/google-maps-js-api-v3-externs.js"
+                              "src/externs/react-externs.js"]
+                             :output-to "resources/public/js/main.js"
+                             :optimizations :advanced
+                             :pretty-print false}}
 
              :test-commands {"run-tests"
                              ["phantomjs" :runner "target-test/unit-test.js"]}}}
