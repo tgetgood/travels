@@ -63,7 +63,7 @@
                                 :pretty-print true
                                 :source-map true}}
 
-              :test {:source-paths ["src/cljs" "src/clj" "test/cljs" "test/clj"]
+              :test {:source-paths ["src/cljs" "src/clj" "test/cljs"]
                      :incremental? true
                      :compiler {:libs [""]
                                 :output-to "target-test/unit-test.js"
