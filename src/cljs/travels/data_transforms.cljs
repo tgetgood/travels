@@ -15,14 +15,19 @@
 
 (defn process-map-data
   [state]
-  {:map-data
-   (create-map 
+  (create-map 
      {:center (:user-location state)}
-     []
-     (-> 
-       state
-       :directions
-       (get (:user-location state))
-       (get (-> state :selected :name))))})
+     {:markers []
+      :directions (-> 
+                   state
+                   :directions
+                   (get (:user-location state))
+                   (get (-> state :selected :name)))}))
 
-
+(defn sorted-site-list
+  [sites]
+  (let [checkfn (fn [x] (-> x :travel :walk :ctime))
+        site-list (map val sites)
+        has-time (group-by #(nil? (checkfn %)) site-list)]
+    (concat (sort-by checkfn (get has-time false)) (get has-time true))))
+           

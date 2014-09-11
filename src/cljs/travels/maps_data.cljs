@@ -45,6 +45,12 @@
         (>! out m)))
     out))
 
+(defn same-place
+  [gll ll]
+  (and (not (nil? gll))
+       (= (:lat ll) (.lat gll))
+       (= (:lng ll) (.lng gll))))
+
 (defn goog-lat-lng
   [{:keys [lat lng]}]
   (google.maps.LatLng. lat lng))

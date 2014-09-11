@@ -38,7 +38,7 @@
           (recur)))))
   (render-state [this state]
     (dom/div {:id "main-view" :class "pure-u-1-3"}
-      (om/build-all site-view (mapv #(val %) (:sites app))
+      (om/build-all site-view (dt/sorted-site-list (:sites app))
         {:init-state state}))))
 
 ;;;; Details Pane
@@ -67,6 +67,7 @@
     (let [map-data (om/get-state owner :map-data)]
       (mw/attach-map! (om/get-node owner "map-canvas") map-data)
       (om/set-state! owner :map-data map-data)))
+  ;; Is did-update better or does it matter?
   (will-update [_ props state]
     (when (not= (:map-data state) (:map-data props))
         (mw/attach-map! (om/get-node owner "map-canvas") (:map-data props))
@@ -84,7 +85,7 @@
     (dom/div {:class "pure-g-r" :id "container"}
       (om/build sites-list app)
       (om/build details-view (:selected app))
-      (om/build map-view (dt/process-map-data app)))))
+      (om/build map-view {:map-data (dt/process-map-data app)}))))
 
 (defn attach-root []
   (om/root browser-view root-state

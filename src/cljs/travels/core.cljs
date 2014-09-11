@@ -5,6 +5,9 @@
              [travels.server :as server]
              [travels.components :as components]))
 
+;; Allow the use of println for testing.
+(set! *print-fn* (fn [x] (.log js/console x)))
+
 (defn ^:export init
   []
   (components/attach-root)

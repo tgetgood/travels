@@ -53,6 +53,8 @@
                  {:walk 
                   {:time 
                    (-> dirs .-routes first .-legs first .-duration .-text)
+                   :ctime
+                   (-> dirs .-routes first .-legs first .-duration .-value)
                    :distance 
                    (-> dirs .-routes first .-legs first .-distance .-text)}})
           (recur)))))
