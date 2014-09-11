@@ -22,6 +22,9 @@ module.exports = function(grunt) {
 			},
 			mkresources: {
 				command: "mkdir -p resources/public"
+			},
+			buildjs: {
+				command: "lein cljsbuild once prod"
 			}
 		},
 
@@ -42,6 +45,6 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-shell');
 	
 	grunt.registerTask('clean', ['shell:rmtmp', 'shell:mkresources']);
-  grunt.registerTask('heroku', ['concat', 'cssmin']);  
+  grunt.registerTask('heroku', ['clean', 'shell:buildjs', 'concat', 'cssmin']);  
 	grunt.registerTask('default', ['heroku']);
 };
