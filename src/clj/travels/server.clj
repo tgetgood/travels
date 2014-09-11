@@ -46,7 +46,7 @@
 )
 
 (defroutes prod-router
-  (GET "/" [] (slurp "src/html/delhi.html"))
+  (GET "/" [] (slurp "src/html/index.html"))
   (route/resources ""))
 
 (defroutes main-router

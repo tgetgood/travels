@@ -51,8 +51,6 @@
 
   :main travels.server
 
-  :hooks [leiningen.cljsbuild]
-
   :cljsbuild {:builds
               {:dev {:source-paths ["src/cljs" "src/clj"]
                      :compiler {:id "dev"
@@ -72,7 +70,7 @@
                                 :optimizations :whitespace
                                 :pretty-print true}}
 
-               :prod {:source-paths ["src/cljs"]
+               :prod {:source-paths ["src/cljs" "src/clj"]
                       :compiler {
                                  :id "prod"
                                  :libs [""]

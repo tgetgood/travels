@@ -9,20 +9,10 @@ module.exports = function(grunt) {
 			}
 		},
 
-		uglify: {
-			options: {
-			},
-			dist: {
-				files: {
-					'resources/public/templates.min.js': ['resources/templates.js']
-				}
-			}
-		},
-
 		cssmin: {
 			css:{
 				src: 'resources/all.css',
-				dest: 'resources/public/all.min.css'
+				dest: 'resources/public/css/main.min.css'
 			}
 		},
 
@@ -52,6 +42,6 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-shell');
 	
 	grunt.registerTask('clean', ['shell:rmtmp', 'shell:mkresources']);
-  grunt.registerTask('heroku', ['concat', 'uglify', 'cssmin']);  
+  grunt.registerTask('heroku', ['concat', 'cssmin']);  
 	grunt.registerTask('default', ['heroku']);
 };
