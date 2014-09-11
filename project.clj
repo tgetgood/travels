@@ -51,8 +51,6 @@
 
   :main travels.server
 
-  :hooks [leiningen.cljsbuild]
-
   :cljsbuild {:builds
               {:dev {:source-paths ["src/cljs" "src/clj"]
                      :compiler {:id "dev"
