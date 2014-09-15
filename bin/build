@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+lein cljsbuild once production
+lein with-profile production compile :all
