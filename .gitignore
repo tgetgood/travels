@@ -12,6 +12,7 @@ pom.xml.asc
 /generated
 /cache
 /node_modules
+/bower_components
 /resources
 /image-assets
 .repl
