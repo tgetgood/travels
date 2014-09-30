@@ -36,6 +36,7 @@
                                             (.startsWith name "/")))
                                  {:headers {"Content-Type" "application/image"}
                                   :body (slurp (str files/image-dir "/" name))}))
+  (route/files "" {:root "bower_components"})
   (route/files "" {:root "resources"})
   (route/files "" {:root "src"})
 )
