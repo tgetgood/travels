@@ -15,15 +15,15 @@
   (render [this]
     (dom/div {:class "distance-bar"}
       (dom/div {:class "walk"}
-        (str "walk time: " 
+        (str "walk time: "
              (-> props :walk :time) " ("
              (-> props :walk :distance) ")")))))
 
 (defcomponent thumbnail-view [[src n] owner]
   (render-state [this {:keys [img-chan]}]
-    (dom/div {:class "pure-u-1-12"
+    (dom/div {:class ""
               :on-mouse-over (fn [_] (put! img-chan n))}
-      (dom/img {:src src}))))
+      (dom/img {:src src :class "thumbnail"}))))
 
 (defcomponent site-view [app owner]
   (init-state [_]
@@ -36,11 +36,10 @@
             (om/set-state! owner :img-n (<! img-chan))
             (recur)))))
   (render-state [this {:keys [focus desc img-n img-chan]}]
-    (dom/div {:on-mouse-over (fn [_] (go (>! focus @app)))
-              :on-click (fn[_] (.log js/console (clj->js @app)))} ;debug
+    (dom/div {:on-mouse-over (fn [_] (go (>! focus @app)))}
       (dom/div {:class "title-bar"
                 :on-mouse-over (fn [_](om/set-state! owner :desc true))
-                :on-mouse-out (fn [_](om/set-state! owner :desc false))} 
+                :on-mouse-out (fn [_](om/set-state! owner :desc false))}
         (dom/h2  {:class "site-name"} (:name app))
         (when desc
           (dom/div {:class "description"}
@@ -97,4 +96,3 @@
 (defn attach-root []
   (om/root browser-view root-state
     {:target (. js/document (getElementById "attach"))}))
-

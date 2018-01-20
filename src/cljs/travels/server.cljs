@@ -7,7 +7,7 @@
   []
   (let [res (chan)
         err (chan)]
-    ($/ajax-request "/api/fakedatadelhi" :get
+    ($/ajax-request "js/fakedatadelhi.js" :get
            {:format ($/json-response-format {:keywords? true})
             :handler (fn [x]
                        (go
@@ -19,7 +19,7 @@
 (defn- handle-response
   [in-ch out-ch]
     ;; Split the sites into separate events
-    (go 
+    (go
       (let [sites (<! in-ch)
             site-map (map (fn [s] [(:name s) s]) sites)]
         (onto-chan out-ch site-map false))))
@@ -30,5 +30,3 @@
         [res err] (get-fake-data)]
     (handle-response res out-ch)
     out-ch))
-
-

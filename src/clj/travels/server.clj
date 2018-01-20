@@ -24,10 +24,10 @@
   (GET "/api/fakedatadelhi" [] (-> (slurp "src/js/fakedata.js")
                                    response/response
                                    (response/header "Content-Type" "application/json")))
- ) 
+ )
 
 (defroutes dev-router
-  (GET  "/" [] (slurp "src/html/index-dev.html"))
+  (GET  "/" [] (slurp "resources/public/index.html"))
   (GET "/photoeditor/" [] (slurp "src/html/photos.html"))
   (GET  "/templates.js" [] (slurp "resources/templates.js"))
   (POST "/fileupload" req (files/upload req))
@@ -37,7 +37,7 @@
                                  {:headers {"Content-Type" "application/image"}
                                   :body (slurp (str files/image-dir "/" name))}))
   (route/files "" {:root "bower_components"})
-  (route/files "" {:root "resources"})
+  (route/files "" {:root "resources/public"})
   (route/files "" {:root "src"})
 )
 
@@ -56,7 +56,7 @@
     wrap-json-response
     wrap-json-body
     ch/api)
-  
+
   (ch/api image-redirect)
 
   (if config/dev-server?
@@ -73,5 +73,3 @@
                   main-router)]
     (run-server handler opts)
     (println (str "Server running on port " config/port))))
-           
-
