@@ -2,7 +2,7 @@
 
   :description "Intergalactic Travel Guide"
 
-  :url "intergalactic.herokuapp.com"
+  :url "https://github.com/tgetgood/travels"
 
   :min-lein-version "2.0.0"
 
@@ -52,37 +52,26 @@
   :main travels.server
 
   :cljsbuild {:builds
-              {:dev {:source-paths ["src/cljs" "src/clj"]
-                     :compiler {:id "dev"
-                                :libs [""]
-                                :output-to "resources/js/main.js"
-                                :output-dir "resources/js/out"
-                                :optimizations :none
-                                :pretty-print true
-                                :source-map true}}
+              {:dev
+               {:source-paths ["src/cljs" "src/clj"]
+                :compiler {:id "dev"
+                           :libs [""]
+                           :output-to "resources/public/js/main.js"
+                           :output-dir "resources/public/js/out"
+                           :main travels.core
+                           :optimizations :none
+                           :pretty-print true
+                           :source-map true}}
 
-              :test {:source-paths ["src/cljs" "src/clj" "test/cljs"]
-                     :incremental? true
-                     :compiler {:libs [""]
-                                :output-to "target-test/unit-test.js"
-                                :output-dir "target-test"
-                                :source-map "target-test/unit-test.js.map"
-                                :optimizations :whitespace
-                                :pretty-print true}}
-
-               :production 
+               :production
                  {:source-paths ["src/cljs" "src/clj"]
                   :compiler {:id "prod"
                              :libs [""]
                              :jar true
-                             :externs 
+                             :main travels.core
+                             :externs
                              ["src/externs/google-maps-js-api-v3-externs.js"
                               "src/externs/react-externs.js"]
                              :output-to "resources/public/js/main.js"
-                             :optimizations :advanced
-                             :pretty-print false}}
-
-             :test-commands {"run-tests"
-                             ["phantomjs" :runner "target-test/unit-test.js"]}}}
-  )
-
+                             :optimizations :simple
+                             :pretty-print false}}}})

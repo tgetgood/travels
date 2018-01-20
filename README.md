@@ -5,7 +5,7 @@ one might do in a new location is overwhelming and cross referencing them can
 take a lot of time. Personally I'd rather spend my limited time in a place
 seeing it, not reading about it.
 
-See demo at: http://intergalactic.herokuapp.com/
+[Try the demo](https://tgetgood.github.io/travels/resources/public/index.html)
 
 Note that this repo is not actively maintained.
 
